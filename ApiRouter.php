@@ -20,13 +20,14 @@ class ApiRouter
 
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && $route['path'] === $path) {
-                try {
-                    $result = $route['handler']();
-                    return; // Let the model handle response
-                } catch (Exception $e) {
-                    http_response_code(500);
-                    header('Content-Type: application/json');
-                    echo json_encode(['error' => $e->getMessage()]);
+                $response = $route['handler']();
+
+                if ($response instanceof ApiResponse) {
+                    http_response_code($response->status);
+                    foreach ($response->headers as $key => $value) {
+                        header("$key: $value");
+                    }
+                    echo json_encode($response->data);
                     return;
                 }
             }
