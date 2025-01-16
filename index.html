@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Galeria del libro</title> <!--(50-60 characters)-->
+	<meta name="description" content="description"> <!--(50-160 characters)-->
+
+	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+
+	<script src="./assets/js/Libro.js" type="module"></script>
+
+</head>
+
+<body>
+
+	<main id="main">
+
+		<footer>
+
+			<button type="button">Alta</button>
+
+			<dialog>
+				<form>
+					<h3>Formulario de alta</h3>
+					<fieldset>
+						<menu>
+							<li>
+								<label for="titulo">Título *</label>
+								<textarea id="titulo" name="titulo" required></textarea>
+							</li>
+							<li>
+								<label for="descripcion">Descripción *</label>
+								<textarea id="descripcion" name="descripcion" required></textarea>
+							</li>
+							<li>
+								<label for="paginas">Páginas *</label>
+								<input type="number" id="paginas" name="paginas" required min="1">
+							</li>
+							<li>
+								<label for="fechaPublicacion">Fecha de publicación *</label>
+								<input type="date" id="fechaPublicacion" name="fechaPublicacion" required>
+							</li>
+							<li>
+								<label for="image">Portada</label>
+								<input type="file" id="image" name="image" accept="image/*">
+							</li>
+							<li>
+								<label for="idCategoria">Categoria *</label>
+								<select name="idCategoria" id="idCategoria" required>
+									<option value="">Seleccione una categoria...</option>
+									<option></option>
+								</select>
+							</li>
+						</menu>
+					</fieldset>
+
+					<fieldset>
+						<menu>
+							<li>
+								<button type="button" value="POST">Dar de alta</button>
+							</li>
+							<li>
+								<button type="button">Cancelar</button>
+							</li>
+						</menu>
+					</fieldset>
+
+					<output></output>
+
+				</form>
+
+			</dialog>
+
+			<button type="button">Filtrar</button>
+
+			<dialog>
+				<form>
+					<h3>Filtros</h3>
+					<fieldset>
+						<menu>
+							<li>
+								<label for="filterTitulo">Título</label>
+								<textarea id="filterTitulo" name="filterTitulo"></textarea>
+							</li>
+							<li>
+								<label for="minimoPaginas">Mínimo de páginas</label>
+								<input type="number" id="minimoPaginas" name="minimoPaginas" min="1">
+							</li>
+							<li>
+								<label for="maximoPaginas">Máximo de páginas</label>
+								<input type="number" id="maximoPaginas" name="maximoPaginas" min="1">
+							</li>
+							<li>
+								<label for="filterCategoria">Categoria</label>
+								<select name="filterCategoria" id="filterCategoria">
+									<option value="">Todas</option>
+									<option></option>
+								</select>
+							</li>
+						</menu>
+					</fieldset>
+					<fieldset>
+						<menu>
+							<li>
+								<button type="button" value="GET">Buscar</button>
+							</li>
+							<li>
+								<button type="button">Cancelar</button>
+							</li>
+						</menu>
+					</fieldset>
+
+					<output></output>
+				</form>
+			</dialog>
+
+			<!-- <button type="button">Eliminar
+				todos</button>
+
+			<dialog>
+
+				<form action="http://localhost/xampp/api-libros/controllers/LibroController.php" name="libro">
+
+					<p>¿Seguro que quiere eliminar todos los libros?</p>
+
+					<button type="button" value="DELETE">Sí, eliminar todos</button>
+					<button type="button">Cancelar</button>
+
+				</form>
+
+			</dialog> -->
+
+		</footer>
+
+		<h1>Galeria del libro</h1>
+
+		<section>
+
+			<h2>¡Amamos los libros!</h2>
+
+			<p>Este es nuestro pequeño rincón para disfrutar del placer de la lectura. Puedes consultar nuestro
+				catálogo, añadir nuevos libros, modificarlos y eliminar los que ya no desees.</p>
+
+		</section>
+
+		<section>
+
+			<h2>Nuestros ejemplares</h2>
+
+			<output id="fetchoutput"></output>
+			<output id="errorcontainer"></output>
+
+		</section>
+
+	</main>
+
+</body>
+
+</html>

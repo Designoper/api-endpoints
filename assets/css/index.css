@@ -1,0 +1,98 @@
+main {
+	&:has(:popover-open) {
+		filter: blur(150px);
+		pointer-events: none;
+
+		:popover-open {
+			pointer-events: initial;
+		}
+	}
+
+	article {
+		display: grid;
+		padding: 2em;
+		border-radius: 0.5em;
+		gap: 1em 10%;
+		/* grid-template-columns: repeat(2, 1fr); */
+
+	}
+
+	dialog {
+		width: 80vw;
+
+		&::backdrop {
+			background-color: rgba(0, 0, 0, 0.9);
+		}
+	}
+
+	form {
+		/* width: 100%; */
+		display: grid;
+		gap: 2em;
+		/* grid-template-columns: repeat(2, 1fr); */
+
+
+
+		fieldset {
+			&:last-of-type {
+				display: flex;
+				justify-content: center;
+				gap: 1em;
+			}
+
+			/* grid-column: 1/-1; */
+		}
+	}
+
+	dialog {
+		max-width: 80vw;
+		padding: 1.5em;
+		margin: auto;
+		border-radius: 0.25rem;
+	}
+
+	input,
+	select,
+	textarea {
+		/* min-width: 1px; */
+		border-radius: 0.25rem;
+		/* width: 100%; */
+		padding: 0.25em 0.75em;
+	}
+
+	menu {
+		display: grid;
+		gap: 1em;
+		grid-column: 1/-1;
+		/* width: 100%;
+		margin: 2em 0; */
+	}
+
+	li {
+		display: grid;
+		gap: 0.5em;
+	}
+
+	button {
+		/* width: fit-content; */
+		padding: 0.75em 0.75em;
+		border-radius: 0.25rem;
+		transition: transform 0.5s;
+		justify-self: center;
+
+		&:hover {
+			transform: scale(107%);
+		}
+	}
+
+	@media screen and (1024px <=width) {
+		form {
+			width: 50%;
+		}
+
+		dialog form {
+			margin: 0;
+			width: 100%;
+		}
+	}
+}
