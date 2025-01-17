@@ -3,13 +3,15 @@
 final class ApiRouter
 {
     private array $routes = [];
-    private string $commonPath = '/api-endpoints/api';
+    private readonly string $commonPath;
 
     public function __construct()
     {
+        $this->setCommonPath('/api-endpoints/api');
+
         $this->setRoute(
             'GET',
-            $this->commonPath . '/libros/paginas/order-desc',
+            $this->getCommonPath() . '/libros/paginas/order-desc',
             function (): void {
                 $libro = new Libro();
                 $libro->OrdenarPaginasDesc();
@@ -18,7 +20,7 @@ final class ApiRouter
 
         $this->setRoute(
             'GET',
-            $this->commonPath . '/libros/paginas/order-asc',
+            $this->getCommonPath() . '/libros/paginas/order-asc',
             function (): void {
                 $libro = new Libro();
                 $libro->OrdenarPaginasAsc();
@@ -27,7 +29,7 @@ final class ApiRouter
 
         $this->setRoute(
             'GET',
-            $this->commonPath . '/libros/paginas/max',
+            $this->getCommonPath() . '/libros/paginas/max',
             function (): void {
                 $libro = new Libro();
                 $maximoPaginas = $_GET["paginas"] ?? null;
@@ -37,7 +39,7 @@ final class ApiRouter
 
         $this->setRoute(
             'GET',
-            $this->commonPath . '/libros/paginas/min',
+            $this->getCommonPath() . '/libros/paginas/min',
             function (): void {
                 $libro = new Libro();
                 $minimoPaginas = $_GET["paginas"] ?? null;
@@ -46,6 +48,16 @@ final class ApiRouter
         );
 
         $this->handleRequest();
+    }
+
+    private function getCommonPath(): string
+    {
+        return $this->commonPath;
+    }
+
+    private function setCommonPath(string $commonPath): void
+    {
+        $this->commonPath = $commonPath;
     }
 
     private function setRoute(string $method, string $path, callable $handler): void
