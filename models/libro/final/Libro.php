@@ -69,15 +69,9 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		$message = $libros ? '¡Libros obtenidos!' : '¡No hay libros!';
-
-		$data = [
-			'message' => $message,
-			'content' => $libros
-		];
-
 		$this->setStatus(200);
-		$this->setData($data);
+		$this->setMessage($libros ? '¡Libros obtenidos!' : '¡No hay libros!');
+		$this->setContent($libros);
 		$this->getResponse();
 	}
 

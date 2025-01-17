@@ -7,24 +7,23 @@ final class ApiRouter
 
     public function __construct()
     {
-
-        $this->addRoute('GET', $this->commonPath . '/libros/paginas/order-desc', function (): void {
+        $this->setRoute('GET', $this->commonPath . '/libros/paginas/order-desc', function (): void {
             $libro = new Libro();
             $libro->OrdenarPaginasDesc();
         });
 
-        $this->addRoute('GET', $this->commonPath . '/libros/paginas/order-asc', function (): void {
+        $this->setRoute('GET', $this->commonPath . '/libros/paginas/order-asc', function (): void {
             $libro = new Libro();
             $libro->OrdenarPaginasAsc();
         });
 
-        $this->addRoute('GET', $this->commonPath . '/libros/paginas/max', function (): void {
+        $this->setRoute('GET', $this->commonPath . '/libros/paginas/max', function (): void {
             $libro = new Libro();
             $maximoPaginas = $_GET["paginas"] ?? null;
             $libro->maxPaginas($maximoPaginas);
         });
 
-        $this->addRoute('GET', $this->commonPath . '/libros/paginas/min', function (): void {
+        $this->setRoute('GET', $this->commonPath . '/libros/paginas/min', function (): void {
             $libro = new Libro();
             $minimoPaginas = $_GET["paginas"] ?? null;
             $libro->minPaginas($minimoPaginas);
@@ -33,7 +32,7 @@ final class ApiRouter
         $this->handleRequest();
     }
 
-    private function addRoute(string $method, string $path, callable $handler): void
+    private function setRoute(string $method, string $path, callable $handler): void
     {
         $this->routes[] = [
             'method' => $method,

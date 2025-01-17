@@ -4,16 +4,17 @@ require_once __DIR__ . '/models/universal/MysqliConnect.php';
 
 abstract class ApiResponse extends MysqliConnect
 {
-    private array $data;
+    private array $data = [];
     private int $status;
     private string $message;
-    private array $content;
-    private array $headers = [];
+    private array $content = [];
 
     protected function __construct()
     {
         parent::__construct();
     }
+
+    //MARK: GETTERS
 
     private function getData(): array
     {
@@ -25,10 +26,17 @@ abstract class ApiResponse extends MysqliConnect
         return $this->status;
     }
 
-    private function getHeaders(): array
+    private function getMessage(): string
     {
-        return $this->headers;
+        return $this->message;
     }
+
+    private function getContent(): array
+    {
+        return $this->content;
+    }
+
+    //MARK: SETTERS
 
     protected function setData(array $data): void
     {
@@ -40,15 +48,24 @@ abstract class ApiResponse extends MysqliConnect
         $this->status = $status;
     }
 
-    protected function setHeaders(array $headers): void
+    protected function setMessage(string $message): void
     {
-        $this->headers = $headers;
+        $this->message = $message;
+		$this->data['message'] = $this->getMessage();
     }
+
+    protected function setContent(array $content): void
+    {
+		$this->content = $content;
+		$this->data['content'] = $this->getContent();
+    }
+
+    //MARK: FINAL
 
     protected function getResponse(): void
     {
         http_response_code($this->getStatus());
-        $this->headers = array_merge(['Content-Type' => 'application/json'], $this->getHeaders());
+		header('Content-Type: application/json');
         echo json_encode($this->getData());
     }
 }
