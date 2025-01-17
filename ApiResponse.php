@@ -1,11 +1,11 @@
 <?php
 
-class ApiResponse {
-    public $data;
-    public $status;
-    public $headers;
+final class ApiResponse {
+    public array $data;
+    public int $status;
+    public array $headers;
 
-    public function __construct($data, $status = 200, $headers = []) {
+    public function __construct(array $data, int $status = 200, array $headers = []) {
         $this->data = $data;
         $this->status = $status;
         $this->headers = array_merge(['Content-Type' => 'application/json'], $headers);

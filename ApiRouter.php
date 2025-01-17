@@ -1,10 +1,10 @@
 <?php
 
-class ApiRouter
+final class ApiRouter
 {
-    private $routes = [];
+    private array $routes = [];
 
-    public function addRoute($method, $path, $handler)
+    public function addRoute(string $method, string $path, callable $handler)
     {
         $this->routes[] = [
             'method' => $method,
