@@ -1,20 +1,8 @@
 <?php
 
-$env_file = fopen('.env', 'r');
-if ($env_file) {
-	while (($line = fgets($env_file)) !== false) {
-		$line = trim($line);
-		if (empty($line) || $line[0] == '#') continue;
+require_once __DIR__ . '/EnvReader.php';
 
-		list($key, $value) = explode('=', $line, 2);
-		if (!empty($key) && !empty($value)) {
-			putenv(sprintf('%s=%s', $key, $value));
-		}
-	}
-	fclose($env_file);
-}
-
-abstract class MysqliConnect
+abstract class MysqliConnect extends EnvReader
 {
 	private readonly string $hostname;
 	private readonly string $username;
@@ -24,6 +12,8 @@ abstract class MysqliConnect
 
 	protected function __construct()
 	{
+		parent::__construct();
+
 		$this->setHostname();
 		$this->setUsername();
 		$this->setPassword();
