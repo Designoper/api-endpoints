@@ -1,17 +1,33 @@
 <?php
 
-require_once __DIR__ . '/../../env.php';
+$env_file = fopen('.env', 'r');
+if ($env_file) {
+    while (($line = fgets($env_file)) !== false) {
+        $line = trim($line);
+        if (empty($line) || $line[0] == '#') continue;
+
+        list($key, $value) = explode('=', $line, 2);
+        if (!empty($key) && !empty($value)) {
+            putenv(sprintf('%s=%s', $key, $value));
+        }
+    }
+    fclose($env_file);
+}
 
 abstract class MysqliConnect
 {
-	private string $hostname = HOSTNAME;
-	private string $username = USERNAME;
-	private string $password = PASSWORD;
-	private string $database = DATABASE;
+	private readonly string $hostname;
+	private readonly string $username;
+	private readonly string $password;
+	private readonly string $database;
 	private readonly mysqli $connection;
 
 	protected function __construct()
 	{
+		$this->setHostname();
+		$this->setUsername();
+		$this->setPassword();
+		$this->setDatabase();
 		$this->setConnection();
 	}
 
@@ -35,6 +51,26 @@ abstract class MysqliConnect
 	private function getDatabase(): string
 	{
 		return $this->database;
+	}
+
+	private function setHostname(): void
+	{
+		$this->hostname = getenv('HOSTNAME');
+	}
+
+	private function setUsername(): void
+	{
+		$this->username = getenv('USERNAME');
+	}
+
+	private function setPassword(): void
+	{
+		$this->password = getenv('PASSWORD');
+	}
+
+	private function setDatabase(): void
+	{
+		$this->database = getenv('DATABASE');
 	}
 
 	protected function getConnection(): mysqli
