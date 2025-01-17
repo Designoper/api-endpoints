@@ -70,7 +70,7 @@ final class Libro extends LibroValidationErrors
 		$query->close();
 
 		$this->setStatus(200);
-		$this->setMessage($libros ? '¡Libros obtenidos!' : '¡No hay libros!');
+		$this->setMessage($libros ? '¡Libros obtenidos!' : 'Ningún libro tiene ' . $minimoPaginas . ' páginas como mínimo');
 		$this->setContent($libros);
 		$this->getResponse();
 	}
