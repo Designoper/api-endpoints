@@ -7,27 +7,43 @@ final class ApiRouter
 
     public function __construct()
     {
-        $this->setRoute('GET', $this->commonPath . '/libros/paginas/order-desc', function (): void {
-            $libro = new Libro();
-            $libro->OrdenarPaginasDesc();
-        });
+        $this->setRoute(
+            'GET',
+            $this->commonPath . '/libros/paginas/order-desc',
+            function (): void {
+                $libro = new Libro();
+                $libro->OrdenarPaginasDesc();
+            }
+        );
 
-        $this->setRoute('GET', $this->commonPath . '/libros/paginas/order-asc', function (): void {
-            $libro = new Libro();
-            $libro->OrdenarPaginasAsc();
-        });
+        $this->setRoute(
+            'GET',
+            $this->commonPath . '/libros/paginas/order-asc',
+            function (): void {
+                $libro = new Libro();
+                $libro->OrdenarPaginasAsc();
+            }
+        );
 
-        $this->setRoute('GET', $this->commonPath . '/libros/paginas/max', function (): void {
-            $libro = new Libro();
-            $maximoPaginas = $_GET["paginas"] ?? null;
-            $libro->maxPaginas($maximoPaginas);
-        });
+        $this->setRoute(
+            'GET',
+            $this->commonPath . '/libros/paginas/max',
+            function (): void {
+                $libro = new Libro();
+                $maximoPaginas = $_GET["paginas"] ?? null;
+                $libro->maxPaginas($maximoPaginas);
+            }
+        );
 
-        $this->setRoute('GET', $this->commonPath . '/libros/paginas/min', function (): void {
-            $libro = new Libro();
-            $minimoPaginas = $_GET["paginas"] ?? null;
-            $libro->minPaginas($minimoPaginas);
-        });
+        $this->setRoute(
+            'GET',
+            $this->commonPath . '/libros/paginas/min',
+            function (): void {
+                $libro = new Libro();
+                $minimoPaginas = $_GET["paginas"] ?? null;
+                $libro->minPaginas($minimoPaginas);
+            }
+        );
 
         $this->handleRequest();
     }

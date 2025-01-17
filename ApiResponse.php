@@ -4,11 +4,11 @@ require_once __DIR__ . '/models/universal/MysqliConnect.php';
 
 abstract class ApiResponse extends MysqliConnect
 {
-    private array $response = [];
-    private int $status;
-    private string $message;
-    private array $content = [];
+    private readonly int $status;
+    private readonly string $message;
+    private readonly array $content;
     private array $validationErrors = [];
+    private array $response = [];
 
     protected function __construct()
     {
