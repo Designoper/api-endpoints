@@ -2,16 +2,16 @@
 
 $env_file = fopen('.env', 'r');
 if ($env_file) {
-    while (($line = fgets($env_file)) !== false) {
-        $line = trim($line);
-        if (empty($line) || $line[0] == '#') continue;
+	while (($line = fgets($env_file)) !== false) {
+		$line = trim($line);
+		if (empty($line) || $line[0] == '#') continue;
 
-        list($key, $value) = explode('=', $line, 2);
-        if (!empty($key) && !empty($value)) {
-            putenv(sprintf('%s=%s', $key, $value));
-        }
-    }
-    fclose($env_file);
+		list($key, $value) = explode('=', $line, 2);
+		if (!empty($key) && !empty($value)) {
+			putenv(sprintf('%s=%s', $key, $value));
+		}
+	}
+	fclose($env_file);
 }
 
 abstract class MysqliConnect
@@ -53,6 +53,13 @@ abstract class MysqliConnect
 		return $this->database;
 	}
 
+	protected function getConnection(): mysqli
+	{
+		return $this->connection;
+	}
+
+	// MARK: SETTERS
+
 	private function setHostname(): void
 	{
 		$this->hostname = getenv('HOSTNAME');
@@ -72,13 +79,6 @@ abstract class MysqliConnect
 	{
 		$this->database = getenv('DATABASE');
 	}
-
-	protected function getConnection(): mysqli
-	{
-		return $this->connection;
-	}
-
-	// MARK: SETTERS
 
 	private function setConnection(): void
 	{
