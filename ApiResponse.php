@@ -4,10 +4,11 @@ require_once __DIR__ . '/models/universal/MysqliConnect.php';
 
 abstract class ApiResponse extends MysqliConnect
 {
-    private array $data = [];
+    private array $response = [];
     private int $status;
     private string $message;
     private array $content = [];
+    private array $validationErrors = [];
 
     protected function __construct()
     {
@@ -15,11 +16,6 @@ abstract class ApiResponse extends MysqliConnect
     }
 
     //MARK: GETTERS
-
-    private function getData(): array
-    {
-        return $this->data;
-    }
 
     private function getStatus(): int
     {
@@ -36,12 +32,12 @@ abstract class ApiResponse extends MysqliConnect
         return $this->content;
     }
 
-    //MARK: SETTERS
+    private function getValidationErrors(): array
+	{
+		return $this->validationErrors;
+	}
 
-    protected function setData(array $data): void
-    {
-        $this->data = $data;
-    }
+    //MARK: SETTERS
 
     protected function setStatus(int $status): void
     {
@@ -51,14 +47,38 @@ abstract class ApiResponse extends MysqliConnect
     protected function setMessage(string $message): void
     {
         $this->message = $message;
-		$this->data['message'] = $this->getMessage();
+		$this->response['message'] = $this->getMessage();
     }
 
     protected function setContent(array $content): void
     {
 		$this->content = $content;
-		$this->data['content'] = $this->getContent();
+		$this->response['content'] = $this->getContent();
     }
+
+    protected function setValidationError(string $validationError): void
+	{
+		$this->validationErrors[] = $validationError;
+	}
+
+	private function setValidationErrors(): void
+	{
+		$this->response['validationErrors'] = $this->getValidationErrors();
+	}
+
+	protected function validationErrorsExist():bool
+	{
+		if (count($this->getValidationErrors()) > 0) {
+			$this->setStatus(400);
+			$this->setMessage("Hay errores de validación");
+			$this->setValidationErrors();
+            $this->getResponse();
+            return true;
+		}
+
+        return false;
+
+	}
 
     //MARK: FINAL
 
@@ -66,6 +86,6 @@ abstract class ApiResponse extends MysqliConnect
     {
         http_response_code($this->getStatus());
 		header('Content-Type: application/json');
-        echo json_encode($this->getData());
+        echo json_encode($this->response);
     }
 }

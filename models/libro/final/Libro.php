@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../errors/LibroValidationErrors.php';
-require_once __DIR__ . '/../../../ApiResponse.php';
 
 final class Libro extends LibroValidationErrors
 {
@@ -10,47 +9,15 @@ final class Libro extends LibroValidationErrors
 		parent::__construct();
 	}
 
-	// MARK: SETTERS
-
-	// private function setFilterTitulo(string $filterTitulo): void
-	// {
-	// 	$this->filterTitulo = "%" . $filterTitulo . "%";
-	// }
-
-	// private function setMinimoPaginas(string $minimoPaginas): void
-	// {
-	// 	$this->minimoPaginas = intval($minimoPaginas);
-	// }
-
-	// private function setMaximoPaginas(string $maximoPaginas): void
-	// {
-	// 	$this->maximoPaginas = intval($maximoPaginas);
-	// }
-
-	// private function setFilterCategoria(string $filterCategoria): void
-	// {
-	// 	$this->filterCategoria = $filterCategoria;
-	// }
-
 	// MARK: MIN PAGINAS
 
-	public function minPaginas(mixed $minimoPaginas): void
+	public function minPaginas(mixed $minimoPaginas)
 	{
-		if (!is_numeric($minimoPaginas) || $minimoPaginas < 1) {
+		$this->validatePaginas($minimoPaginas);
 
-			$data = [
-				'message' => 'Hay errores de validación',
-				'validationErrors' => ['El campo \'paginas\' debe ser un número entero superior o igual a 1']
-			];
-
-			$this->setStatus(400);
-			$this->setData($data);
-			$this->getResponse();
-
+		if ($this->validationErrorsExist()) {
 			return;
 		}
-		// $this->validatePaginas($minimoPaginas);
-		// $this->checkValidationErrors();
 
 		$statement =
 			"SELECT *
@@ -66,11 +33,15 @@ final class Libro extends LibroValidationErrors
 		$query->execute();
 
 		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$libros
+				? 'Libros con mínimo de ' . $minimoPaginas . ' páginas.'
+				: 'Ningún libro tiene ' . $minimoPaginas . ' páginas como mínimo.';
 
 		$query->close();
 
 		$this->setStatus(200);
-		$this->setMessage($libros ? '¡Libros obtenidos!' : 'Ningún libro tiene ' . $minimoPaginas . ' páginas como mínimo');
+		$this->setMessage($message);
 		$this->setContent($libros);
 		$this->getResponse();
 	}
@@ -87,9 +58,9 @@ final class Libro extends LibroValidationErrors
 		}
 
 		$statement = "SELECT *
-                 FROM libros
-                 NATURAL JOIN categorias
-                 WHERE libros.paginas <= ?";
+			FROM libros
+			NATURAL JOIN categorias
+			WHERE libros.paginas <= ?";
 
 		$query = $this->getConnection()->prepare($statement);
 		$query->bind_param("i", $maximoPaginas);
