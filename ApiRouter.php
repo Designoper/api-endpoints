@@ -44,20 +44,31 @@ final class ApiRouter
     private function handleRequest(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        switch ($method) {
+            case 'GET':
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
+                $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $method && $route['path'] === $path) {
-                $route['handler']();
-                return;
-            }
+                foreach ($this->routes as $route) {
+                    if ($route['method'] === $method && $route['path'] === $path) {
+                        $route['handler']();
+                        return;
+                    }
+                }
+
+                http_response_code(404);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'error' => 'Route not found',
+                    'requested_path' => $path
+                ]);
+                break;
+
+            default:
+                http_response_code(405);
+                header('Allow: GET, POST, PUT, DELETE');
         }
-
-        http_response_code(404);
-        header('Content-Type: application/json');
-        echo json_encode([
-            'error' => 'Route not found',
-            'requested_path' => $path
-        ]);
     }
 }
