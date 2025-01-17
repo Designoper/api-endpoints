@@ -2,11 +2,12 @@
 
 require_once __DIR__ . '/models/universal/MysqliConnect.php';
 
-
-class ApiResponse extends MysqliConnect
+abstract class ApiResponse extends MysqliConnect
 {
     private array $data;
     private int $status;
+    private string $message;
+    private array $content;
     private array $headers = [];
 
     protected function __construct()
@@ -44,10 +45,10 @@ class ApiResponse extends MysqliConnect
         $this->headers = $headers;
     }
 
-    protected function getResponse()
+    protected function getResponse(): void
     {
         http_response_code($this->getStatus());
-        array_merge(['Content-Type' => 'application/json'], $this->getHeaders());
+        $this->headers = array_merge(['Content-Type' => 'application/json'], $this->getHeaders());
         echo json_encode($this->getData());
     }
 }
