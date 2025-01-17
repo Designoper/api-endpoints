@@ -9,6 +9,8 @@ final class ApiRouter extends Sanitizer
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->setCommonPath('/api-endpoints/api');
 
         $this->setRoute(
