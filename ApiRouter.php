@@ -51,14 +51,7 @@ final class ApiRouter
             if ($route['method'] === $method && $route['path'] === $path) {
                 $response = $route['handler']();
 
-                if ($response instanceof ApiResponse) {
-                    http_response_code($response->status);
-                    foreach ($response->headers as $key => $value) {
-                        header("$key: $value");
-                    }
-                    echo json_encode($response->data);
-                    return;
-                }
+                return;
             }
         }
 

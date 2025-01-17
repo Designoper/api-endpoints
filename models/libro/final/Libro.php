@@ -34,10 +34,23 @@ final class Libro extends LibroValidationErrors
 
 	// MARK: MIN PAGINAS
 
-	public function minPaginas(int $minimoPaginas): void
+	public function minPaginas(mixed $minimoPaginas): void
 	{
-		$this->validatePaginas($minimoPaginas);
-		$this->checkValidationErrors();
+		if (!is_numeric($minimoPaginas) || $minimoPaginas < 1) {
+
+			$data = [
+				'message' => 'Hay errores de validación',
+				'validationErrors' => ['El campo \'paginas\' debe ser un número entero superior o igual a 1']
+			];
+
+			$this->setStatus(400);
+			$this->setData($data);
+			$this->getResponse();
+
+			return;
+		}
+		// $this->validatePaginas($minimoPaginas);
+		// $this->checkValidationErrors();
 
 		$statement =
 			"SELECT *
@@ -56,14 +69,15 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		if ($libros) {
-			$this->setMessage('¡Libros obtenidos!');
-		} else {
-			$this->setMessage('¡No hay libros!');
-		}
+		$message = $libros ? '¡Libros obtenidos!' : '¡No hay libros!';
 
-		$this->setStatusCode(200);
-		$this->setContent($libros);
+		$data = [
+			'message' => $message,
+			'content' => $libros
+		];
+
+		$this->setStatus(200);
+		$this->setData($data);
 		$this->getResponse();
 	}
 
@@ -115,15 +129,15 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		if ($libros) {
-			$this->setMessage('¡Libros obtenidos!');
-		} else {
-			$this->setMessage('¡No hay libros!');
-		}
+		// if ($libros) {
+		// 	$this->setMessage('¡Libros obtenidos!');
+		// } else {
+		// 	$this->setMessage('¡No hay libros!');
+		// }
 
-		$this->setStatusCode(200);
-		$this->setContent($libros);
-		$this->getResponse();
+		// $this->setStatusCode(200);
+		// $this->setContent($libros);
+		// $this->getResponse();
 	}
 
 	// MARK: PAGINAS DESC
@@ -143,14 +157,14 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		if ($libros) {
-			$this->setMessage('¡Libros obtenidos!');
-		} else {
-			$this->setMessage('¡No hay libros!');
-		}
+		// if ($libros) {
+		// 	$this->setMessage('¡Libros obtenidos!');
+		// } else {
+		// 	$this->setMessage('¡No hay libros!');
+		// }
 
-		$this->setStatusCode(200);
-		$this->setContent($libros);
-		$this->getResponse();
+		// $this->setStatusCode(200);
+		// $this->setContent($libros);
+		// $this->getResponse();
 	}
 }
