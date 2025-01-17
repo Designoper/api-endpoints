@@ -1,6 +1,8 @@
 <?php
 
-final class ApiRouter
+require_once __DIR__ . '/Sanitizer.php';
+
+final class ApiRouter extends Sanitizer
 {
     private array $routes = [];
     private readonly string $commonPath;
