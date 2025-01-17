@@ -68,6 +68,7 @@ final class ApiRouter
 
             default:
                 http_response_code(405);
+                header('Content-Type: application/json');
                 header('Allow: GET, POST, PUT, DELETE');
         }
     }

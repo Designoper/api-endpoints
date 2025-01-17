@@ -33,9 +33,9 @@ abstract class ApiResponse extends MysqliConnect
     }
 
     private function getValidationErrors(): array
-	{
-		return $this->validationErrors;
-	}
+    {
+        return $this->validationErrors;
+    }
 
     //MARK: SETTERS
 
@@ -47,45 +47,44 @@ abstract class ApiResponse extends MysqliConnect
     protected function setMessage(string $message): void
     {
         $this->message = $message;
-		$this->response['message'] = $this->getMessage();
+        $this->response['message'] = $this->getMessage();
     }
 
     protected function setContent(array $content): void
     {
-		$this->content = $content;
-		$this->response['content'] = $this->getContent();
+        $this->content = $content;
+        $this->response['content'] = $this->getContent();
     }
 
     protected function setValidationError(string $validationError): void
-	{
-		$this->validationErrors[] = $validationError;
-	}
+    {
+        $this->validationErrors[] = $validationError;
+    }
 
-	private function setValidationErrors(): void
-	{
-		$this->response['validationErrors'] = $this->getValidationErrors();
-	}
+    private function setValidationErrors(): void
+    {
+        $this->response['validationErrors'] = $this->getValidationErrors();
+    }
 
-	protected function validationErrorsExist():bool
-	{
-		if (count($this->getValidationErrors()) > 0) {
-			$this->setStatus(400);
-			$this->setMessage("Hay errores de validación");
-			$this->setValidationErrors();
+    protected function validationErrorsExist(): bool
+    {
+        if (count($this->getValidationErrors()) > 0) {
+            $this->setStatus(400);
+            $this->setMessage("Hay errores de validación");
+            $this->setValidationErrors();
             $this->getResponse();
             return true;
-		}
+        }
 
         return false;
-
-	}
+    }
 
     //MARK: FINAL
 
     protected function getResponse(): void
     {
         http_response_code($this->getStatus());
-		header('Content-Type: application/json');
+        header('Content-Type: application/json');
         echo json_encode($this->response);
     }
 }

@@ -8,7 +8,7 @@ abstract class MysqliConnect
 	private string $username = USERNAME;
 	private string $password = PASSWORD;
 	private string $database = DATABASE;
-	private mysqli $connection;
+	private readonly mysqli $connection;
 
 	protected function __construct()
 	{
