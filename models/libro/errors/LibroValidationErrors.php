@@ -48,8 +48,8 @@ abstract class LibroValidationErrors extends ApiResponse
 
 	protected function validateIdCategoria(mixed $idCategoria): void
 	{
-		if (!is_int($idCategoria) || $idCategoria <= 0) {
-			$this->setValidationError('El campo "idCategoria" debe ser un número entero superior o igual a 1');
+		if (filter_var($idCategoria, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) === false) {
+			$this->setValidationError("El campo 'idCategoria' debe ser un número entero superior o igual a 1");
 		}
 	}
 
