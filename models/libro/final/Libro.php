@@ -11,7 +11,7 @@ final class Libro extends LibroValidationErrors
 
 	// MARK: MIN PAGINAS
 
-	public function minPaginas(mixed $minimoPaginas)
+	public function minPaginas(mixed $minimoPaginas): void
 	{
 		$this->validatePaginas($minimoPaginas);
 
@@ -35,8 +35,8 @@ final class Libro extends LibroValidationErrors
 		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$message =
 			$libros
-				? 'Libros con mínimo de ' . $minimoPaginas . ' páginas.'
-				: 'Ningún libro tiene ' . $minimoPaginas . ' páginas como mínimo.';
+			? 'Libros con mínimo de ' . $minimoPaginas . ' páginas.'
+			: 'Ningún libro tiene ' . $minimoPaginas . ' páginas como mínimo.';
 
 		$query->close();
 
@@ -48,13 +48,12 @@ final class Libro extends LibroValidationErrors
 
 	// MARK: MAX PAGINAS
 
-	public function maxPaginas(mixed $maximoPaginas): ApiResponse
+	public function maxPaginas(mixed $maximoPaginas): void
 	{
-		if (!is_numeric($maximoPaginas) || $maximoPaginas < 1) {
-			return new ApiResponse([
-				'message' => 'Hay errores de validación',
-				'validationErrors' => ['El campo \'paginas\' debe ser un número entero superior o igual a 1']
-			], 400);
+		$this->validatePaginas($maximoPaginas);
+
+		if ($this->validationErrorsExist()) {
+			return;
 		}
 
 		$statement = "SELECT *
@@ -69,12 +68,15 @@ final class Libro extends LibroValidationErrors
 		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message = $libros ? '¡Libros obtenidos!' : '¡No hay libros!';
+		$message =
+			$libros
+			? '¡Libros obtenidos!'
+			: '¡No hay libros!';
 
-		return new ApiResponse([
-			'message' => $message,
-			'content' => $libros
-		], 200);
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		$this->getResponse();
 	}
 
 	// MARK: PAGINAS ASC
@@ -94,15 +96,15 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		// if ($libros) {
-		// 	$this->setMessage('¡Libros obtenidos!');
-		// } else {
-		// 	$this->setMessage('¡No hay libros!');
-		// }
+		$message =
+			$libros
+			? '¡Libros obtenidos!'
+			: '¡No hay libros!';
 
-		// $this->setStatusCode(200);
-		// $this->setContent($libros);
-		// $this->getResponse();
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		$this->getResponse();
 	}
 
 	// MARK: PAGINAS DESC
@@ -122,14 +124,14 @@ final class Libro extends LibroValidationErrors
 
 		$query->close();
 
-		// if ($libros) {
-		// 	$this->setMessage('¡Libros obtenidos!');
-		// } else {
-		// 	$this->setMessage('¡No hay libros!');
-		// }
+		$message =
+			$libros
+			? '¡Libros obtenidos!'
+			: '¡No hay libros!';
 
-		// $this->setStatusCode(200);
-		// $this->setContent($libros);
-		// $this->getResponse();
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		$this->getResponse();
 	}
 }
