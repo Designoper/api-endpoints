@@ -9,6 +9,57 @@ final class Libro extends LibroValidationErrors
 		parent::__construct();
 	}
 
+	public function greatFilter(): void
+	{
+		$sql = "SELECT * FROM libros
+		NATURAL JOIN categorias
+		WHERE 1=1";
+
+		$min_paginas = isset($_GET['min_paginas']) ? $_GET['min_paginas'] : null;
+		$max_paginas = isset($_GET['max_paginas']) ? $_GET['max_paginas'] : null;
+		$parametros = [];
+		$tipos = '';
+
+		if ($min_paginas) {
+			$this->validatePaginas($min_paginas);
+			$parametros[] = $min_paginas;
+			$tipos .= 'i';
+
+			$sql .= " AND libros.paginas >= ?";
+		}
+
+		if ($max_paginas) {
+			$this->validatePaginas($max_paginas);
+			$parametros[] = $max_paginas;
+			$tipos .= 'i';
+
+			$sql .= " AND libros.paginas <= ?";
+		}
+
+		$this->validationErrorsExist();
+
+		$query = $this->getConnection()->prepare($sql);
+
+		if ($parametros) {
+			$query->bind_param($tipos, ...$parametros);
+		}
+
+		$query->execute();
+
+		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$libros
+			? 'Libros obtenidos'
+			: 'No hay coincidencias';
+
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		$this->getResponse();
+	}
+
 	// MARK: MIN PAGINAS
 
 	public function minPaginas(mixed $minimoPaginas): void

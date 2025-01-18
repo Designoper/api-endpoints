@@ -15,6 +15,15 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
+            $this->getCommonPath() . '/libros/filter',
+            function (): void {
+                $libro = new Libro();
+                $libro->greatFilter();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
             $this->getCommonPath() . '/libros/paginas/order-desc',
             function (): void {
                 $libro = new Libro();
