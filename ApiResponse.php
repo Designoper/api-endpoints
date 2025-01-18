@@ -66,17 +66,15 @@ abstract class ApiResponse extends MysqliConnect
         $this->response['validationErrors'] = $this->getValidationErrors();
     }
 
-    protected function validationErrorsExist(): bool
+    protected function validationErrorsExist(): void
     {
         if (count($this->getValidationErrors()) > 0) {
             $this->setStatus(400);
             $this->setMessage("Hay errores de validación");
             $this->setValidationErrors();
             $this->getResponse();
-            return true;
+            exit();
         }
-
-        return false;
     }
 
     //MARK: FINAL

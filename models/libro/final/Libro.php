@@ -15,9 +15,7 @@ final class Libro extends LibroValidationErrors
 	{
 		$this->validatePaginas($minimoPaginas);
 
-		if ($this->validationErrorsExist()) {
-			return;
-		}
+		$this->validationErrorsExist();
 
 		$statement =
 			"SELECT *
@@ -52,9 +50,7 @@ final class Libro extends LibroValidationErrors
 	{
 		$this->validatePaginas($maximoPaginas);
 
-		if ($this->validationErrorsExist()) {
-			return;
-		}
+		$this->validationErrorsExist();
 
 		$statement = "SELECT *
 			FROM libros
