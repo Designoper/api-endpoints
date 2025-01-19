@@ -1,11 +1,14 @@
 <?php
 
-abstract class Sanitizer {
-    protected function __construct() {
+abstract class Sanitizer
+{
+    protected function __construct()
+    {
         $this->sanitizeGlobals();
     }
 
-    private function sanitizeValue(mixed $value): string|array {
+    private function sanitizeValue(mixed $value): string|array
+    {
         if (is_array($value)) {
             return array_map([$this, 'sanitizeValue'], $value);
         }
@@ -20,7 +23,8 @@ abstract class Sanitizer {
         return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
-    private function sanitizeGlobals(): void {
+    private function sanitizeGlobals(): void
+    {
         $globals = ['_GET', '_POST', '_REQUEST', '_COOKIE'];
         foreach ($globals as $global) {
             if (isset($GLOBALS[$global]) && is_array($GLOBALS[$global])) {

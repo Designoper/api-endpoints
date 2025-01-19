@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../../ApiResponse.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
 abstract class LibroValidationErrors extends ApiResponse
 {

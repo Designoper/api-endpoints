@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/models/universal/MysqliConnect.php';
+require_once __DIR__ . '/MysqliConnect.php';
 
 abstract class ApiResponse extends MysqliConnect
 {

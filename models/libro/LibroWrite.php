@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../errors/LibroIntegrityErrors.php';
+require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {

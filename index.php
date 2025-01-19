@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/ApiRouter.php';
-require_once __DIR__ . '/models/libro/final/Libro.php';
+require_once __DIR__ . '/models/universal/ApiRouter.php';
 
 new ApiRouter();

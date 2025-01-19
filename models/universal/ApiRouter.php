@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/Sanitizer.php';
+require_once __DIR__ . '/../../models/libro/Libro.php';
+require_once __DIR__ . '/../../models/categoria/Categoria.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -11,26 +13,34 @@ final class ApiRouter extends Sanitizer
     {
         parent::__construct();
 
-        $this->setCommonPath('/api-endpoints/api');
+        $this->setCommonPath('/api-endpoints/api/');
 
         $this->setRoute(
             'GET',
-            $this->getCommonPath() . '/libros',
+            $this->getCommonPath() . 'libros/',
             function (): void {
                 $libro = new Libro();
-                $libro->greatFilter();
+                $libro->filterLibros();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            $this->getCommonPath() . 'categorias/',
+            function (): void {
+                $categoria = new Categoria();
+                $categoria->readCategorias();
             }
         );
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . '/libros',
+            $this->getCommonPath() . 'libros/',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }
         );
-
 
         $this->handleRequest();
     }

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../errors/LibroValidationErrors.php';
+require_once __DIR__ . '/LibroValidationErrors.php';
 
 final class Libro extends LibroValidationErrors
 {
@@ -26,7 +26,7 @@ final class Libro extends LibroValidationErrors
 		return $this->statement;
 	}
 
-	private function getparams(): array
+	private function getParams(): array
 	{
 		return $this->params;
 	}
@@ -51,7 +51,7 @@ final class Libro extends LibroValidationErrors
 		$this->types .= $type;
 	}
 
-	public function greatFilter(): void
+	public function filterLibros(): void
 	{
 		$min_paginas = $_GET["min_paginas"] ?? "";
 		$max_paginas = $_GET["max_paginas"] ?? "";
@@ -97,8 +97,8 @@ final class Libro extends LibroValidationErrors
 
 		$query = $this->getConnection()->prepare($this->getStatement());
 
-		if ($this->getparams()) {
-			$query->bind_param($this->getTypes(), ...$this->getparams());
+		if ($this->getParams()) {
+			$query->bind_param($this->getTypes(), ...$this->getParams());
 		}
 
 		$query->execute();
