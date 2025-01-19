@@ -3,6 +3,7 @@
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/libro/Libro.php';
 require_once __DIR__ . '/../../models/categoria/Categoria.php';
+require_once __DIR__ . '/../../models/usuario/Usuario.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -37,6 +38,8 @@ final class ApiRouter extends Sanitizer
             'POST',
             $this->getCommonPath() . 'libros/',
             function (): void {
+                $usuario = new Usuario();
+                $usuario->login();
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }

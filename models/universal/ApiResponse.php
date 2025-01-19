@@ -77,6 +77,14 @@ abstract class ApiResponse extends MysqliConnect
         }
     }
 
+    protected function invalidUser(): void
+    {
+        $this->setStatus(401);
+        $this->setMessage("Credenciales incorrectas");
+        $this->getResponse();
+        exit();
+    }
+
     //MARK: FINAL
 
     protected function getResponse(): void
