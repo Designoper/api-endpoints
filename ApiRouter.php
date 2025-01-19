@@ -15,50 +15,22 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            $this->getCommonPath() . '/libros/filter',
+            $this->getCommonPath() . '/libros',
             function (): void {
                 $libro = new Libro();
                 $libro->greatFilter();
             }
         );
 
-        // $this->setRoute(
-        //     'GET',
-        //     $this->getCommonPath() . '/libros/paginas/order-desc',
-        //     function (): void {
-        //         $libro = new Libro();
-        //         $libro->OrdenarPaginasDesc();
-        //     }
-        // );
+        $this->setRoute(
+            'POST',
+            $this->getCommonPath() . '/libros',
+            function (): void {
+                $libro = new LibroWrite();
+                $libro->createLibro();
+            }
+        );
 
-        // $this->setRoute(
-        //     'GET',
-        //     $this->getCommonPath() . '/libros/paginas/order-asc',
-        //     function (): void {
-        //         $libro = new Libro();
-        //         $libro->OrdenarPaginasAsc();
-        //     }
-        // );
-
-        // $this->setRoute(
-        //     'GET',
-        //     $this->getCommonPath() . '/libros/paginas/max',
-        //     function (): void {
-        //         $libro = new Libro();
-        //         $maximoPaginas = $_GET["paginas"] ?? null;
-        //         $libro->maxPaginas($maximoPaginas);
-        //     }
-        // );
-
-        // $this->setRoute(
-        //     'GET',
-        //     $this->getCommonPath() . '/libros/paginas/min',
-        //     function (): void {
-        //         $libro = new Libro();
-        //         $minimoPaginas = $_GET["paginas"] ?? null;
-        //         $libro->minPaginas($minimoPaginas);
-        //     }
-        // );
 
         $this->handleRequest();
     }

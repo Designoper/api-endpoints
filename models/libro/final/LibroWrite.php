@@ -176,7 +176,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->execute();
 		$query->close();
 
-		$this->setStatusCode(201);
+		$this->setStatus(201);
 		$this->getResponse();
 	}
 
@@ -227,11 +227,11 @@ final class LibroWrite extends LibroIntegrityErrors
 				"Id categoria" => $this->getIdCategoria()
 			];
 
-			$this->setStatusCode(200);
+			$this->setStatus(200);
 			$this->setMessage('¡Libro modificado!');
 			$this->setUpdatedContent($libroModificado);
 		} else {
-			$this->setStatusCode(204);
+			$this->setStatus(204);
 		}
 		$this->getResponse();
 	}
@@ -264,7 +264,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->execute();
 		$query->close();
 
-		$this->setStatusCode(204);
+		$this->setStatus(204);
 		$this->getResponse();
 	}
 
@@ -284,7 +284,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$query->close();
 
-		$this->setStatusCode(204);
+		$this->setStatus(204);
 		$this->getResponse();
 	}
 }
