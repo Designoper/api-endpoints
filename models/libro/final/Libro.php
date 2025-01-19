@@ -53,42 +53,41 @@ final class Libro extends LibroValidationErrors
 
 	public function greatFilter(): void
 	{
-		$min_paginas = isset($_GET['min_paginas']) ? $_GET['min_paginas'] : null;
-		$max_paginas = isset($_GET['max_paginas']) ? $_GET['max_paginas'] : null;
-		$min_fecha = isset($_GET['min_fecha']) ? $_GET['min_fecha'] : null;
-		$max_fecha = isset($_GET['max_fecha']) ? $_GET['max_fecha'] : null;
-		$titulo = isset($_GET["titulo"]) ? ($_GET["titulo"]) : null;
+		$min_paginas = $_GET["min_paginas"] ?? "";
+		$max_paginas = $_GET["max_paginas"] ?? "";
+		$min_fecha = $_GET["min_fecha"] ?? "";
+		$max_fecha = $_GET["max_fecha"] ?? "";
+		$titulo = $_GET["titulo"] ?? "";
 
-		if (isset($min_paginas) && ($min_paginas !== "")) {
+		if ($min_paginas !== "") {
 			$this->validatePaginas($min_paginas);
 			$this->addParam($min_paginas);
 			$this->addType('i');
 			$this->addStatement("AND libros.paginas >= ?");
 		}
 
-		if (isset($max_paginas) && ($max_paginas !== "")) {
+		if ($max_paginas !== "") {
 			$this->validatePaginas($max_paginas);
 			$this->addParam($max_paginas);
 			$this->addType('i');
 			$this->addStatement("AND libros.paginas <= ?");
 		}
 
-		if (isset($min_fecha) && ($min_fecha !== "")) {
+		if ($min_fecha !== "") {
 			$this->validateFechaPublicacion($min_fecha);
 			$this->addParam($min_fecha);
 			$this->addType('s');
 			$this->addStatement("AND libros.fecha_publicacion >= ?");
 		}
 
-		if (isset($max_fecha) && ($max_fecha !== "")) {
+		if ($max_fecha !== "") {
 			$this->validateFechaPublicacion($max_fecha);
 			$this->addParam($max_fecha);
 			$this->addType('s');
 			$this->addStatement("AND libros.fecha_publicacion <= ?");
 		}
 
-		if (isset($titulo) && ($titulo !== "")) {
-			// $this->validatePaginas($min_paginas);
+		if ($titulo !== "") {
 			$this->addParam("%" . $titulo . "%");
 			$this->addType('s');
 			$this->addStatement("AND libros.titulo LIKE ?");
