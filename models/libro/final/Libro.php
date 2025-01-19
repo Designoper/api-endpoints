@@ -57,6 +57,7 @@ final class Libro extends LibroValidationErrors
 		$max_paginas = isset($_GET['max_paginas']) ? $_GET['max_paginas'] : null;
 		$min_fecha = isset($_GET['min_fecha']) ? $_GET['min_fecha'] : null;
 		$max_fecha = isset($_GET['max_fecha']) ? $_GET['max_fecha'] : null;
+		$titulo = isset($_GET["titulo"]) ? isset($_GET["titulo"]) : null;
 
 		if (isset($min_paginas) && ($min_paginas !== "")) {
 			$this->validatePaginas($min_paginas);
@@ -84,6 +85,14 @@ final class Libro extends LibroValidationErrors
 			$this->addParam($max_fecha);
 			$this->addType('s');
 			$this->addStatement("AND libros.fecha_publicacion <= ?");
+		}
+
+		if (isset($titulo) && ($titulo !== "")) {
+			// $this->validatePaginas($min_paginas);
+			// $tituloParam = "\\\\'%" . $titulo . "%\\\\'";
+			$this->addParam($titulo);
+			$this->addType('s');
+			$this->addStatement("AND WHERE libros.titulo LIKE ''?''");
 		}
 
 		$this->validationErrorsExist();
