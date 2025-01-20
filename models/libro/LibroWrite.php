@@ -7,7 +7,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly ?int $idLibro;
 	private readonly ?string $titulo;
 	private readonly ?string $descripcion;
-	private readonly ?int $paginas;
+	private readonly int $paginas;
 	private readonly ?string $fechaPublicacion;
 	private readonly ?int $idCategoria;
 
@@ -21,11 +21,11 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		parent::__construct();
 
-		$this->setTitulo();
-		$this->setDescripcion();
-		$this->setPaginas();
-		$this->setFechaPublicacion();
-		$this->setIdCategoria();
+		// $this->setTitulo();
+		// $this->setDescripcion();
+		// $this->setPaginas();
+		// $this->setFechaPublicacion();
+		// $this->setIdCategoria();
 	}
 
 	// MARK: GETTERS
@@ -87,6 +87,8 @@ final class LibroWrite extends LibroIntegrityErrors
 				$this->titulo = $titulo;
 			} else $this->titulo = null;
 		} else $this->titulo = null;
+
+
 	}
 
 	private function setDescripcion(): void
@@ -101,12 +103,23 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setPaginas(): void
 	{
-		if (isset($_POST["paginas"])) {
-			$paginas = filter_var($_POST["paginas"], FILTER_SANITIZE_NUMBER_INT);
-			if ($paginas !== "") {
-				$this->paginas = intval($paginas);
-			} else $this->paginas = null;
-		} else $this->paginas = null;
+		// if (isset($_POST["paginas"])) {
+		// 	$paginas = filter_var($_POST["paginas"], FILTER_SANITIZE_NUMBER_INT);
+		// 	if ($paginas !== "") {
+		// 		$this->paginas = intval($paginas);
+		// 	} else $this->paginas = null;
+		// } else $this->paginas = null;
+
+		$input = $_POST['paginas'] ?? null;
+		// Sanitize to remove any non-numeric characters
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
+
+		// Validate both the sanitized and original input
+		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+			$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+		}
+
+		else $this->paginas = intval($sanitizedInput);
 	}
 
 	private function setFechaPublicacion(): void
@@ -150,11 +163,18 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-		$this->validateTitulo($this->getTitulo());
-		$this->validateDescripcion($this->getDescripcion());
-		$this->validatePaginas($this->getPaginas());
-		$this->validateFechaPublicacion($this->getFechaPublicacion());
-		$this->validateIdCategoria($this->getIdCategoria());
+
+		$this->setTitulo();
+		$this->setDescripcion();
+		$this->setPaginas();
+		$this->setFechaPublicacion();
+		$this->setIdCategoria();
+
+		// $this->validateTitulo($this->getTitulo());
+		// $this->validateDescripcion($this->getDescripcion());
+		// $this->validatePaginas();
+		// $this->validateFechaPublicacion($this->getFechaPublicacion());
+		// $this->validateIdCategoria($this->getIdCategoria());
 
 		$this->checkValidationErrors();
 
