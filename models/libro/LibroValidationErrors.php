@@ -32,9 +32,15 @@ abstract class LibroValidationErrors extends ApiResponse
 
 	protected function validatePaginas(mixed $paginas): void
 	{
+		// if (!is_numeric($paginas) || $paginas <= 0) {
+		// 	$this->setValidationError("El campo 'idLibro' debe ser un número entero superior o igual a 1");
+		// }
 		if (filter_var($paginas, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) === false) {
 			$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1");
 		}
+		// if (filter_var($paginas, FILTER_SANITIZE_NUMBER_INT, array("options" => array("min_range" => 1))) === false) {
+		// 	$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1");
+		// }
 	}
 
 	protected function validateFechaPublicacion(mixed $fechaPublicacion): void

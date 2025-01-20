@@ -4,12 +4,12 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
-	private ?int $idLibro;
-	private ?string $titulo;
-	private ?string $descripcion;
-	private ?int $paginas;
-	private ?string $fechaPublicacion;
-	private ?int $idCategoria;
+	private readonly ?int $idLibro;
+	private readonly ?string $titulo;
+	private readonly ?string $descripcion;
+	private readonly ?int $paginas;
+	private readonly ?string $fechaPublicacion;
+	private readonly ?int $idCategoria;
 
 	private ?array $portada;
 	private string $portadaRuta;
@@ -17,11 +17,15 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private string $relativeFolder = 'libros/';
 
-	public function __construct(
-	) {
+	public function __construct()
+	{
 		parent::__construct();
 
-		// $this->setPortada($portada);
+		$this->setTitulo();
+		$this->setDescripcion();
+		$this->setPaginas();
+		$this->setFechaPublicacion();
+		$this->setIdCategoria();
 	}
 
 	// MARK: GETTERS
@@ -41,7 +45,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->descripcion;
 	}
 
-	private function getPaginas(): ?int
+	private function getPaginas()
 	{
 		return $this->paginas;
 	}
@@ -75,29 +79,54 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->idLibro = intval($idLibro);
 	}
 
-	private function setTitulo(?string $titulo): void
+	private function setTitulo(): void
 	{
-		$this->titulo = $titulo;
+		if (isset($_POST["titulo"])) {
+			$titulo = filter_var($_POST["titulo"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if ($titulo !== "") {
+				$this->titulo = $titulo;
+			} else $this->titulo = null;
+		} else $this->titulo = null;
 	}
 
-	private function setDescripcion(?string $descripcion): void
+	private function setDescripcion(): void
 	{
-		$this->descripcion = $descripcion;
+		if (isset($_POST["descripcion"])) {
+			$descripcion = filter_var($_POST["descripcion"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if ($descripcion !== "") {
+				$this->descripcion = $descripcion;
+			} else $this->descripcion = null;
+		} else $this->descripcion = null;
 	}
 
-	private function setPaginas(?string $paginas): void
+	private function setPaginas(): void
 	{
-		$this->paginas = intval($paginas);
+		if (isset($_POST["paginas"])) {
+			$paginas = filter_var($_POST["paginas"], FILTER_SANITIZE_NUMBER_INT);
+			if ($paginas !== "") {
+				$this->paginas = intval($paginas);
+			} else $this->paginas = null;
+		} else $this->paginas = null;
 	}
 
-	private function setFechaPublicacion(?string $fechaPublicacion): void
+	private function setFechaPublicacion(): void
 	{
-		$this->fechaPublicacion = $fechaPublicacion;
+		if (isset($_POST["fecha_publicacion"])) {
+			$fechaPublicacion = filter_var($_POST["fecha_publicacion"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if ($fechaPublicacion !== "") {
+				$this->fechaPublicacion = $fechaPublicacion;
+			} else $this->fechaPublicacion = null;
+		} else $this->fechaPublicacion = null;
 	}
 
-	private function setIdCategoria(?string $idCategoria): void
+	private function setIdCategoria(): void
 	{
-		$this->idCategoria = intval($idCategoria);
+		if (isset($_POST["id_categoria"])) {
+			$idCategoria = filter_var($_POST["id_categoria"], FILTER_SANITIZE_NUMBER_INT);
+			if ($idCategoria !== "") {
+				$this->idCategoria = intval($idCategoria);
+			} else $this->idCategoria = null;
+		} else $this->idCategoria = null;
 	}
 
 	// MARK: IMAGE SETTERS
@@ -121,12 +150,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-		$this->setTitulo($_POST["titulo"] ?? "");
-		$this->setDescripcion($_POST["descripcion"] ?? "");
-		$this->setPaginas($_POST["paginas"] ?? "");
-		$this->setFechaPublicacion($_POST["fecha_publicacion"] ?? "");
-		$this->setIdCategoria($_POST["id_categoria"] ?? "");
-
 		$this->validateTitulo($this->getTitulo());
 		$this->validateDescripcion($this->getDescripcion());
 		$this->validatePaginas($this->getPaginas());
@@ -154,13 +177,19 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$query = $this->getConnection()->prepare($statement);
 
+		$titulo = $this->getTitulo();
+		$descripcion = $this->getDescripcion();
+		$paginas = $this->getPaginas();
+		$fechaPublicacion = $this->getFechaPublicacion();
+		$idCategoria = $this->getIdCategoria();
+
 		$query->bind_param(
 			"ssisi",
-			$this->titulo,
-			$this->descripcion,
-			$this->paginas,
-			$this->fechaPublicacion,
-			$this->idCategoria
+			$titulo,
+			$descripcion,
+			$paginas,
+			$fechaPublicacion,
+			$idCategoria
 		);
 
 		$query->execute();
