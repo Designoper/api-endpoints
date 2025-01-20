@@ -18,24 +18,10 @@ final class LibroWrite extends LibroIntegrityErrors
 	private string $relativeFolder = 'libros/';
 
 	public function __construct(
-		?string $idLibro = null,
-		?string $titulo = null,
-		?string $descripcion = null,
-		?string $paginas = null,
-		?string $fechaPublicacion = null,
-		?string $idCategoria = null,
-		?array $portada = null
 	) {
 		parent::__construct();
 
-		$this->setIdLibro($idLibro);
-		$this->setTitulo($titulo);
-		$this->setDescripcion($descripcion);
-		$this->setPaginas($paginas);
-		$this->setFechaPublicacion($fechaPublicacion);
-		$this->setIdCategoria($idCategoria);
-
-		$this->setPortada($portada);
+		// $this->setPortada($portada);
 	}
 
 	// MARK: GETTERS
@@ -135,6 +121,12 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
+		$this->setTitulo($_POST["titulo"] ?? "");
+		$this->setDescripcion($_POST["descripcion"] ?? "");
+		$this->setPaginas($_POST["paginas"] ?? "");
+		$this->setFechaPublicacion($_POST["fecha_publicacion"] ?? "");
+		$this->setIdCategoria($_POST["id_categoria"] ?? "");
+
 		$this->validateTitulo($this->getTitulo());
 		$this->validateDescripcion($this->getDescripcion());
 		$this->validatePaginas($this->getPaginas());
@@ -148,26 +140,24 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
+		// $portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
 
-		$this->setPortadaRutaRelativa($portadaRutaRelativa);
+		// $this->setPortadaRutaRelativa($portadaRutaRelativa);
 
-		$portadaRuta = $this->moveFile($this->getPortada(), $this->getRelativeFolder());
+		// $portadaRuta = $this->moveFile($this->getPortada(), $this->getRelativeFolder());
 
-		$this->setPortadaRuta($portadaRuta);
+		// $this->setPortadaRuta($portadaRuta);
 
 		$statement =
-			"INSERT INTO libros (titulo, descripcion, portada, portada_ruta_relativa, paginas, fecha_publicacion, id_categoria)
-		VALUES (?, ?, ?, ?, ?, ?, ?)";
+			"INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria)
+		VALUES (?, ?, ?, ?, ?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"ssssisi",
+			"ssisi",
 			$this->titulo,
 			$this->descripcion,
-			$this->portadaRuta,
-			$this->portadaRutaRelativa,
 			$this->paginas,
 			$this->fechaPublicacion,
 			$this->idCategoria
@@ -177,6 +167,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->close();
 
 		$this->setStatus(201);
+		$this->setMessage("Libro creado");
 		$this->getResponse();
 	}
 
@@ -229,7 +220,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 			$this->setStatus(200);
 			$this->setMessage('¡Libro modificado!');
-			$this->setUpdatedContent($libroModificado);
+			// $this->setUpdatedContent($libroModificado);
 		} else {
 			$this->setStatus(204);
 		}
@@ -248,7 +239,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->removeFile($this->getIdLibro());
+		// $this->removeFile($this->getIdLibro());
 
 		$statement =
 			"DELETE FROM libros

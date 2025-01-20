@@ -22,7 +22,7 @@ abstract class LibroIntegrityErrors extends LibroValidationErrors
 		$query->close();
 
 		if (!$libros) {
-			$this->setStatusCode(404);
+			$this->setStatus(404);
 			$this->setIntegrityError('¡No hay ningún libro!');
 		}
 	}
@@ -42,7 +42,7 @@ abstract class LibroIntegrityErrors extends LibroValidationErrors
 		$query->close();
 
 		if ($libro) {
-			$this->setStatusCode(409);
+			$this->setStatus(409);
 			$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
 		}
 	}
@@ -63,7 +63,7 @@ abstract class LibroIntegrityErrors extends LibroValidationErrors
 		$query->close();
 
 		if ($libro) {
-			$this->setStatusCode(409);
+			$this->setStatus(409);
 			$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
 		}
 	}
@@ -83,7 +83,7 @@ abstract class LibroIntegrityErrors extends LibroValidationErrors
 		$query->close();
 
 		if (!$libro) {
-			$this->setStatusCode(404);
+			$this->setStatus(404);
 			$this->setIntegrityError('¡El libro solicitado no existe!');
 		}
 	}
@@ -103,7 +103,7 @@ abstract class LibroIntegrityErrors extends LibroValidationErrors
 		$query->close();
 
 		if (!$categoria) {
-			$this->setStatusCode(404);
+			$this->setStatus(404);
 			$this->setIntegrityError('¡La categoria seleccionada no existe!');
 		}
 	}

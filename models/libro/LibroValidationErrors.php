@@ -12,21 +12,21 @@ abstract class LibroValidationErrors extends ApiResponse
 	protected function validateIdLibro(mixed $idLibro): void
 	{
 		if (!is_int($idLibro) || $idLibro <= 0) {
-			$this->setValidationError('El campo "idLibro" debe ser un número entero superior o igual a 1');
+			$this->setValidationError("El campo 'idLibro' debe ser un número entero superior o igual a 1");
 		}
 	}
 
 	protected function validateTitulo(mixed $titulo): void
 	{
 		if (empty($titulo)) {
-			$this->setValidationError('El campo "titulo" no puede estar vacío');
+			$this->setValidationError("El campo 'titulo' no puede estar vacío");
 		}
 	}
 
 	protected function validateDescripcion(mixed $descripcion): void
 	{
 		if (empty($descripcion)) {
-			$this->setValidationError('El campo "descripcion" no puede estar vacío');
+			$this->setValidationError("El campo 'descripcion' no puede estar vacío");
 		}
 	}
 
@@ -42,7 +42,7 @@ abstract class LibroValidationErrors extends ApiResponse
 		$dateTime = DateTime::createFromFormat('Y-m-d', $fechaPublicacion);
 
 		if (!$dateTime || $dateTime->format('Y-m-d') !== $fechaPublicacion) {
-			$this->setValidationError('El campo "fechaPublicacion" debe tener el formato yyyy-mm-dd');
+			$this->setValidationError("El campo 'fechaPublicacion' debe tener el formato yyyy-mm-dd");
 		}
 	}
 

@@ -8,6 +8,7 @@ abstract class ApiResponse extends MysqliConnect
     private readonly string $message;
     private readonly array $content;
     private array $validationErrors = [];
+    private array $integrityErrors = [];
     private array $response = [];
 
     protected function __construct()
@@ -35,6 +36,11 @@ abstract class ApiResponse extends MysqliConnect
     private function getValidationErrors(): array
     {
         return $this->validationErrors;
+    }
+
+    private function getIntegrityErrors(): array
+    {
+        return $this->integrityErrors;
     }
 
     //MARK: SETTERS
@@ -66,12 +72,32 @@ abstract class ApiResponse extends MysqliConnect
         $this->response['validationErrors'] = $this->getValidationErrors();
     }
 
-    protected function validationErrorsExist(): void
+    protected function setIntegrityError(string $integrityError): void
+    {
+        $this->integrityErrors[] = $integrityError;
+    }
+
+    private function setIntegrityErrors(): void
+    {
+        $this->response['integrityErrors'] = $this->getIntegrityErrors();
+    }
+
+    protected function checkValidationErrors(): void
     {
         if (count($this->getValidationErrors()) > 0) {
             $this->setStatus(400);
             $this->setMessage("Hay errores de validación");
             $this->setValidationErrors();
+            $this->getResponse();
+            exit();
+        }
+    }
+
+    protected function checkIntegrityErrors(): void
+    {
+        if (count($this->getIntegrityErrors()) > 0) {
+            $this->setMessage("Hay errores de integridad");
+            $this->setIntegrityErrors();
             $this->getResponse();
             exit();
         }

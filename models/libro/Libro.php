@@ -93,7 +93,7 @@ final class Libro extends LibroValidationErrors
 			$this->addStatement("AND libros.titulo LIKE ?");
 		}
 
-		$this->validationErrorsExist();
+		$this->checkValidationErrors();
 
 		$query = $this->getConnection()->prepare($this->getStatement());
 
