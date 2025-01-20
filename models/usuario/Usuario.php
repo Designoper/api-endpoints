@@ -1,14 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../universal/ApiResponse.php';
+require_once __DIR__ . '/UsuarioIntegrityErrors.php';
 
-final class Usuario extends ApiResponse
+final class Usuario extends UsuarioIntegrityErrors
 {
-	// private string $statement;
-	// private array $params = [];
-	// private string $types = '';
-	private string $usuario;
-	private string $password;
+	private readonly string $usuario;
+	private readonly string $password;
 
 	public function __construct()
 	{
@@ -58,6 +55,9 @@ final class Usuario extends ApiResponse
 
 		$this->checkValidationErrors();
 
+
+		$this->checkIntegrityErrors();
+
 		$statement = "SELECT *
 		FROM usuarios
 		WHERE nombre = ?
@@ -90,8 +90,17 @@ final class Usuario extends ApiResponse
 
 	public function createUsuario(): void
 	{
-		$usuario = $_POST["usuario"] ?? null;
-		$password = $_POST["password"] ?? null;
+		$this->setUsuario();
+		$this->setPassword();
+
+		$this->checkValidationErrors();
+
+		$usuario = $this->getUsuario();
+		$password = $this->getPassword();
+
+		$this->nombreUsuarioExists($usuario);
+
+		$this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO usuarios (nombre, password)
