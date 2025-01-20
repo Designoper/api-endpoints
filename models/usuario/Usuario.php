@@ -45,6 +45,11 @@ final class Usuario extends UsuarioIntegrityErrors
 			return;
 		}
 
+		if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $sanitizedInput)) {
+			$this->setValidationError("El campo 'password' debe tener como mínimo 8 carácteres, de los cuales 1 debe ser minúscula, 1 mayúscula y 1 número.");
+			return;
+		}
+
 		$this->password = $sanitizedInput;
 	}
 
