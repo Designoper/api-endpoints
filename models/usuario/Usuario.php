@@ -53,8 +53,8 @@ final class Usuario extends ApiResponse
 
 	public function login(): void
 	{
-		$usuario = $_GET["usuario"] ?? null;
-		$password = $_GET["password"] ?? null;
+		$usuario = $_POST["usuario"] ?? null;
+		$password = $_POST["password"] ?? null;
 
 		$statement = "SELECT *
 		FROM usuarios
