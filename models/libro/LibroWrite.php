@@ -4,12 +4,12 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
-	private readonly ?int $idLibro;
+	private readonly int $idLibro;
 	private readonly string $titulo;
-	private readonly ?string $descripcion;
+	private readonly string $descripcion;
 	private readonly int $paginas;
-	private readonly ?string $fechaPublicacion;
-	private readonly ?int $idCategoria;
+	private readonly string $fechaPublicacion;
+	private readonly int $idCategoria;
 
 	private ?array $portada;
 	private string $portadaRuta;
@@ -30,7 +30,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	// MARK: GETTERS
 
-	private function getIdLibro(): ?int
+	private function getIdLibro(): int
 	{
 		return $this->idLibro;
 	}
@@ -40,7 +40,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->titulo;
 	}
 
-	private function getDescripcion(): ?string
+	private function getDescripcion(): string
 	{
 		return $this->descripcion;
 	}
@@ -50,12 +50,12 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->paginas;
 	}
 
-	private function getFechaPublicacion(): ?string
+	private function getFechaPublicacion(): string
 	{
 		return $this->fechaPublicacion;
 	}
 
-	private function getIdCategoria(): ?int
+	private function getIdCategoria(): int
 	{
 		return $this->idCategoria;
 	}
@@ -86,17 +86,23 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		if (empty($sanitizedInput)) {
 			$this->setValidationError("El campo 'titulo' no puede estar vacío.");
-		} else $this->titulo = $sanitizedInput;
+			return;
+		}
+
+		$this->titulo = $sanitizedInput;
 	}
 
 	private function setDescripcion(): void
 	{
-		if (isset($_POST["descripcion"])) {
-			$descripcion = filter_var($_POST["descripcion"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			if ($descripcion !== "") {
-				$this->descripcion = $descripcion;
-			} else $this->descripcion = null;
-		} else $this->descripcion = null;
+		$input = $_POST['descripcion'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		if (empty($sanitizedInput)) {
+			$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
+			return;
+		}
+
+		$this->descripcion = $sanitizedInput;
 	}
 
 	private function setPaginas(): void
@@ -106,17 +112,30 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
 			$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-		} else $this->paginas = intval($sanitizedInput);
+			return;
+		}
+
+		$this->paginas = intval($sanitizedInput);
 	}
 
 	private function setFechaPublicacion(): void
 	{
-		if (isset($_POST["fecha_publicacion"])) {
-			$fechaPublicacion = filter_var($_POST["fecha_publicacion"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			if ($fechaPublicacion !== "") {
-				$this->fechaPublicacion = $fechaPublicacion;
-			} else $this->fechaPublicacion = null;
-		} else $this->fechaPublicacion = null;
+		$input = $_POST['fecha_publicacion'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		if (empty($sanitizedInput)) {
+			$this->setValidationError("El campo 'fecha_publicacion' no puede estar vacío.");
+			return;
+		}
+
+		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
+
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
+			$this->setValidationError("El campo 'fechaPublicacion' debe tener el formato yyyy-mm-dd");
+			return;
+		}
+
+		$this->fechaPublicacion = $sanitizedInput;
 	}
 
 	private function setIdCategoria(): void
