@@ -74,9 +74,17 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	// MARK: SETTERS
 
-	private function setIdLibro(?string $idLibro): void
+	private function setIdLibro(): void
 	{
-		$this->idLibro = intval($idLibro);
+		$input = $_POST['id_libro'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
+
+		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+			$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+			return;
+		}
+
+		$this->idLibro = intval($sanitizedInput);
 	}
 
 	private function setTitulo(): void
@@ -130,8 +138,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
-			$this->setValidationError("El campo 'fechaPublicacion' debe tener el formato yyyy-mm-dd");
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+			$this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.");
 			return;
 		}
 
@@ -140,12 +148,15 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setIdCategoria(): void
 	{
-		if (isset($_POST["id_categoria"])) {
-			$idCategoria = filter_var($_POST["id_categoria"], FILTER_SANITIZE_NUMBER_INT);
-			if ($idCategoria !== "") {
-				$this->idCategoria = intval($idCategoria);
-			} else $this->idCategoria = null;
-		} else $this->idCategoria = null;
+		$input = $_POST['id_categoria'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
+
+		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+			$this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+			return;
+		}
+
+		$this->idCategoria = intval($sanitizedInput);
 	}
 
 	// MARK: IMAGE SETTERS
