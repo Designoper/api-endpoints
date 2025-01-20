@@ -4,49 +4,59 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 
 final class Usuario extends ApiResponse
 {
-	private string $statement;
-	private array $params = [];
-	private string $types = '';
+	// private string $statement;
+	// private array $params = [];
+	// private string $types = '';
+	private string $usuario;
+	private string $password;
 
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	private function getStatement(): string
+	private function getUsuario(): string
 	{
-		return $this->statement;
+		return $this->usuario;
 	}
 
-	private function getParams(): array
+	private function getPassword(): string
 	{
-		return $this->params;
+		return $this->password;
 	}
 
-	private function getTypes(): string
+	private function setUsuario(): void
 	{
-		return $this->types;
+		$input = $_POST['usuario'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		if (empty($sanitizedInput)) {
+			$this->setValidationError("El campo 'usuario' no puede estar vacío.");
+			return;
+		}
+
+		$this->usuario = $sanitizedInput;
 	}
 
-	private function addStatement(string $statement): void
+	private function setPassword(): void
 	{
-		$this->statement .= ' ' . $statement;
-	}
+		$input = $_POST['password'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-	private function addParam(string|int $param): void
-	{
-		$this->params[] = $param;
-	}
+		if (empty($sanitizedInput)) {
+			$this->setValidationError("El campo 'password' no puede estar vacío.");
+			return;
+		}
 
-	private function addType(string $type): void
-	{
-		$this->types .= $type;
+		$this->password = $sanitizedInput;
 	}
 
 	public function login(): void
 	{
-		$usuario = $_POST["usuario"] ?? null;
-		$password = $_POST["password"] ?? null;
+		$this->setUsuario();
+		$this->setPassword();
+
+		$this->checkValidationErrors();
 
 		$statement = "SELECT *
 		FROM usuarios
@@ -54,6 +64,9 @@ final class Usuario extends ApiResponse
 		AND PASSWORD = ?";
 
 		$query = $this->getConnection()->prepare($statement);
+
+		$usuario = $this->getUsuario();
+		$password = $this->getPassword();
 
 		$query->bind_param(
 			"ss",
@@ -73,5 +86,30 @@ final class Usuario extends ApiResponse
 			$this->getResponse();
 			exit();
 		}
+	}
+
+	public function createUsuario(): void
+	{
+		$usuario = $_POST["usuario"] ?? null;
+		$password = $_POST["password"] ?? null;
+
+		$statement =
+			"INSERT INTO usuarios (nombre, password)
+			VALUES (?, ?)";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"ss",
+			$usuario,
+			$password
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->setStatus(201);
+		$this->setMessage("Usuario creado con éxito");
+		$this->getResponse();
 	}
 }

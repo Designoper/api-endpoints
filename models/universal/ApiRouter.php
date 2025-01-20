@@ -37,12 +37,32 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
+            $this->getCommonPath() . 'usuarios/',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->createUsuario();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
             $this->getCommonPath() . 'libros/',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->login();
                 $libro = new LibroWrite();
                 $libro->createLibro();
+            }
+        );
+
+        $this->setRoute(
+            'PUT',
+            $this->getCommonPath() . 'libros/',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->login();
+                $libro = new LibroWrite();
+                $libro->updateLibro();
             }
         );
 

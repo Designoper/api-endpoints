@@ -20,12 +20,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function __construct()
 	{
 		parent::__construct();
-
-		// $this->setTitulo();
-		// $this->setDescripcion();
-		// $this->setPaginas();
-		// $this->setFechaPublicacion();
-		// $this->setIdCategoria();
 	}
 
 	// MARK: GETTERS
@@ -180,14 +174,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-
 		$this->setTitulo();
 		$this->setDescripcion();
 		$this->setPaginas();
 		$this->setFechaPublicacion();
 		$this->setIdCategoria();
-
-
 
 		$this->checkValidationErrors();
 
@@ -237,12 +228,12 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function updateLibro(): void
 	{
-		$this->validateIdLibro($this->getIdLibro());
-		$this->validateTitulo($this->getTitulo());
-		$this->validateDescripcion($this->getDescripcion());
-		$this->validatePaginas($this->getPaginas());
-		$this->validateFechaPublicacion($this->getFechaPublicacion());
-		$this->validateIdCategoria($this->getIdCategoria());
+		$this->setIdLibro();
+		$this->setTitulo();
+		$this->setDescripcion();
+		$this->setPaginas();
+		$this->setFechaPublicacion();
+		$this->setIdCategoria();
 
 		$this->checkValidationErrors();
 
@@ -258,27 +249,36 @@ final class LibroWrite extends LibroIntegrityErrors
 		WHERE id_libro = ?";
 
 		$query = $this->getConnection()->prepare($statement);
+
+		$idLibro = $this->getIdLibro();
+		$titulo = $this->getTitulo();
+		$descripcion = $this->getDescripcion();
+		$paginas = $this->getPaginas();
+		$fechaPublicacion = $this->getFechaPublicacion();
+		$idCategoria = $this->getIdCategoria();
+
 		$query->bind_param(
 			"ssisii",
-			$this->titulo,
-			$this->descripcion,
-			$this->paginas,
-			$this->fechaPublicacion,
-			$this->idCategoria,
-			$this->idLibro
+			$titulo,
+			$descripcion,
+			$paginas,
+			$fechaPublicacion,
+			$idCategoria,
+			$idLibro
 		);
+
 		$query->execute();
 		$numFilas = $query->affected_rows;
 		$query->close();
 
 		if ($numFilas === 1) {
-			$libroModificado = [
-				"titulo" => $this->getTitulo(),
-				"descripcion" => $this->getDescripcion(),
-				"paginas" => $this->getPaginas(),
-				"fecha_de_publicacion" => $this->getFechaPublicacion(),
-				"Id categoria" => $this->getIdCategoria()
-			];
+			// $libroModificado = [
+			// 	"titulo" => $this->getTitulo(),
+			// 	"descripcion" => $this->getDescripcion(),
+			// 	"paginas" => $this->getPaginas(),
+			// 	"fecha_de_publicacion" => $this->getFechaPublicacion(),
+			// 	"Id categoria" => $this->getIdCategoria()
+			// ];
 
 			$this->setStatus(200);
 			$this->setMessage('¡Libro modificado!');
@@ -293,7 +293,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteLibro(): void
 	{
-		$this->validateIdLibro($this->getIdLibro());
+		$this->setIdLibro();
 
 		$this->checkValidationErrors();
 
@@ -309,9 +309,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$query = $this->getConnection()->prepare($statement);
 
+		$idLibro = $this->getIdLibro();
+
 		$query->bind_param(
 			"i",
-			$this->idLibro
+			$idLibro
 		);
 
 		$query->execute();

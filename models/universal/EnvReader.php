@@ -4,10 +4,10 @@ abstract class EnvReader
 {
 	protected function __construct()
 	{
-		$this->envRead();
+		$this->getEnvironmentVariables();
 	}
 
-	private function envRead(): void
+	private function getEnvironmentVariables(): void
 	{
 		$env_file = fopen('.env', 'r');
 
