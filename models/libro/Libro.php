@@ -4,17 +4,19 @@ require_once __DIR__ . '/LibroValidationErrors.php';
 
 final class Libro extends LibroValidationErrors
 {
-	private string $statement = "SELECT
-	libros.id_libro,
-	libros.titulo,
-	libros.descripcion,
-	libros.paginas,
-	libros.fecha_publicacion,
-	DATE_FORMAT(libros.fecha_publicacion, '%d/%m/%Y') AS fecha_publicacion_dd_mm_yyyy,
-	categorias.categoria
-		FROM libros
-		NATURAL JOIN categorias
-		WHERE 1=1";
+	private string $statement =
+	"SELECT
+		libros.id_libro,
+		libros.titulo,
+		libros.descripcion,
+		libros.paginas,
+		libros.fecha_publicacion,
+		DATE_FORMAT(libros.fecha_publicacion, '%d/%m/%Y')
+		AS fecha_publicacion_dd_mm_yyyy,
+		categorias.categoria
+	FROM libros
+	NATURAL JOIN categorias
+	WHERE 1=1";
 	private array $params = [];
 	private string $types = '';
 
@@ -55,14 +57,16 @@ final class Libro extends LibroValidationErrors
 
 	public function readLibros(): void
 	{
-		$statement = "SELECT
-			libros.id_libro,
-			libros.titulo,
-			libros.descripcion,
-			libros.paginas,
-			libros.fecha_publicacion,
-			DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y') AS fecha_publicacion_dd_mm_yyyy,
-			categorias.categoria
+		$statement =
+			"SELECT
+				libros.id_libro,
+				libros.titulo,
+				libros.descripcion,
+				libros.paginas,
+				libros.fecha_publicacion,
+				DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y')
+				AS fecha_publicacion_dd_mm_yyyy,
+				categorias.categoria
 			FROM libros
 			NATURAL JOIN categorias
 			ORDER BY libros.titulo";
