@@ -91,6 +91,7 @@ final class Libro extends LibroValidationErrors
 		$min_fecha = $_GET["min_fecha"] ?? "";
 		$max_fecha = $_GET["max_fecha"] ?? "";
 		$titulo = $_GET["titulo"] ?? "";
+		$categoria = $_GET["categoria"] ?? "";
 
 		if ($min_paginas !== "") {
 			$this->validatePaginas($min_paginas);
@@ -124,6 +125,12 @@ final class Libro extends LibroValidationErrors
 			$this->addParam("%" . $titulo . "%");
 			$this->addType('s');
 			$this->addStatement("AND libros.titulo LIKE ?");
+		}
+
+		if ($categoria !== "") {
+			$this->addParam($categoria);
+			$this->addType('i');
+			$this->addStatement("AND libros.id_categoria = ?");
 		}
 
 		$this->checkValidationErrors();
