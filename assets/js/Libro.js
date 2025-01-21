@@ -129,7 +129,7 @@ export class Libro extends Categoria {
 
                 <h3>${libro['titulo']}</h3>
                 <img src='${libro['portada']}' alt='Portada de ${libro['titulo']}' loading='lazy'>
-                <p>Descripción: ${libro['descripcion']}</p>
+                <p>${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
                 <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
                 <p>Categoria: ${libro['categoria']}</p>

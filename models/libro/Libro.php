@@ -147,7 +147,7 @@ final class Libro extends LibroValidationErrors
 		$message =
 			$libros
 			? 'Libros obtenidos'
-			: 'No hay coincidencias';
+			: 'Ningún libro coincide con el criterio seleccionado';
 
 		$query->close();
 
