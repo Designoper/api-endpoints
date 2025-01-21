@@ -81,6 +81,19 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->idLibro = intval($sanitizedInput);
 	}
 
+	private function setIdLibroPUT($input): void
+	{
+		// $input = $data['id_libro'] ?? null;
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
+
+		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+			$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+			return;
+		}
+
+		$this->idLibro = intval($sanitizedInput);
+	}
+
 	private function setTitulo(): void
 	{
 		$input = $_POST['titulo'] ?? null;
@@ -293,7 +306,10 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteLibro(): void
 	{
-		$this->setIdLibro();
+		$input = file_get_contents('php://input');
+		$data = json_decode($input, true) ?? [];
+
+		$this->setIdLibroPUT($data["id_libro"] ?? null);
 
 		$this->checkValidationErrors();
 

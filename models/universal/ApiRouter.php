@@ -22,6 +22,15 @@ final class ApiRouter extends Sanitizer
             $this->getCommonPath() . 'libros/',
             function (): void {
                 $libro = new Libro();
+                $libro->readLibros();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            $this->getCommonPath() . 'libros/filter/',
+            function (): void {
+                $libro = new Libro();
                 $libro->filterLibros();
             }
         );
@@ -63,6 +72,17 @@ final class ApiRouter extends Sanitizer
                 $usuario->login();
                 $libro = new LibroWrite();
                 $libro->updateLibro();
+            }
+        );
+
+        $this->setRoute(
+            'DELETE',
+            $this->getCommonPath() . 'libros/',
+            function (): void {
+                // $usuario = new Usuario();
+                // $usuario->login();
+                $libro = new LibroWrite();
+                $libro->deleteLibro();
             }
         );
 

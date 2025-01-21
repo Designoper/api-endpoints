@@ -1,7 +1,8 @@
 import { Categoria } from "./Categoria.js";
 
 export class Libro extends Categoria {
-    static librosEndpoint = 'http://localhost/api-libros/controllers/LibroController.php';
+    static librosEndpoint = 'http://localhost/api-endpoints/api/libros/';
+    static librosFilterEndpoint = 'http://localhost/api-endpoints/api/libros/filter/';
     static fetchOutput = document.getElementById('fetchoutput');
     static errorContainer = document.getElementById('errorcontainer');
 
@@ -25,7 +26,7 @@ export class Libro extends Categoria {
 
         const data = this.collectInputs(form);
         const response = await this.fetchData({
-            url: Libro.librosEndpoint,
+            url: Libro.librosFilterEndpoint,
             method: 'GET',
             data: data
         });
@@ -130,7 +131,7 @@ export class Libro extends Categoria {
                 <img src='${libro['portada']}' alt='Portada de ${libro['titulo']}' loading='lazy'>
                 <p>Descripción: ${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
-                <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
+                <p>Fecha de publicación: ${libro['fecha_publicacion']}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
                 <button type='button'>Modificar</button>

@@ -51,6 +51,35 @@ final class Libro extends LibroValidationErrors
 		$this->types .= $type;
 	}
 
+	public function readLibros(): void
+	{
+		$statement = "SELECT
+			libros.titulo,
+			libros.descripcion,
+			libros.paginas,
+			DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y') AS fecha_publicacion,
+			categorias.categoria
+			FROM libros
+			NATURAL JOIN categorias
+			ORDER BY libros.titulo";
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->execute();
+
+		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$libros
+			? 'Libros obtenidos'
+			: 'No hay coincidencias';
+
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		$this->getResponse();
+	}
+
 	public function filterLibros(): void
 	{
 		$min_paginas = $_GET["min_paginas"] ?? "";
