@@ -1,7 +1,7 @@
 import { Base } from "./Base.js";
 
 export class Categoria extends Base {
-	static categoriasEndpoint = 'http://localhost/api-libros/controllers/CategoriaController.php';
+	static categoriasEndpoint = 'http://localhost/api-endpoints/api/categorias/';
 	static categoriasCache;
 
 	constructor() {
