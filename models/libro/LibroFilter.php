@@ -150,6 +150,13 @@ final class LibroFilter extends LibroValidationErrors
 
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+		$dateTime = DateTime::createFromFormat('Y-m-d', $sanitizedInput);
+
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+			$this->setValidationError("El campo 'min_fecha' debe tener el formato yyyy-mm-dd");
+			return;
+		}
+
 		$this->minimoFechaPublicacion = $sanitizedInput;
 	}
 
@@ -163,6 +170,13 @@ final class LibroFilter extends LibroValidationErrors
 		}
 
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		$dateTime = DateTime::createFromFormat('Y-m-d', $sanitizedInput);
+
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+			$this->setValidationError("El campo 'max_fecha' debe tener el formato yyyy-mm-dd");
+			return;
+		}
 
 		$this->maximoFechaPublicacion = $sanitizedInput;
 	}
