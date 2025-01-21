@@ -20,12 +20,12 @@ final class LibroFilter extends LibroValidationErrors
 	private array $params = [];
 	private string $types = '';
 
-	private readonly int|string $minimoPaginas;
-	private readonly int|string $maximoPaginas;
-	private readonly string $minimoFechaPublicacion;
-	private readonly string $maximoFechaPublicacion;
-	private readonly string $titulo;
-	private readonly string $categoria;
+	private readonly ?int $minimoPaginas;
+	private readonly ?int $maximoPaginas;
+	private readonly ?string $minimoFechaPublicacion;
+	private readonly ?string $maximoFechaPublicacion;
+	private readonly ?string $titulo;
+	private readonly ?string $categoria;
 
 	public function __construct()
 	{
@@ -69,36 +69,35 @@ final class LibroFilter extends LibroValidationErrors
 
 
 
-	private function getTitulo(): string
+	private function getTitulo(): ?string
 	{
 		return $this->titulo;
 	}
 
-	private function getMinimoPaginas(): string|int
+	private function getMinimoPaginas(): ?int
 	{
 		return $this->minimoPaginas;
 	}
 
-	private function getMaximoPaginas(): string|int
+	private function getMaximoPaginas(): ?int
 	{
 		return $this->maximoPaginas;
 	}
 
-	private function getMinimoFechaPublicacion(): string
+	private function getMinimoFechaPublicacion(): ?string
 	{
 		return $this->minimoFechaPublicacion;
 	}
 
-	private function getMaximoFechaPublicacion(): string
+	private function getMaximoFechaPublicacion(): ?string
 	{
 		return $this->maximoFechaPublicacion;
 	}
 
-	private function getCategoria(): string
+	private function getCategoria(): ?string
 	{
 		return $this->categoria;
 	}
-
 
 	//MARK: SETTERS
 
@@ -107,7 +106,7 @@ final class LibroFilter extends LibroValidationErrors
 		$input = $_GET['min_paginas'] ?? "";
 
 		if ($input === "") {
-			$this->minimoPaginas = $input;
+			$this->minimoPaginas = null;
 			return;
 		}
 
@@ -126,7 +125,7 @@ final class LibroFilter extends LibroValidationErrors
 		$input = $_GET['max_paginas'] ?? "";
 
 		if ($input === "") {
-			$this->maximoPaginas = $input;
+			$this->maximoPaginas = null;
 			return;
 		}
 
@@ -144,6 +143,11 @@ final class LibroFilter extends LibroValidationErrors
 	{
 		$input = $_GET['min_fecha'] ?? "";
 
+		if ($input === "") {
+			$this->minimoFechaPublicacion = null;
+			return;
+		}
+
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 		$this->minimoFechaPublicacion = $sanitizedInput;
@@ -152,6 +156,11 @@ final class LibroFilter extends LibroValidationErrors
 	private function setMaximoFechaPublicacion(): void
 	{
 		$input = $_GET['max_fecha'] ?? "";
+
+		if ($input === "") {
+			$this->maximoFechaPublicacion = null;
+			return;
+		}
 
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -172,7 +181,7 @@ final class LibroFilter extends LibroValidationErrors
 		$input = $_GET['id_categoria'] ?? "";
 
 		if ($input === "") {
-			$this->categoria = $input;
+			$this->categoria = null;
 			return;
 		}
 
@@ -197,43 +206,43 @@ final class LibroFilter extends LibroValidationErrors
 		$this->setTitulo();
 		$this->setCategoria();
 
-		if ($this->getMinimoPaginas() !== "") {
+		$this->checkValidationErrors();
+
+		if ($this->getMinimoPaginas()) {
 			$this->addParam($this->getMinimoPaginas());
 			$this->addType('i');
 			$this->addStatement("AND libros.paginas >= ?");
 		}
 
-		if ($this->getMaximoPaginas() !== "") {
+		if ($this->getMaximoPaginas()) {
 			$this->addParam($this->getMaximoPaginas());
 			$this->addType('i');
 			$this->addStatement("AND libros.paginas <= ?");
 		}
 
-		if ($this->getMinimoFechaPublicacion() !== "") {
+		if ($this->getMinimoFechaPublicacion()) {
 			$this->addParam($this->getMinimoFechaPublicacion());
 			$this->addType('s');
 			$this->addStatement("AND libros.fecha_publicacion >= ?");
 		}
 
-		if ($this->getMaximoFechaPublicacion() !== "") {
+		if ($this->getMaximoFechaPublicacion()) {
 			$this->addParam($this->getMaximoFechaPublicacion());
 			$this->addType('s');
 			$this->addStatement("AND libros.fecha_publicacion <= ?");
 		}
 
-		if ($this->getTitulo() !== "") {
+		if ($this->getTitulo()) {
 			$this->addParam("%" . $this->getTitulo() . "%");
 			$this->addType('s');
 			$this->addStatement("AND libros.titulo LIKE ?");
 		}
 
-		if ($this->getCategoria() !== "") {
+		if ($this->getCategoria()) {
 			$this->addParam($this->getCategoria());
 			$this->addType('i');
 			$this->addStatement("AND libros.id_categoria = ?");
 		}
-
-		$this->checkValidationErrors();
 
 		$query = $this->getConnection()->prepare($this->getStatement());
 
