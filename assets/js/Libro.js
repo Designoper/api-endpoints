@@ -131,7 +131,7 @@ export class Libro extends Categoria {
                 <img src='${libro['portada']}' alt='Portada de ${libro['titulo']}' loading='lazy'>
                 <p>Descripción: ${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
-                <p>Fecha de publicación: ${libro['fecha_publicacion']}</p>
+                <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
                 <button type='button'>Modificar</button>

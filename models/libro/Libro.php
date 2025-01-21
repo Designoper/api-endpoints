@@ -5,9 +5,11 @@ require_once __DIR__ . '/LibroValidationErrors.php';
 final class Libro extends LibroValidationErrors
 {
 	private string $statement = "SELECT
+	libros.id_libro,
 	libros.titulo,
 	libros.descripcion,
 	libros.paginas,
+	libros.fecha_publicacion,
 	DATE_FORMAT(libros.fecha_publicacion, '%d/%m/%Y') AS fecha_publicacion,
 	categorias.categoria
 		FROM libros
@@ -54,10 +56,12 @@ final class Libro extends LibroValidationErrors
 	public function readLibros(): void
 	{
 		$statement = "SELECT
+			libros.id_libro,
 			libros.titulo,
 			libros.descripcion,
 			libros.paginas,
-			DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y') AS fecha_publicacion,
+			libros.fecha_publicacion,
+			DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y') AS fecha_publicacion_dd_mm_yyyy,
 			categorias.categoria
 			FROM libros
 			NATURAL JOIN categorias
