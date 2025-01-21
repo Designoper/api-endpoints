@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/libro/Libro.php';
+require_once __DIR__ . '/../../models/libro/LibroFilter.php';
 require_once __DIR__ . '/../../models/libro/LibroWrite.php';
 require_once __DIR__ . '/../../models/categoria/Categoria.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
@@ -30,7 +31,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             $this->getCommonPath() . 'libros/filter/',
             function (): void {
-                $libro = new Libro();
+                $libro = new LibroFilter();
                 $libro->filterLibros();
             }
         );

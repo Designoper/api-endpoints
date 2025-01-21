@@ -20,6 +20,13 @@ final class Libro extends LibroValidationErrors
 	private array $params = [];
 	private string $types = '';
 
+	private readonly int $minimoPaginas;
+	private readonly int $maximoPaginas;
+	private readonly int $minimoFechaPublicacion;
+	private readonly int $maximoFechaPublicacion;
+	private readonly string $titulo;
+	private readonly string $categoria;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -53,6 +60,19 @@ final class Libro extends LibroValidationErrors
 	private function addType(string $type): void
 	{
 		$this->types .= $type;
+	}
+
+	private function setMinimoPaginas(): void
+	{
+		$input = $_GET['paginas'] ?? "";
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
+
+		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+			$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+			return;
+		}
+
+		$this->minimoPaginas = intval($sanitizedInput);
 	}
 
 	public function readLibros(): void
