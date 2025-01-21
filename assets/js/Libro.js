@@ -134,7 +134,7 @@ export class Libro extends Categoria {
                 <p>Fecha de publicación: ${libro['fecha_publicacion']}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
-                <button type='button'>Modificar</button>
+                <a href="./editar.html?id_libro=${libro['id_libro']}&titulo=${libro['titulo']}&descripcion=${libro['descripcion']}&paginas=${libro['paginas']}">Editar</a>
 
                 <dialog>
 

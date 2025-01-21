@@ -54,6 +54,7 @@ final class Libro extends LibroValidationErrors
 	public function readLibros(): void
 	{
 		$statement = "SELECT
+			libros.id_libro,
 			libros.titulo,
 			libros.descripcion,
 			libros.paginas,
