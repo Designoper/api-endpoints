@@ -58,8 +58,8 @@ final class ApiRouter extends Sanitizer
             'POST',
             $this->getCommonPath() . 'libros/',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->login();
+                // $usuario = new Usuario();
+                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }

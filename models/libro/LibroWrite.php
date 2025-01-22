@@ -99,7 +99,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$input = $_POST['titulo'] ?? null;
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-		if (empty($sanitizedInput)) {
+		if ($sanitizedInput === "" || $sanitizedInput === null) {
 			$this->setValidationError("El campo 'titulo' no puede estar vacío.");
 			return;
 		}
@@ -112,7 +112,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$input = $_POST['descripcion'] ?? null;
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-		if (empty($sanitizedInput)) {
+		if ($sanitizedInput === "" || $sanitizedInput === null) {
 			$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
 			return;
 		}
@@ -138,7 +138,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$input = $_POST['fecha_publicacion'] ?? null;
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-		if (empty($sanitizedInput)) {
+		if ($sanitizedInput === "" || $sanitizedInput === null) {
 			$this->setValidationError("El campo 'fecha_publicacion' no puede estar vacío.");
 			return;
 		}
