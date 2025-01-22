@@ -275,7 +275,6 @@ final class LibroFilter extends LibroValidationErrors
 		}
 
 		if ($this->getCriterioOrden()) {
-			$param = "";
 			switch ($this->getCriterioOrden()) {
 				case 'tituloAsc':
 					$param = "libros.titulo ASC";
