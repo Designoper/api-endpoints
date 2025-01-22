@@ -219,6 +219,11 @@ final class LibroFilter extends LibroValidationErrors
 	{
 		$input = $_GET['criterio_orden'] ?? "";
 
+		if ($input === "") {
+			$this->criterioOrden = null;
+			return;
+		}
+
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 		$this->criterioOrden = $sanitizedInput;
