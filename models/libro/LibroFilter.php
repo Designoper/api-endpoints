@@ -26,6 +26,7 @@ final class LibroFilter extends LibroValidationErrors
 	private readonly ?string $maximoFechaPublicacion;
 	private readonly ?string $titulo;
 	private readonly ?string $categoria;
+	private readonly ?string $criterioOrden;
 
 	public function __construct()
 	{
@@ -97,6 +98,11 @@ final class LibroFilter extends LibroValidationErrors
 	private function getCategoria(): ?string
 	{
 		return $this->categoria;
+	}
+
+	private function getCriterioOrden(): ?string
+	{
+		return $this->criterioOrden;
 	}
 
 	//MARK: SETTERS
@@ -209,6 +215,15 @@ final class LibroFilter extends LibroValidationErrors
 		$this->categoria = intval($sanitizedInput);
 	}
 
+	private function setCriterioOrden(): void
+	{
+		$input = $_GET['criterio_orden'] ?? "";
+
+		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		$this->criterioOrden = $sanitizedInput;
+	}
+
 	//MARK: FUNCTION
 
 	public function filterLibros(): void
@@ -219,6 +234,7 @@ final class LibroFilter extends LibroValidationErrors
 		$this->setMaximoFechaPublicacion();
 		$this->setTitulo();
 		$this->setCategoria();
+		$this->setCriterioOrden();
 
 		$this->checkValidationErrors();
 
@@ -256,6 +272,33 @@ final class LibroFilter extends LibroValidationErrors
 			$this->addParam($this->getCategoria());
 			$this->addType('i');
 			$this->addStatement("AND libros.id_categoria = ?");
+		}
+
+		if ($this->getCriterioOrden()) {
+			switch ($this->getCriterioOrden()) {
+				case 'tituloAsc':
+					$param = "libros.titulo ASC";
+					break;
+				case 'tituloDesc':
+					$param = "libros.titulo DESC";
+					break;
+				case 'paginasAsc':
+					$param = "libros.paginas ASC";
+					break;
+				case 'paginasDesc':
+					$param = "libros.paginas DESC";
+					break;
+				case 'fechaAsc':
+					$param = "libros.fecha_publicacion ASC";
+					break;
+				case 'fechaDesc':
+					$param = "libros.fecha_publicacion DESC";
+					break;
+			}
+			$this->addParam($param);
+			$this->addType('s');
+			$query = "ORDER BY " . $param;
+			$this->addStatement($query);
 		}
 
 		$query = $this->getConnection()->prepare($this->getStatement());
