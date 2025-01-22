@@ -275,6 +275,7 @@ final class LibroFilter extends LibroValidationErrors
 		}
 
 		if ($this->getCriterioOrden()) {
+			$param = "";
 			switch ($this->getCriterioOrden()) {
 				case 'tituloAsc':
 					$param = "libros.titulo ASC";
@@ -294,11 +295,12 @@ final class LibroFilter extends LibroValidationErrors
 				case 'fechaDesc':
 					$param = "libros.fecha_publicacion DESC";
 					break;
+
+				default:
+					$param = "libros.titulo ASC";
 			}
-			$this->addParam($param);
-			$this->addType('s');
-			$query = "ORDER BY " . $param;
-			$this->addStatement($query);
+
+			$this->addStatement("ORDER BY " . $param);
 		}
 
 		$query = $this->getConnection()->prepare($this->getStatement());
