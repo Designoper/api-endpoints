@@ -224,6 +224,20 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
+		$permitedValues = [
+			'tituloAsc',
+			'tituloDesc',
+			'paginasAsc',
+			'paginasDesc',
+			'fechaAsc',
+			'fechaDesc'
+		];
+
+		if (!in_array($input, $permitedValues, true)) {
+			$this->setValidationError("El campo 'criterio_orden' solo acepta los siguientes valores: 'tituloAsc','tituloDesc','paginasAsc','paginasDesc','fechaAsc','fechaDesc'.");
+			return;
+		}
+
 		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 		$this->criterioOrden = $sanitizedInput;
@@ -299,9 +313,6 @@ final class LibroFilter extends LibroValidationErrors
 				case 'fechaDesc':
 					$param = "libros.fecha_publicacion DESC";
 					break;
-
-				default:
-					$param = "libros.titulo ASC";
 			}
 
 			$this->addStatement("ORDER BY " . $param);
