@@ -25,7 +25,7 @@ final class LibroFilter extends LibroValidationErrors
 	private readonly ?string $minimoFechaPublicacion;
 	private readonly ?string $maximoFechaPublicacion;
 	private readonly ?string $titulo;
-	private readonly ?string $categoria;
+	private readonly ?int $idCategoria;
 	private readonly ?string $criterioOrden;
 
 	public function __construct()
@@ -95,9 +95,9 @@ final class LibroFilter extends LibroValidationErrors
 		return $this->maximoFechaPublicacion;
 	}
 
-	private function getCategoria(): ?string
+	private function getIdCategoria(): ?int
 	{
-		return $this->categoria;
+		return $this->idCategoria;
 	}
 
 	private function getCriterioOrden(): ?string
@@ -154,16 +154,14 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $sanitizedInput);
-
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
 			$this->setValidationError("El campo 'min_fecha' debe tener el formato yyyy-mm-dd");
 			return;
 		}
 
-		$this->minimoFechaPublicacion = $sanitizedInput;
+		$this->minimoFechaPublicacion = $input;
 	}
 
 	private function setMaximoFechaPublicacion(): void
@@ -175,33 +173,34 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $sanitizedInput);
-
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
 			$this->setValidationError("El campo 'max_fecha' debe tener el formato yyyy-mm-dd");
 			return;
 		}
 
-		$this->maximoFechaPublicacion = $sanitizedInput;
+		$this->maximoFechaPublicacion = $input;
 	}
 
 	private function setTitulo(): void
 	{
 		$input = $_GET['titulo'] ?? "";
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if ($input === "") {
+			$this->titulo = null;
+			return;
+		}
 
-		$this->titulo = $sanitizedInput;
+		$this->titulo = $input;
 	}
 
-	private function setCategoria(): void
+	private function setIdCategoria(): void
 	{
 		$input = $_GET['id_categoria'] ?? "";
 
 		if ($input === "") {
-			$this->categoria = null;
+			$this->idCategoria = null;
 			return;
 		}
 
@@ -212,7 +211,7 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$this->categoria = intval($sanitizedInput);
+		$this->idCategoria = intval($sanitizedInput);
 	}
 
 	private function setCriterioOrden(): void
@@ -238,9 +237,7 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
-		$this->criterioOrden = $sanitizedInput;
+		$this->criterioOrden = $input;
 	}
 
 	//MARK: FUNCTION
@@ -252,7 +249,7 @@ final class LibroFilter extends LibroValidationErrors
 		$this->setMinimoFechaPublicacion();
 		$this->setMaximoFechaPublicacion();
 		$this->setTitulo();
-		$this->setCategoria();
+		$this->setIdCategoria();
 		$this->setCriterioOrden();
 
 		$this->checkValidationErrors();
@@ -287,8 +284,8 @@ final class LibroFilter extends LibroValidationErrors
 			$this->addStatement("AND libros.titulo LIKE ?");
 		}
 
-		if ($this->getCategoria()) {
-			$this->addParam($this->getCategoria());
+		if ($this->getIdCategoria()) {
+			$this->addParam($this->getIdCategoria());
 			$this->addType('i');
 			$this->addStatement("AND libros.id_categoria = ?");
 		}

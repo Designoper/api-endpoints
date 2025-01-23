@@ -96,28 +96,26 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setTitulo(): void
 	{
-		$input = $_POST['titulo'] ?? null;
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$input = $_POST['titulo'] ?? "";
 
-		if ($sanitizedInput === "" || $sanitizedInput === null) {
+		if ($input === "") {
 			$this->setValidationError("El campo 'titulo' no puede estar vacío.");
 			return;
 		}
 
-		$this->titulo = $sanitizedInput;
+		$this->titulo = $input;
 	}
 
 	private function setDescripcion(): void
 	{
-		$input = $_POST['descripcion'] ?? null;
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$input = $_POST['descripcion'] ?? "";
 
-		if ($sanitizedInput === "" || $sanitizedInput === null) {
+		if ($input === "") {
 			$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
 			return;
 		}
 
-		$this->descripcion = $sanitizedInput;
+		$this->descripcion = $input;
 	}
 
 	private function setPaginas(): void
@@ -135,22 +133,21 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setFechaPublicacion(): void
 	{
-		$input = $_POST['fecha_publicacion'] ?? null;
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$input = $_POST['fecha_publicacion'] ?? "";
 
-		if ($sanitizedInput === "" || $sanitizedInput === null) {
+		if ($input === "") {
 			$this->setValidationError("El campo 'fecha_publicacion' no puede estar vacío.");
 			return;
 		}
 
 		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $sanitizedInput) {
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
 			$this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.");
 			return;
 		}
 
-		$this->fechaPublicacion = $sanitizedInput;
+		$this->fechaPublicacion = $input;
 	}
 
 	private function setIdCategoria(): void
