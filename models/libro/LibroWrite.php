@@ -195,7 +195,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->tituloExists($this->getTitulo());
 		$this->idCategoriaExists($this->getIdCategoria());
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		// $portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
 
@@ -251,12 +251,16 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->tituloUpdateExists($this->getTitulo(), $this->getIdLibro());
 		$this->idCategoriaExists($this->getIdCategoria());
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
 			"UPDATE libros
-		SET titulo = ?, descripcion = ?, paginas = ?, fecha_publicacion = ?, id_categoria = ?
-		WHERE id_libro = ?";
+			SET titulo = ?,
+			descripcion = ?,
+			paginas = ?,
+			fecha_publicacion = ?,
+			id_categoria = ?
+			WHERE id_libro = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -312,13 +316,13 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->idLibroExists($this->getIdLibro());
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		// $this->removeFile($this->getIdLibro());
 
 		$statement =
 			"DELETE FROM libros
-		WHERE id_libro = ?";
+			WHERE id_libro = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -342,10 +346,10 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$this->librosExists();
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
-			"DELETE FROM libros";
+			"TRUNCATE TABLE libros";
 
 		$query = $this->getConnection()->prepare($statement);
 		$query->execute();
