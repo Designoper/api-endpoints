@@ -234,15 +234,13 @@ export class Libro extends Categoria {
 
     async printLibros(libros) {
 
-        await this.setCategoriasCache();
-
         if (libros.content.length === 0) {
             Libro.fetchOutput.innerHTML = "";
             Libro.errorContainer.innerHTML = libros.message;
         }
 
         else {
-            const categorias = this.getCategoriasCache();
+            const categorias = await this.getCategorias();
             const content = Libro.librosTemplate(libros.content, categorias.content);
             Libro.fetchOutput.innerHTML = content;
             Libro.errorContainer.innerHTML = "";

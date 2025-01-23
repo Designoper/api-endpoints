@@ -2,7 +2,6 @@ import { Base } from "./Base.js";
 
 export class Categoria extends Base {
 	static categoriasEndpoint = 'http://localhost/api-endpoints/api/categorias/';
-	static categoriasCache;
 
 	constructor() {
 		super();
@@ -18,24 +17,13 @@ export class Categoria extends Base {
 		return response;
 	}
 
-	async setCategoriasCache() {
-		const response = await this.getCategorias();
-		Categoria.categoriasCache = response;
-	}
-
-	getCategoriasCache() {
-		return Categoria.categoriasCache;
-	}
-
 	static categoriasTemplate({
 		fetchedCategorias,
-		libroCategoria = null
 	}) {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
-				value='${categoria['id_categoria']}'
-				${categoria['categoria'] === libroCategoria ? 'selected' : ''}>
+				value='${categoria['id_categoria']}'>
 				${categoria['categoria']}
 			</option>`
 		).join('');
@@ -43,15 +31,13 @@ export class Categoria extends Base {
 		return categorias;
 	}
 
-	printCategorias({
+	async printCategorias({
 		place,
-		libroCategoria = null
 	}) {
-		const categorias = this.getCategoriasCache();
+		const categorias = await this.getCategorias();
 
 		const content = Categoria.categoriasTemplate({
 			fetchedCategorias: categorias.content,
-			libroCategoria: libroCategoria
 		});
 
 		place.outerHTML = content;
