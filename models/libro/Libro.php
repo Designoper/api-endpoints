@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/LibroValidationErrors.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
-final class Libro extends LibroValidationErrors
+final class Libro extends ApiResponse
 {
 	public function __construct()
 	{

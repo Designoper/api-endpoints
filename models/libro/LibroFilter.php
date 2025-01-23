@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/LibroValidationErrors.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
-final class LibroFilter extends LibroValidationErrors
+final class LibroFilter extends ApiResponse
 {
 	private string $statement =
 	"SELECT
