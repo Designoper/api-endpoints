@@ -123,7 +123,7 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$this->minimoPaginas = intval($sanitizedInput);
+		$this->minimoPaginas = (int) $sanitizedInput;
 	}
 
 	private function setMaximoPaginas(): void
@@ -142,7 +142,7 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$this->maximoPaginas = intval($sanitizedInput);
+		$this->maximoPaginas = (int) $sanitizedInput;
 	}
 
 	private function setMinimoFechaPublicacion(): void
@@ -211,7 +211,7 @@ final class LibroFilter extends LibroValidationErrors
 			return;
 		}
 
-		$this->idCategoria = intval($sanitizedInput);
+		$this->idCategoria = (int) $sanitizedInput;
 	}
 
 	private function setCriterioOrden(): void

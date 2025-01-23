@@ -78,7 +78,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			return;
 		}
 
-		$this->idLibro = intval($sanitizedInput);
+		$this->idLibro = (int) $sanitizedInput;
 	}
 
 	private function setIdLibroPUT($input): void
@@ -91,7 +91,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			return;
 		}
 
-		$this->idLibro = intval($sanitizedInput);
+		$this->idLibro = (int) $sanitizedInput;
 	}
 
 	private function setTitulo(): void
@@ -128,7 +128,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			return;
 		}
 
-		$this->paginas = intval($sanitizedInput);
+		$this->paginas = (int) $sanitizedInput;
 	}
 
 	private function setFechaPublicacion(): void
@@ -160,7 +160,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			return;
 		}
 
-		$this->idCategoria = intval($sanitizedInput);
+		$this->idCategoria = (int) $sanitizedInput;
 	}
 
 	// MARK: IMAGE SETTERS
