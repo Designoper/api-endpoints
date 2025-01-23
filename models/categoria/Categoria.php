@@ -29,7 +29,7 @@ final class Categoria extends ApiResponse
 		$message =
 			$categorias
 			? 'Categorias obtenidas'
-			: 'No hay coincidencias';
+			: 'No hay categorias';
 
 		$query->close();
 
