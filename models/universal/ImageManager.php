@@ -67,7 +67,7 @@ abstract class ImageManager extends ApiResponse
 
 		$this->setExtraDirectories($extraDirectories);
 
-		$targetDirectory = realpath(__DIR__ . '/../../assets/img/' . $this->getExtraDirectories()) . '/';
+		$targetDirectory = __DIR__ . '/../../assets/img/' . $this->getExtraDirectories();
 
 		move_uploaded_file(
 			$file["tmp_name"],

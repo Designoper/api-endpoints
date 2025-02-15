@@ -18,7 +18,7 @@ CREATE TABLE libros (
 	titulo VARCHAR(50) NOT NULL UNIQUE,
 	descripcion VARCHAR(200) NOT NULL,
 	portada VARCHAR(100) NOT NULL,
-	portada_ruta_relativa VARCHAR(50),
+	portada_ruta_relativa VARCHAR(100),
 	paginas INT NOT NULL,
 	fecha_publicacion DATE NOT NULL,
 	id_categoria INT NOT NULL,
