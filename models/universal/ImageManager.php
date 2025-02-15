@@ -7,7 +7,7 @@ abstract class ImageManager extends ApiResponse
 	private string $root = 'http://localhost/api-endpoints/';
 	private string $genericPathImage = 'assets/img/';
 	private string $extraDirectories = '';
-	private string $relativePath = '../../';
+	private string $relativePath = __DIR__ . '/../../';
 	private string $defaultImage = 'default.jpg';
 
 	protected function __construct()
@@ -67,11 +67,11 @@ abstract class ImageManager extends ApiResponse
 
 		$this->setExtraDirectories($extraDirectories);
 
-		$targetDirectory = __DIR__ . '/../../assets/img/' . $this->getExtraDirectories();
+		$destination = $this->getRelativePath() . $this->getGenericPathImage() . $this->getExtraDirectories() . $file["name"];
 
 		move_uploaded_file(
 			$file["tmp_name"],
-			$targetDirectory . $file["name"]
+			$destination
 		);
 
 		return $this->getRoot() . $this->getGenericPathImage() . $this->getExtraDirectories() . $file["name"];
@@ -87,7 +87,7 @@ abstract class ImageManager extends ApiResponse
 			return;
 		}
 
-		unlink(__DIR__ . '/' . $this->getRelativePath() . $path);
+		unlink($this->getRelativePath() . $path);
 	}
 
 
