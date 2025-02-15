@@ -203,7 +203,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
 		$this->setPortadaRutaRelativa($portadaRutaRelativa);
 
-		$portadaRuta = $this->moveFile($this->getPortada(), $this->getRelativeFolder());
+		$portadaRuta = $this->uploadFile($this->getPortada(), $this->getRelativeFolder());
 		$this->setPortadaRuta($portadaRuta);
 
 
@@ -331,9 +331,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteLibro(): void
 	{
-		// $input = file_get_contents('php://input');
-		// $data = json_decode($input, true) ?? [];
-
 		$this->setIdLibro();
 
 		$this->checkValidationErrors();
@@ -342,7 +339,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->removeFile($this->getIdLibro());
+		$this->deleteFile($this->getIdLibro());
 
 		$statement =
 			"DELETE FROM libros
