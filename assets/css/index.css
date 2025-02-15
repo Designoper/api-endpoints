@@ -14,7 +14,6 @@ main {
 		border-radius: 0.5em;
 		gap: 1em 10%;
 		/* grid-template-columns: repeat(2, 1fr); */
-
 	}
 
 	dialog {
@@ -31,8 +30,6 @@ main {
 		gap: 2em;
 		/* grid-template-columns: repeat(2, 1fr); */
 
-
-
 		fieldset {
 			&:last-of-type {
 				display: flex;
@@ -41,6 +38,14 @@ main {
 			}
 
 			/* grid-column: 1/-1; */
+		}
+
+		span {
+			display: none;
+		}
+
+		:user-invalid+span {
+			display: initial;
 		}
 	}
 

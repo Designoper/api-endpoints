@@ -61,6 +61,16 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->portada;
 	}
 
+	private function getPortadaRuta(): string
+	{
+		return $this->portadaRuta;
+	}
+
+	private function getPortadaRutaRelativa(): ?string
+	{
+		return $this->portadaRutaRelativa;
+	}
+
 	private function getRelativeFolder(): string
 	{
 		return $this->relativeFolder;
@@ -80,19 +90,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->idLibro = (int) $sanitizedInput;
 	}
-
-	// private function setIdLibroPUT($input): void
-	// {
-	// 	// $input = $data['id_libro'] ?? null;
-	// 	$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
-
-	// 	if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-	// 		$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
-	// 		return;
-	// 	}
-
-	// 	$this->idLibro = (int) $sanitizedInput;
-	// }
 
 	private function setTitulo(): void
 	{
@@ -165,9 +162,10 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	// MARK: IMAGE SETTERS
 
-	private function setPortada(?array $portada): void
+	private function setPortada(): void
 	{
-		$this->portada = $portada;
+		$file = $_FILES["portada"] ?? null;
+		$this->portada = $file;
 	}
 
 	private function setPortadaRuta(string $portadaRuta): void
@@ -189,38 +187,64 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->setPaginas();
 		$this->setFechaPublicacion();
 		$this->setIdCategoria();
+		$this->setPortada();
 
 		$this->checkValidationErrors();
 
 		$this->tituloExists($this->getTitulo());
 		$this->idCategoriaExists($this->getIdCategoria());
 
-		// $this->checkIntegrityErrors();
+		$this->checkIntegrityErrors();
 
-		// $portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
 
-		// $this->setPortadaRutaRelativa($portadaRutaRelativa);
 
-		// $portadaRuta = $this->moveFile($this->getPortada(), $this->getRelativeFolder());
 
-		// $this->setPortadaRuta($portadaRuta);
+
+		$portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
+		$this->setPortadaRutaRelativa($portadaRutaRelativa);
+
+		$portadaRuta = $this->moveFile($this->getPortada(), $this->getRelativeFolder());
+		$this->setPortadaRuta($portadaRuta);
+
+
+
 
 		$statement =
-			"INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria)
-		VALUES (?, ?, ?, ?, ?)";
+			"INSERT INTO libros (
+				titulo,
+				descripcion,
+				portada,
+				portada_ruta_relativa,
+				paginas,
+				fecha_publicacion,
+				id_categoria
+			)
+			VALUES (
+				?,
+				?,
+				?,
+				?,
+				?,
+				?,
+				?
+			)";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
+		// $portada = $this->getPortadaRuta();
+		// $portadaRutaRelativa = $this->getPortadaRutaRelativa();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
 
 		$query->bind_param(
-			"ssisi",
+			"ssssisi",
 			$titulo,
 			$descripcion,
+			$portadaRuta,
+			$portadaRutaRelativa,
 			$paginas,
 			$fechaPublicacion,
 			$idCategoria

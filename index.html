@@ -35,6 +35,7 @@
 							<li>
 								<label for="titulo">Título *</label>
 								<textarea id="titulo" name="titulo" required></textarea>
+								<span>El campo 'titulo' no puede estar vacío.</span>
 							</li>
 							<li>
 								<label for="descripcion">Descripción *</label>
@@ -43,14 +44,15 @@
 							<li>
 								<label for="paginas">Páginas *</label>
 								<input type="number" id="paginas" name="paginas" required min="1">
+								<span>El campo 'paginas' debe ser un número igual o superior a 1.</span>
 							</li>
 							<li>
 								<label for="fecha_publicacion">Fecha de publicación *</label>
 								<input type="date" id="fecha_publicacion" name="fecha_publicacion" required>
 							</li>
 							<li>
-								<label for="image">Portada</label>
-								<input type="file" id="image" name="image" accept="image/*">
+								<label for="portada">Portada</label>
+								<input type="file" id="portada" name="portada" accept="image/*">
 							</li>
 							<li>
 								<label for="id_categoria">Categoria *</label>

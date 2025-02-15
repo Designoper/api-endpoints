@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../universal/ApiResponse.php';
+require_once __DIR__ . '/../universal/ImageManager.php';
 
-abstract class LibroIntegrityErrors extends ApiResponse
+abstract class LibroIntegrityErrors extends ImageManager
 {
 	protected function __construct()
 	{

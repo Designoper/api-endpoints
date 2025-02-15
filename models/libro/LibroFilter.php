@@ -8,6 +8,7 @@ final class LibroFilter extends ApiResponse
 	"SELECT
 		libros.id_libro,
 		libros.titulo,
+		libros.portada,
 		libros.descripcion,
 		libros.paginas,
 		libros.fecha_publicacion,

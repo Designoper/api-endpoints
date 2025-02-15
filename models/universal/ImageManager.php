@@ -1,13 +1,13 @@
 <?php
 
-require_once __DIR__ . '/Response.php';
+require_once __DIR__ . '/ApiResponse.php';
 
-abstract class ImageManager extends Response
+abstract class ImageManager extends ApiResponse
 {
-	private string $root = 'http://localhost/api-libros/';
+	private string $root = 'http://localhost/api-endpoints/';
 	private string $genericPathImage = 'assets/img/';
 	private string $extraDirectories = '';
-	private string $relativePath = '../';
+	private string $relativePath = '../../';
 	private string $defaultImage = 'default.jpg';
 
 	protected function __construct()
@@ -75,6 +75,8 @@ abstract class ImageManager extends Response
 		return $this->getRoot() . $this->getGenericPathImage() . $this->getExtraDirectories() . $file["name"];
 	}
 
+
+
 	protected function removeFile(int $idLibro): void
 	{
 		$path = $this->retrieveRelativePath($idLibro);
@@ -86,11 +88,14 @@ abstract class ImageManager extends Response
 		unlink($this->getRelativePath() . $path);
 	}
 
+
+
 	private function retrieveRelativePath(int $idLibro): ?string
 	{
 		$statement =
-			"SELECT portada_ruta_relativa FROM libros
-		WHERE id_libro = ?";
+			"SELECT portada_ruta_relativa
+			FROM libros
+			WHERE id_libro = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 

@@ -36,7 +36,7 @@ final class Categoria extends ApiResponse
 		$this->setStatus(200);
 		$this->setMessage($message);
 		$this->setContent($categorias);
-		header('Cache-Control: public, max-age=31536000, must-revalidate');
+		// header('Cache-Control: public, max-age=31536000, must-revalidate');
 		$this->getResponse();
 	}
 }

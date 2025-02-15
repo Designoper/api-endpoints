@@ -17,8 +17,8 @@ CREATE TABLE libros (
 	id_libro INT PRIMARY KEY AUTO_INCREMENT,
 	titulo VARCHAR(50) NOT NULL UNIQUE,
 	descripcion VARCHAR(200) NOT NULL,
-	-- portada VARCHAR(50) NOT NULL,
-	-- portada_ruta_relativa VARCHAR(50),
+	portada VARCHAR(100) NOT NULL,
+	portada_ruta_relativa VARCHAR(50),
 	paginas INT NOT NULL,
 	fecha_publicacion DATE NOT NULL,
 	id_categoria INT NOT NULL,
@@ -37,10 +37,10 @@ INSERT INTO categorias (categoria) VALUES
 ("Deporte"),
 ("Religión");
 
-INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria) VALUES
-("Pedro y Paco", "Dos grandes amigos", 27, '2006-06-02', 4),
-("Don Quijote", "Un caballero con delirios", 600, '1505-12-07', 2);
+-- INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria) VALUES
+-- ("Pedro y Paco", "Dos grandes amigos", 27, '2006-06-02', 4),
+-- ("Don Quijote", "Un caballero con delirios", 600, '1505-12-07', 2);
 
-INSERT INTO usuarios (nombre, password) VALUES
-("Juan", "1234"),
-("Manolo", "12345");
+-- INSERT INTO usuarios (nombre, password) VALUES
+-- ("Juan", "1234"),
+-- ("Manolo", "12345");

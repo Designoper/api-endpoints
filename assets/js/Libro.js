@@ -140,6 +140,7 @@ export class Libro extends Categoria {
             `<article>
 
                 <h3>${libro['titulo']}</h3>
+                <img src="${libro['portada']}" alt="">
                 <p>${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
                 <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
@@ -171,8 +172,8 @@ export class Libro extends Categoria {
                             </li>
 
                             <li>
-								<label for="image">Portada</label>
-								<input type="file" id="image" name="image" accept="image/*">
+								<label for="portada">Portada</label>
+								<input type="file" id="portada" name="portada" accept="image/*">
 							</li>
 
                             <li>
