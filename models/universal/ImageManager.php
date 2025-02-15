@@ -87,7 +87,7 @@ abstract class ImageManager extends ApiResponse
 			return;
 		}
 
-		unlink($this->getRelativePath() . $path);
+		unlink(__DIR__ . '/' . $this->getRelativePath() . $path);
 	}
 
 

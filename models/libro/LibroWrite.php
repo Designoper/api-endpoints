@@ -342,7 +342,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		// $this->removeFile($this->getIdLibro());
+		$this->removeFile($this->getIdLibro());
 
 		$statement =
 			"DELETE FROM libros
