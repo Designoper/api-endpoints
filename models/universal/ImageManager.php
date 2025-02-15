@@ -65,7 +65,7 @@ abstract class ImageManager extends ApiResponse
 			return $this->getRoot() . $this->getGenericPathImage() . $this->getDefaultImage();
 		}
 
-		$this->setExtraDirectories($extraDirectories ?? "");
+		$this->setExtraDirectories($extraDirectories);
 
 		move_uploaded_file(
 			$file["tmp_name"],

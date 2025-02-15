@@ -233,8 +233,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
-		// $portada = $this->getPortadaRuta();
-		// $portadaRutaRelativa = $this->getPortadaRutaRelativa();
+		$portadaRuta = $this->getPortadaRuta();
+		$portadaRutaRelativa = $this->getPortadaRutaRelativa();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
