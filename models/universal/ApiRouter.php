@@ -56,7 +56,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'libros/',
+            $this->getCommonPath() . 'libros/create/',
             function (): void {
                 // $usuario = new Usuario();
                 // $usuario->login();
@@ -66,19 +66,19 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
-            'PUT',
-            $this->getCommonPath() . 'libros/',
+            'POST',
+            $this->getCommonPath() . 'libros/update/',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->login();
+                // $usuario = new Usuario();
+                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->updateLibro();
             }
         );
 
         $this->setRoute(
-            'DELETE',
-            $this->getCommonPath() . 'libros/',
+            'POST',
+            $this->getCommonPath() . 'libros/delete/',
             function (): void {
                 // $usuario = new Usuario();
                 // $usuario->login();

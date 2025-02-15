@@ -12,6 +12,12 @@ export class Libro extends Categoria {
 
     // MARK: CRUD FUNCTIONS
 
+
+
+
+
+    // MARK: GET LIBROS
+
     async getLibros() {
 
         const response = await this.fetchData({
@@ -21,6 +27,8 @@ export class Libro extends Categoria {
 
         await this.printLibros(response);
     }
+
+    // MARK: FILTER LIBROS
 
     async filterLibros(form, dialog) {
 
@@ -39,16 +47,16 @@ export class Libro extends Categoria {
         })
     }
 
+    // MARK: CREATE LIBRO
+
     async createLibro(form, errorContainer, dialog) {
 
         const data = this.collectInputs(form);
         const response = await this.fetchData({
-            url: Libro.librosEndpoint,
+            url: 'http://localhost/api-endpoints/api/libros/create/',
             method: 'POST',
             data: data
         });
-
-        console.log(response)
 
         if (response.ok) {
             this.resetForm({
@@ -65,12 +73,14 @@ export class Libro extends Categoria {
         }
     }
 
+    // MARK: UPDATE LIBRO
+
     async updateLibro(form, errorContainer, dialog) {
 
         const data = this.collectInputs(form);
         const response = await this.fetchData({
-            url: Libro.librosEndpoint,
-            method: 'PUT',
+            url: 'http://localhost/api-endpoints/api/libros/update/',
+            method: 'POST',
             data: data
         });
 
@@ -99,12 +109,14 @@ export class Libro extends Categoria {
         }
     }
 
+    // MARK: DELETE LIBRO
+
     async deleteLibro(form) {
 
         const data = this.collectInputs(form);
         const response = await this.fetchData({
-            url: Libro.librosEndpoint,
-            method: 'DELETE',
+            url: 'http://localhost/api-endpoints/api/libros/delete/',
+            method: 'POST',
             data: data,
         });
 
@@ -138,7 +150,7 @@ export class Libro extends Categoria {
                 <dialog>
 
                     <form>
-                        <input type='number' value='${libro['id_libro']}' name='idLibro' hidden>
+                        <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
                         <h3>Modificando ${libro['titulo']}</h3>
 
@@ -164,13 +176,13 @@ export class Libro extends Categoria {
 							</li>
 
                             <li>
-                                <label for='fechaPublicacion'>Fecha de publicación *</label>
-                                <input type='date' id='fechaPublicacion' name='fechaPublicacion' value='${libro['fecha_publicacion']}' required>
+                                <label for='fecha_publicacion'>Fecha de publicación *</label>
+                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro['fecha_publicacion']}' required>
                             </li>
 
                             <li>
                                 <label for='categoria'>Categoria *</label>
-                                <select name='idCategoria' id='categoria' required>
+                                <select name='id_categoria' id='categoria' required>
                                     <option value=''>Seleccione una categoria...</option>
                                     ${fetchedCategorias.map(categoria =>
                 `<option
@@ -208,7 +220,7 @@ export class Libro extends Categoria {
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
                     <form>
-                        <input type='number' value='${libro['id_libro']}' name='idLibro' hidden>
+                        <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
                         <fieldset>
 
