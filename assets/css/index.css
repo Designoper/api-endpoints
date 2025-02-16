@@ -32,9 +32,15 @@ main {
 
 		fieldset {
 			&:last-of-type {
-				display: flex;
+				/* display: flex;
 				justify-content: center;
-				gap: 1em;
+				gap: 1em; */
+
+				menu {
+					display: flex;
+					justify-content: center;
+					gap: 1em;
+				}
 			}
 
 			/* grid-column: 1/-1; */
@@ -76,6 +82,10 @@ main {
 	li {
 		display: grid;
 		gap: 0.5em;
+
+		&:has([type="checkbox"]) {
+			display: block;
+		}
 	}
 
 	button {

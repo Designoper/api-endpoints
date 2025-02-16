@@ -272,7 +272,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->tituloUpdateExists($this->getTitulo(), $this->getIdLibro());
 		$this->idCategoriaExists($this->getIdCategoria());
 
-		// $this->checkIntegrityErrors();
+		$this->checkIntegrityErrors();
 
 		$statement =
 			"UPDATE libros

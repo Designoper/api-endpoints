@@ -177,6 +177,11 @@ export class Libro extends Categoria {
 							</li>
 
                             <li>
+                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada">
+								<label for="eliminar_portada">Eliminar portada actual</label>
+							</li>
+
+                            <li>
                                 <label for='fecha_publicacion'>Fecha de publicación *</label>
                                 <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro['fecha_publicacion']}' required>
                             </li>
