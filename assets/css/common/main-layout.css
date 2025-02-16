@@ -27,6 +27,7 @@ main {
 	#fetchoutput {
 		display: grid;
 		gap: 3em;
+		align-content: flex-start;
 	}
 
 	@media screen and (1024px <=width) {
@@ -45,7 +46,6 @@ main {
 						grid-area: p1;
 					}
 				}
-
 			}
 
 			&:nth-of-type(2) {
