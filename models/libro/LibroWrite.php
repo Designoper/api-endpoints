@@ -206,9 +206,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$portadaRuta = $this->uploadFile($this->getPortada(), $this->getRelativeFolder());
 		$this->setPortadaRuta($portadaRuta);
 
-
-
-
 		$statement =
 			"INSERT INTO libros (
 				titulo,
