@@ -265,6 +265,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->setPaginas();
 		$this->setFechaPublicacion();
 		$this->setIdCategoria();
+		$this->setPortada();
 
 		$this->checkValidationErrors();
 

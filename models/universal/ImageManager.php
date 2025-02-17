@@ -51,11 +51,9 @@ abstract class ImageManager extends ApiResponse
 
     protected function setFileRelativePath(?array $file = null, string $additional = ""): ?string
     {
-        if ($file === null) {
-            return null;
-        }
-
-        return $this->getImagePath() . $additional . $file["name"];
+        return $file
+            ? $this->getImagePath() . $additional . $file["name"]
+            : null;
     }
 
     // MARK: FILE OPERATIONS
@@ -82,11 +80,9 @@ abstract class ImageManager extends ApiResponse
     {
         $path = $this->getFileRelativePathById($bookId);
 
-        if ($path === null) {
-            return;
+        if ($path) {
+            unlink($this->getProjectRoot() . $path);
         }
-
-        unlink($this->getProjectRoot() . $path);
     }
 
     private function getFileRelativePathById(int $bookId): ?string
