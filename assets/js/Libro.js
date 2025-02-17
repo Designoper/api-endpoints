@@ -177,7 +177,7 @@ export class Libro extends Categoria {
 							</li>
 
                             <li>
-                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada">
+                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada" value="eliminar_portada">
 								<label for="eliminar_portada">Eliminar portada actual</label>
 							</li>
 

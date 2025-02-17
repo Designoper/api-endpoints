@@ -10,6 +10,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly int $paginas;
 	private readonly string $fechaPublicacion;
 	private readonly int $idCategoria;
+	private readonly ?string $checkbox;
 
 	private ?array $portada;
 
@@ -48,6 +49,11 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function getIdCategoria(): int
 	{
 		return $this->idCategoria;
+	}
+
+	private function getCheckbox(): ?string
+	{
+		return $this->checkbox;
 	}
 
 	// MARK: IMAGE GETTERS
@@ -141,6 +147,23 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->idCategoria = (int) $sanitizedInput;
 	}
 
+	private function setCheckbox(): void
+	{
+		$input = $_POST['eliminar_portada'] ?? null;
+
+		if ($input === null) {
+			$this->checkbox = $input;
+			return;
+		}
+
+		if ($input !== "eliminar_portada") {
+			$this->setValidationError("El unico valor válido es eliminar_portada");
+			return;
+		}
+
+		$this->checkbox = $input;
+	}
+
 	// MARK: IMAGE SETTERS
 
 	private function setPortada(): void
@@ -223,7 +246,9 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->setPaginas();
 		$this->setFechaPublicacion();
 		$this->setIdCategoria();
+
 		$this->setPortada();
+		$this->setCheckbox();
 
 		$this->checkValidationErrors();
 
@@ -233,10 +258,13 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
+		$portada = $this->updateFile($this->getPortada(), $this->getCheckbox(), $this->getIdLibro());
+
 		$statement =
 			"UPDATE libros
 				SET titulo = ?,
 				descripcion = ?,
+				portada = ?,
 				paginas = ?,
 				fecha_publicacion = ?,
 				id_categoria = ?
@@ -252,9 +280,10 @@ final class LibroWrite extends LibroIntegrityErrors
 		$idCategoria = $this->getIdCategoria();
 
 		$query->bind_param(
-			"ssisii",
+			"sssisii",
 			$titulo,
 			$descripcion,
+			$portada,
 			$paginas,
 			$fechaPublicacion,
 			$idCategoria,
