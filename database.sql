@@ -17,8 +17,7 @@ CREATE TABLE libros (
 	id_libro INT PRIMARY KEY AUTO_INCREMENT,
 	titulo VARCHAR(50) NOT NULL UNIQUE,
 	descripcion VARCHAR(200) NOT NULL,
-	portada VARCHAR(100) NOT NULL,
-	portada_ruta_relativa VARCHAR(100),
+	portada VARCHAR(100) DEFAULT 'http://localhost/api-endpoints/assets/img/default/default.jpg',
 	paginas INT NOT NULL,
 	fecha_publicacion DATE NOT NULL,
 	id_categoria INT NOT NULL,
@@ -36,6 +35,16 @@ INSERT INTO categorias (categoria) VALUES
 ("Gastronomía"),
 ("Deporte"),
 ("Religión");
+
+-- CREATE TRIGGER antes_actualizar_ejemplo
+-- BEFORE UPDATE ON libros
+-- FOR EACH ROW
+-- BEGIN
+--     IF libros.portada IS NULL THEN
+--         SET libros.nombre = 'ValorPorDefecto';
+--     END IF;
+-- END;
+
 
 -- INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria) VALUES
 -- ("Pedro y Paco", "Dos grandes amigos", 27, '2006-06-02', 4),

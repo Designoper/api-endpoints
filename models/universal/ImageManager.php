@@ -4,7 +4,7 @@ require_once __DIR__ . '/ApiResponse.php';
 
 abstract class ImageManager extends ApiResponse
 {
-    private string $baseUrl = 'http://localhost/api-endpoints/';
+    private readonly string $host;
     private string $imagePath = 'assets/img/';
     private string $additionalDirs = '';
     private string $projectRoot = __DIR__ . '/../../';
@@ -13,13 +13,15 @@ abstract class ImageManager extends ApiResponse
     protected function __construct()
     {
         parent::__construct();
+
+        $this->setHost();
     }
 
     // MARK: GETTERS
 
-    private function getBaseUrl(): string
+    private function getHost(): string
     {
-        return $this->baseUrl;
+        return $this->host;
     }
 
     private function getImagePath(): string
@@ -44,43 +46,43 @@ abstract class ImageManager extends ApiResponse
 
     // MARK: SETTERS
 
-    private function setAdditionalDirs(string $additionalDirs): void
+    private function setHost(): void
     {
-        $this->additionalDirs = $additionalDirs;
-    }
+        $esquema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-    protected function setFileRelativePath(?array $file = null, string $additional = ""): ?string
-    {
-        return $file
-            ? $this->getImagePath() . $additional . $file["name"]
-            : null;
+        $host = $_SERVER['HTTP_HOST'];
+
+        $this->host = $esquema . $host;
     }
 
     // MARK: FILE OPERATIONS
 
-    protected function uploadFile(?array $file = null, string $additionalDirs = ""): string
+    protected function uploadFile(?array $file = null): string
     {
         if ($file === null) {
-            return $this->getBaseUrl() . $this->getImagePath() . $this->getDefaultImage();
+            return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
         }
 
-        $this->setAdditionalDirs($additionalDirs);
+        $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
 
-        $destination = $this->getProjectRoot() . $this->getImagePath() . $this->getAdditionalDirs() . $file["name"];
+        $destination = $this->getProjectRoot() . $this->getImagePath() . $file["name"];
 
         move_uploaded_file(
             $file["tmp_name"],
             $destination
         );
 
-        return $this->getBaseUrl() . $this->getImagePath() . $this->getAdditionalDirs() . $file["name"];
+        return $url_completa;
     }
 
     protected function deleteFile(int $bookId): void
     {
         $path = $this->getFileRelativePathById($bookId);
 
-        if ($path) {
+        // $parsed_url = parse_url($url_completa);
+
+
+        if ($path !== $this->getHost() . '/api-endpoints/assets/img/default/default.jpg') {
             unlink($this->getProjectRoot() . $path);
         }
     }
@@ -88,7 +90,7 @@ abstract class ImageManager extends ApiResponse
     private function getFileRelativePathById(int $bookId): ?string
     {
         $statement =
-            "SELECT portada_ruta_relativa
+            "SELECT portada
             FROM libros
             WHERE id_libro = ?";
 

@@ -12,10 +12,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly int $idCategoria;
 
 	private ?array $portada;
-	private string $portadaRuta;
-	private ?string $portadaRutaRelativa;
-
-	private string $relativeFolder = 'libros/';
 
 	public function __construct()
 	{
@@ -59,21 +55,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function getPortada(): ?array
 	{
 		return $this->portada;
-	}
-
-	private function getPortadaRuta(): string
-	{
-		return $this->portadaRuta;
-	}
-
-	private function getPortadaRutaRelativa(): ?string
-	{
-		return $this->portadaRutaRelativa;
-	}
-
-	private function getRelativeFolder(): string
-	{
-		return $this->relativeFolder;
 	}
 
 	// MARK: SETTERS
@@ -168,16 +149,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->portada = $file;
 	}
 
-	private function setPortadaRuta(string $portadaRuta): void
-	{
-		$this->portadaRuta = $portadaRuta;
-	}
-
-	private function setPortadaRutaRelativa(?string $portadaRutaRelativa): void
-	{
-		$this->portadaRutaRelativa = $portadaRutaRelativa;
-	}
-
 	// MARK: CREATE
 
 	public function createLibro(): void
@@ -196,28 +167,18 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-
-
-
-
-		$portadaRutaRelativa = $this->setFileRelativePath($this->getPortada(), $this->getRelativeFolder());
-		$this->setPortadaRutaRelativa($portadaRutaRelativa);
-
-		$portadaRuta = $this->uploadFile($this->getPortada(), $this->getRelativeFolder());
-		$this->setPortadaRuta($portadaRuta);
+		$portada = $this->uploadFile($this->getPortada());
 
 		$statement =
 			"INSERT INTO libros (
 				titulo,
 				descripcion,
 				portada,
-				portada_ruta_relativa,
 				paginas,
 				fecha_publicacion,
 				id_categoria
 			)
 			VALUES (
-				?,
 				?,
 				?,
 				?,
@@ -230,18 +191,15 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
-		$portadaRuta = $this->getPortadaRuta();
-		$portadaRutaRelativa = $this->getPortadaRutaRelativa();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
 
 		$query->bind_param(
-			"ssssisi",
+			"sssisi",
 			$titulo,
 			$descripcion,
-			$portadaRuta,
-			$portadaRutaRelativa,
+			$portada,
 			$paginas,
 			$fechaPublicacion,
 			$idCategoria
