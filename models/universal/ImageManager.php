@@ -77,13 +77,16 @@ abstract class ImageManager extends ApiResponse
 
     protected function deleteFile(int $bookId): void
     {
-        $path = $this->getFileRelativePathById($bookId);
+        $imageUrl = $this->getFileRelativePathById($bookId);
 
-        // $parsed_url = parse_url($url_completa);
+        $pos = strpos($imageUrl, 'default/default.jpg');
 
-
-        if ($path !== $this->getHost() . '/api-endpoints/assets/img/default/default.jpg') {
-            unlink($this->getProjectRoot() . $path);
+        if ($pos) {
+            return;
+        } else {
+            $pos = strpos($imageUrl, 'assets');
+            $nueva_ruta = substr($imageUrl, $pos);
+            unlink($this->getProjectRoot() . $nueva_ruta);
         }
     }
 
