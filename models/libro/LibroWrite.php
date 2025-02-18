@@ -12,7 +12,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly int $idCategoria;
 
 	private readonly bool $checkbox;
-	private ?array $portada;
+	private readonly ?array $portada;
 
 	public function __construct()
 	{
@@ -51,16 +51,16 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->idCategoria;
 	}
 
-	private function getCheckbox(): bool
-	{
-		return $this->checkbox;
-	}
-
 	// MARK: IMAGE GETTERS
 
 	private function getPortada(): ?array
 	{
 		return $this->portada;
+	}
+
+	private function getCheckbox(): bool
+	{
+		return $this->checkbox;
 	}
 
 	// MARK: SETTERS
@@ -147,20 +147,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->idCategoria = (int) $sanitizedInput;
 	}
 
-	private function setCheckbox(): void
-	{
-		// $input = $_POST['eliminar_portada'] ?? null;
-		// Verifica si el checkbox está presente en $_POST
-		if (isset($_POST['eliminar_portada'])) {
-			$input = $_POST['eliminar_portada'];
-
-			if ($input === "") {
-				$this->checkbox = true;
-			} else $this->setValidationError("El único valor válido para eliminar_portada es la cadena vacía ('')");
-			// return;
-		} else $this->checkbox = false;
-	}
-
 	// MARK: IMAGE SETTERS
 
 	private function setPortada(): void
@@ -168,11 +154,20 @@ final class LibroWrite extends LibroIntegrityErrors
 		if (isset($_FILES["portada"]) && $_FILES["portada"]["error"] === UPLOAD_ERR_OK) {
 			$this->portada = $_FILES["portada"];
 		} else {
-			// Manejar el caso cuando no se ha enviado una imagen o ha habido un error en la carga
 			$this->portada = null;
 		}
 	}
 
+	private function setCheckbox(): void
+	{
+		if (isset($_POST['eliminar_portada'])) {
+			$input = $_POST['eliminar_portada'];
+
+			if ($input === "") {
+				$this->checkbox = true;
+			} else $this->setValidationError("El único valor válido para eliminar_portada es la cadena vacía ('')");
+		} else $this->checkbox = false;
+	}
 
 	// MARK: CREATE
 

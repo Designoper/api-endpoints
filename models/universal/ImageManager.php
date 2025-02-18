@@ -57,7 +57,7 @@ abstract class ImageManager extends ApiResponse
 
     // MARK: FILE OPERATIONS
 
-    protected function uploadFile(?array $file = null): string
+    protected function uploadFile(?array $file): string
     {
         if ($file === null) {
             return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
@@ -75,11 +75,11 @@ abstract class ImageManager extends ApiResponse
         return $url_completa;
     }
 
-    protected function updateFile(?array $file = null, bool $checkbox, int $bookId): string
+    protected function updateFile(?array $file, bool $checkbox, int $bookId): string
     {
         if ($file === null && $checkbox === false) {
-            $a = $this->getFileUrl($bookId);
-            return $a;
+            $imageCurrentUrl = $this->getFileUrl($bookId);
+            return $imageCurrentUrl;
         }
 
         if ($file === null && $checkbox === true) {
@@ -107,14 +107,12 @@ abstract class ImageManager extends ApiResponse
     {
         $imageUrl = $this->getFileUrl($bookId);
 
-        $pos = strpos($imageUrl, 'default/default.jpg');
+        $defaultImage = strpos($imageUrl, 'default/default.jpg');
 
-        if ($pos) {
-            return;
-        } else {
-            $pos = strpos($imageUrl, 'assets');
-            $nueva_ruta = substr($imageUrl, $pos);
-            unlink($this->getProjectRoot() . $nueva_ruta);
+        if ($defaultImage === false) {
+            $position = strpos($imageUrl, 'assets');
+            $relativeImageRoute = substr($imageUrl, $position);
+            unlink($this->getProjectRoot() . $relativeImageRoute);
         }
     }
 
