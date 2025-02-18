@@ -15,7 +15,7 @@
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/Libro.js" type="module"></script>
+	<!-- <script src="./assets/js/Libro.js" type="module"></script> -->
 
 </head>
 
@@ -25,9 +25,9 @@
 
 		<footer>
 
-			<button type="button">Alta</button>
+			<button type="button" commandfor="alta-dialog" command="show-modal">Alta</button>
 
-			<dialog>
+			<dialog id="alta-dialog">
 				<form>
 					<h3>Formulario de alta</h3>
 					<fieldset>
