@@ -75,20 +75,20 @@ abstract class ImageManager extends ApiResponse
         return $url_completa;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $bookId): string
+    protected function updateFile(?array $file, bool $checkbox, int $idLibro): string
     {
         if ($file === null && $checkbox === false) {
-            $imageCurrentUrl = $this->getFileUrl($bookId);
+            $imageCurrentUrl = $this->getFileUrl($idLibro);
             return $imageCurrentUrl;
         }
 
         if ($file === null && $checkbox === true) {
-            $this->deleteFile($bookId);
+            $this->deleteFile($idLibro);
             return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
         }
 
         if ($file) {
-            $this->deleteFile($bookId);
+            $this->deleteFile($idLibro);
 
             $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
 
@@ -103,9 +103,9 @@ abstract class ImageManager extends ApiResponse
         }
     }
 
-    protected function deleteFile(int $bookId): void
+    protected function deleteFile(int $idLibro): void
     {
-        $imageUrl = $this->getFileUrl($bookId);
+        $imageUrl = $this->getFileUrl($idLibro);
 
         $defaultImage = strpos($imageUrl, 'default/default.jpg');
 
@@ -116,7 +116,7 @@ abstract class ImageManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $bookId): ?string
+    private function getFileUrl(int $idLibro): ?string
     {
         $statement =
             "SELECT portada
@@ -127,7 +127,7 @@ abstract class ImageManager extends ApiResponse
 
         $query->bind_param(
             "i",
-            $bookId
+            $idLibro
         );
 
         $query->execute();
