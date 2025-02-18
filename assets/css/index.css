@@ -22,16 +22,6 @@ main {
 		display: grid;
 		gap: 2em;
 
-		fieldset {
-			&:last-of-type {
-				menu {
-					display: flex;
-					justify-content: center;
-					gap: 1em;
-				}
-			}
-		}
-
 		span {
 			display: none;
 		}
@@ -49,6 +39,11 @@ main {
 	menu {
 		display: grid;
 		gap: 1em;
+
+		&:has(button) {
+			display: flex;
+			justify-content: center;
+		}
 	}
 
 	li {
@@ -61,7 +56,6 @@ main {
 	}
 
 	button {
-		/* width: fit-content; */
 		padding: 0.75em;
 		border-radius: 0.25rem;
 		transition: transform 0.5s;

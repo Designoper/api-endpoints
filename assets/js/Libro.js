@@ -146,8 +146,14 @@ export class Libro extends Categoria {
                 <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
-                <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
-                <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
+                <menu>
+                    <li>
+                        <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
+                    </li>
+                    <li>
+                        <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
+                    </li>
+                </menu>
 
                 <dialog id="modificar-dialog-${libro['id_libro']}">
 
