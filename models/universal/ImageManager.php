@@ -75,7 +75,7 @@ abstract class ImageManager extends ApiResponse
         return $url_completa;
     }
 
-    protected function updateFile(?array $file = null, ?string $checkbox = null, ?int $bookId = null): string
+    protected function updateFile(?array $file = null, ?string $checkbox = null, int $bookId = null): string
     {
         if ($file === null && $checkbox === null) {
             return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
