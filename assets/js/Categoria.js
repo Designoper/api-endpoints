@@ -31,9 +31,7 @@ export class Categoria extends Base {
 		return categorias;
 	}
 
-	async printCategorias({
-		place,
-	}) {
+	async printCategorias(place) {
 		const categorias = await this.getCategorias();
 
 		const content = Categoria.categoriasTemplate({

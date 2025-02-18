@@ -274,9 +274,7 @@ export class Libro extends Categoria {
         const emptyOptions = document.querySelectorAll('option:not([value])');
 
         emptyOptions.forEach(option => {
-            this.printCategorias({
-                place: option
-            });
+            this.printCategorias(option);
         });
     }
 
@@ -287,7 +285,9 @@ export class Libro extends Categoria {
         // const filterButtonOutput = filterButton.closest('form output')
 
         filterButton.onclick = () => {
-            this.filterLibros(form, dialog);
+            if (form.reportValidity()) {
+                this.filterLibros(form, dialog);
+            }
         }
     }
 
@@ -321,14 +321,17 @@ export class Libro extends Categoria {
     }
 
     deleteButton() {
-        const deleteButton = document.querySelectorAll('[value="DELETE"]');
+        const deleteButtons = document.querySelectorAll('[value="DELETE"]');
 
-        deleteButton.forEach(button => {
+        deleteButtons.forEach(button => {
             button.onclick = () => {
-                const deleteButtonForm = button.closest('form');
-                const deleteButtonDialog = button.closest('dialog');
-                const deleteButtonOutput = button.closest('form output');
-                this.deleteLibro(deleteButtonForm, deleteButtonOutput, deleteButtonDialog);
+                const form = button.closest('form');
+                const dialog = button.closest('dialog');
+                const output = form.querySelector('output');
+
+                if (form.reportValidity()) {
+                    this.deleteLibro(form, output, dialog);
+                }
             }
         });
     }
