@@ -21,14 +21,6 @@ main {
 	form {
 		display: grid;
 		gap: 2em;
-
-		span {
-			display: none;
-		}
-
-		:user-invalid+span {
-			display: initial;
-		}
 	}
 
 	:is(input, select, textarea) {
