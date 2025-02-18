@@ -121,6 +121,30 @@ export class Libro extends Categoria {
         await this.getLibros();
     }
 
+    async deleteAllLibro(form, errorContainer, dialog) {
+
+        // this.formValidityChecker(form);
+        const response = await this.fetchData({
+            url: 'http://localhost/api-endpoints/api/libros/delete-all/',
+            method: 'POST',
+            form: form
+        });
+
+        if (response.ok) {
+            this.resetForm({
+                form: form,
+                errorContainer: errorContainer,
+                dialog: dialog
+            });
+
+            await this.getLibros();
+        }
+
+        if (!response.ok) {
+            this.errorChecker(response, errorContainer);
+        }
+    }
+
     resetForm({
         form,
         errorContainer,
@@ -336,12 +360,27 @@ export class Libro extends Categoria {
         });
     }
 
+    deleteAllButton() {
+        const button = document.querySelector('[value="DELETE_ALL"]');
+
+        button.onclick = () => {
+            const form = button.closest('form');
+            const dialog = button.closest('dialog');
+            const output = form.querySelector('output');
+
+            if (form.reportValidity()) {
+                this.deleteAllLibro(form, output, dialog);
+            }
+        }
+    }
+
     final() {
         this.optionsDropdown();
         this.filterButton();
         this.postButton();
         this.putButton();
         this.deleteButton();
+        this.deleteAllButton();
     }
 }
 

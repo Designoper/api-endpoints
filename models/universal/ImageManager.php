@@ -5,16 +5,15 @@ require_once __DIR__ . '/ApiResponse.php';
 abstract class ImageManager extends ApiResponse
 {
     private readonly string $host;
+    private readonly string $projectRoot;
     private string $imagePath = 'assets/img/';
-    private string $additionalDirs = '';
-    private string $projectRoot = __DIR__ . '/../../';
-    private string $defaultImage = 'default.jpg';
 
     protected function __construct()
     {
         parent::__construct();
 
         $this->setHost();
+        $this->setProjectRoot();
     }
 
     // MARK: GETTERS
@@ -29,19 +28,9 @@ abstract class ImageManager extends ApiResponse
         return $this->imagePath;
     }
 
-    private function getAdditionalDirs(): string
-    {
-        return $this->additionalDirs;
-    }
-
     private function getProjectRoot(): string
     {
         return $this->projectRoot;
-    }
-
-    private function getDefaultImage(): string
-    {
-        return $this->defaultImage;
     }
 
     // MARK: SETTERS
@@ -53,6 +42,11 @@ abstract class ImageManager extends ApiResponse
         $host = $_SERVER['HTTP_HOST'];
 
         $this->host = $esquema . $host;
+    }
+
+    private function setProjectRoot(): void
+    {
+        $this->projectRoot = __DIR__ . '/../../';
     }
 
     // MARK: FILE OPERATIONS

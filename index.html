@@ -142,21 +142,28 @@
 				</form>
 			</dialog>
 
-			<!-- <button type="button">Eliminar
-				todos</button>
+			<button type="button" commandfor="delete-all-dialog" command="show-modal">Eliminar todos</button>
 
-			<dialog>
+			<dialog id="delete-all-dialog">
 
-				<form action="http://localhost/xampp/api-libros/controllers/LibroController.php" name="libro">
+				<form>
 
 					<p>¿Seguro que quiere eliminar todos los libros?</p>
 
-					<button type="button" value="DELETE">Sí, eliminar todos</button>
-					<button type="button">Cancelar</button>
+					<menu>
+						<li>
+							<button type="button" value="DELETE_ALL">Sí, eliminar todos</button>
+						</li>
+						<li>
+							<button type="button" commandfor="delete-all-dialog" command="close">Cancelar</button>
+						</li>
+					</menu>
+
+					<output></output>
 
 				</form>
 
-			</dialog> -->
+			</dialog>
 
 		</footer>
 

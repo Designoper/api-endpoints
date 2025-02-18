@@ -342,7 +342,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$this->librosExists();
 
-		// $this->checkIntegrityErrors();
+		$this->checkIntegrityErrors();
 
 		$statement =
 			"TRUNCATE TABLE libros";

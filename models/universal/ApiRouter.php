@@ -87,6 +87,15 @@ final class ApiRouter extends Sanitizer
             }
         );
 
+        $this->setRoute(
+            'POST',
+            $this->getCommonPath() . 'libros/delete-all/',
+            function (): void {
+                $libro = new LibroWrite();
+                $libro->deleteAllLibros();
+            }
+        );
+
         $this->handleRequest();
     }
 
