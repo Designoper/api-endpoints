@@ -32,11 +32,11 @@ export class Libro extends Categoria {
 
     async filterLibros(form, dialog) {
 
-        const data = this.collectInputs(form);
+        this.formValidityChecker(form);
         const response = await this.fetchData({
             url: Libro.librosFilterEndpoint,
             method: 'GET',
-            data: data
+            form: form
         });
 
         await this.printLibros(response);

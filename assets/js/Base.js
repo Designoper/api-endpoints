@@ -4,7 +4,6 @@ export class Base {
 	async fetchData({
 		url,
 		method = 'GET',
-		data = {},
 		form
 	}) {
 
@@ -13,10 +12,14 @@ export class Base {
 		switch (method) {
 			case 'GET':
 				url = new URL(url);
-				url.search = new URLSearchParams(data);
+				const params = new FormData(form);
+				url.search = new URLSearchParams(params).toString();
+
 				break;
 
 			case 'POST':
+			case 'PUT':
+			case 'DELETE':
 				const formData = new FormData(form);
 
 				fetchOptions = {
@@ -26,15 +29,13 @@ export class Base {
 
 				break;
 
-			case 'PUT':
-			case 'DELETE':
-				fetchOptions = {
-					method: method,
-					body: JSON.stringify(data),
-					headers: {
-						'Content-Type': 'application/json'
-					},
-				}
+				// fetchOptions = {
+				// 	method: method,
+				// 	body: JSON.stringify(data),
+				// 	headers: {
+				// 		'Content-Type': 'application/json'
+				// 	},
+				// }
 		}
 
 		try {
@@ -60,22 +61,6 @@ export class Base {
 			throw new Error('Los datos del formulario no son válidos');
 		}
 	}
-
-	// collectInputs(form) {
-	// 	this.formValidityChecker(form);
-
-	// 	const data = {};
-	// 	const inputs = form.querySelectorAll('[name]');
-
-	// 	inputs.forEach(input => {
-	// 		if (input.getAttribute('type') === 'file') {
-	// 			data[input.name] = input.files[0];
-	// 		}
-	// 		else data[input.name] = input.value;
-	// 	});
-
-	// 	return data;
-	// }
 
 	errorChecker(response, errorContainer) {
 		if (response?.validationErrors?.length > 0) {
