@@ -5,6 +5,7 @@ export class Base {
 		url,
 		method = 'GET',
 		data = {},
+		form
 	}) {
 
 		let fetchOptions = {};
@@ -16,11 +17,7 @@ export class Base {
 				break;
 
 			case 'POST':
-				const formData = new FormData();
-
-				for (const [key, value] of Object.entries(data)) {
-					formData.append(key, value);
-				}
+				const formData = new FormData(form);
 
 				fetchOptions = {
 					method: method,
@@ -64,21 +61,21 @@ export class Base {
 		}
 	}
 
-	collectInputs(form) {
-		this.formValidityChecker(form);
+	// collectInputs(form) {
+	// 	this.formValidityChecker(form);
 
-		const data = {};
-		const inputs = form.querySelectorAll('[name]');
+	// 	const data = {};
+	// 	const inputs = form.querySelectorAll('[name]');
 
-		inputs.forEach(input => {
-			if (input.getAttribute('type') === 'file') {
-				data[input.name] = input.files[0];
-			}
-			else data[input.name] = input.value;
-		});
+	// 	inputs.forEach(input => {
+	// 		if (input.getAttribute('type') === 'file') {
+	// 			data[input.name] = input.files[0];
+	// 		}
+	// 		else data[input.name] = input.value;
+	// 	});
 
-		return data;
-	}
+	// 	return data;
+	// }
 
 	errorChecker(response, errorContainer) {
 		if (response?.validationErrors?.length > 0) {

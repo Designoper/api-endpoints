@@ -75,13 +75,14 @@ abstract class ImageManager extends ApiResponse
         return $url_completa;
     }
 
-    protected function updateFile(?array $file = null, ?string $checkbox = null, int $bookId = null): string
+    protected function updateFile(?array $file = null, bool $checkbox, int $bookId): string
     {
-        if ($file === null && $checkbox === null) {
-            return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
+        if ($file === null && $checkbox === false) {
+            $a = $this->getFileUrl($bookId);
+            return $a;
         }
 
-        if ($file === null && $checkbox === "eliminar_portada") {
+        if ($file === null && $checkbox === true) {
             $this->deleteFile($bookId);
             return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
         }

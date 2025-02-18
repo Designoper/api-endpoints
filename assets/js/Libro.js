@@ -51,11 +51,11 @@ export class Libro extends Categoria {
 
     async createLibro(form, errorContainer, dialog) {
 
-        const data = this.collectInputs(form);
+        this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/create/',
             method: 'POST',
-            data: data
+            form: form
         });
 
         if (response.ok) {
@@ -77,11 +77,11 @@ export class Libro extends Categoria {
 
     async updateLibro(form, errorContainer, dialog) {
 
-        const data = this.collectInputs(form);
+        this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/update/',
             method: 'POST',
-            data: data
+            form: form
         });
 
         if (response.status === 204) {
@@ -113,11 +113,11 @@ export class Libro extends Categoria {
 
     async deleteLibro(form) {
 
-        const data = this.collectInputs(form);
+        this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/delete/',
             method: 'POST',
-            data: data,
+            form: form
         });
 
         await this.getLibros();
@@ -184,7 +184,7 @@ export class Libro extends Categoria {
 							</li>
 
                             <li>
-                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada" value="eliminar_portada">
+                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada" value="">
 								<label for="eliminar_portada">Eliminar portada actual</label>
 							</li>
 
