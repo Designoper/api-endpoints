@@ -15,7 +15,7 @@
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
-	<!-- <script src="./assets/js/Libro.js" type="module"></script> -->
+	<script src="./assets/js/Libro.js" type="module"></script>
 
 </head>
 
@@ -70,7 +70,7 @@
 								<button type="button" value="POST">Dar de alta</button>
 							</li>
 							<li>
-								<button type="button">Cancelar</button>
+								<button type="button" commandfor="alta-dialog" command="close">Cancelar</button>
 							</li>
 						</menu>
 					</fieldset>
@@ -81,9 +81,9 @@
 
 			</dialog>
 
-			<button type="button">Filtrar</button>
+			<button type="button" commandfor="filter-dialog" command="show-modal">Filtrar</button>
 
-			<dialog>
+			<dialog id="filter-dialog">
 				<form>
 					<h3>Filtros</h3>
 					<fieldset>
@@ -135,7 +135,7 @@
 								<button type="button" value="GET">Buscar</button>
 							</li>
 							<li>
-								<button type="button">Cancelar</button>
+								<button type="button" commandfor="filter-dialog" command="close">Cancelar</button>
 							</li>
 						</menu>
 					</fieldset>

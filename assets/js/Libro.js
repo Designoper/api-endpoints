@@ -140,15 +140,16 @@ export class Libro extends Categoria {
             `<article>
 
                 <h3>${libro['titulo']}</h3>
-                <img src="${libro['portada']}" alt="">
+                <img src="${libro['portada']}" alt="Portada de ${libro['titulo']}" loading="lazy">
                 <p>${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
                 <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
-                <button type='button'>Modificar</button>
+                <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
+                <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
 
-                <dialog>
+                <dialog id="modificar-dialog-${libro['id_libro']}">
 
                     <form>
                         <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
@@ -208,7 +209,7 @@ export class Libro extends Categoria {
                                     <button type='button' value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
-                                    <button type='button'>Cancelar</button>
+                                    <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
                                 </li>
                             </menu>
 
@@ -219,9 +220,7 @@ export class Libro extends Categoria {
                     </form>
                 </dialog>
 
-                <button type='button'>Eliminar</button>
-
-                <dialog>
+                <dialog id="eliminar-dialog-${libro['id_libro']}">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
@@ -235,7 +234,7 @@ export class Libro extends Categoria {
                                     <button type='button' value='DELETE'>Sí, eliminar</button>
                                 </li>
                                 <li>
-                                    <button type='button'>Cancelar</button>
+                                    <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
                                 </li>
                             </menu>
 
@@ -265,26 +264,6 @@ export class Libro extends Categoria {
         }
 
         this.final();
-    }
-
-    showDialogButtons() {
-        const showDialogButtons = document.querySelectorAll('button:has(+dialog)');
-
-        showDialogButtons.forEach(button => {
-            button.onclick = () => {
-                button.nextElementSibling.showModal();
-            }
-        })
-    }
-
-    closeDialogButtons() {
-        const closeDialogButtons = document.querySelectorAll('li:has(button):last-of-type button');
-
-        closeDialogButtons.forEach(button => {
-            button.onclick = () => {
-                button.closest('dialog').close();
-            }
-        });
     }
 
     optionsDropdown() {
@@ -346,8 +325,6 @@ export class Libro extends Categoria {
     }
 
     final() {
-        this.showDialogButtons();
-        this.closeDialogButtons();
         this.optionsDropdown();
         this.filterButton();
         this.postButton();
