@@ -32,7 +32,7 @@ export class Libro extends Categoria {
 
     async filterLibros(form, dialog) {
 
-        this.formValidityChecker(form);
+        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: Libro.librosFilterEndpoint,
             method: 'GET',
@@ -50,8 +50,6 @@ export class Libro extends Categoria {
     // MARK: CREATE LIBRO
 
     async createLibro(form, errorContainer, dialog) {
-
-        this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/create/',
             method: 'POST',
@@ -77,7 +75,7 @@ export class Libro extends Categoria {
 
     async updateLibro(form, errorContainer, dialog) {
 
-        this.formValidityChecker(form);
+        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/update/',
             method: 'POST',
@@ -113,7 +111,7 @@ export class Libro extends Categoria {
 
     async deleteLibro(form) {
 
-        this.formValidityChecker(form);
+        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/delete/',
             method: 'POST',
@@ -283,36 +281,41 @@ export class Libro extends Categoria {
     }
 
     filterButton() {
-        const filterButton = document.querySelector('[value="GET"]')
-        const filterButtonForm = filterButton.closest('form');
-        const filterButtonDialog = filterButton.closest('dialog')
+        const filterButton = document.querySelector('[value="GET"]');
+        const form = filterButton.closest('form');
+        const dialog = filterButton.closest('dialog');
         // const filterButtonOutput = filterButton.closest('form output')
 
         filterButton.onclick = () => {
-            this.filterLibros(filterButtonForm, filterButtonDialog);
+            this.filterLibros(form, dialog);
         }
     }
 
     postButton() {
-        const postButton = document.querySelector('[value="POST"]')
-        const postButtonForm = postButton.closest('form');
-        const postButtonDialog = postButton.closest('dialog');
-        const postButtonOutput = postButtonForm.querySelector('output');
+        const button = document.querySelector('[value="POST"]');
+        const form = button.closest('form');
+        const dialog = button.closest('dialog');
+        const output = form.querySelector('output');
 
-        postButton.onclick = () => {
-            this.createLibro(postButtonForm, postButtonOutput, postButtonDialog);
+        button.onclick = () => {
+            if (form.reportValidity()) {
+                this.createLibro(form, output, dialog);
+            }
         }
     }
 
     putButton() {
-        const putButton = document.querySelectorAll('[value="PUT"]');
+        const putButtons = document.querySelectorAll('[value="PUT"]');
 
-        putButton.forEach(button => {
+        putButtons.forEach(button => {
             button.onclick = () => {
-                const putButtonForm = button.closest('form');
-                const putButtonDialog = button.closest('dialog');
-                const putButtonOutput = putButtonForm.querySelector('output');
-                this.updateLibro(putButtonForm, putButtonOutput, putButtonDialog);
+                const form = button.closest('form');
+                const dialog = button.closest('dialog');
+                const output = form.querySelector('output');
+
+                if (form.reportValidity()) {
+                    this.updateLibro(form, output, dialog);
+                }
             }
         });
     }
