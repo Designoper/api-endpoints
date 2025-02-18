@@ -56,12 +56,6 @@ export class Base {
 		}
 	}
 
-	formValidityChecker(form) {
-		if (!form.reportValidity()) {
-			throw new Error('Los datos del formulario no son válidos');
-		}
-	}
-
 	errorChecker(response, errorContainer) {
 		if (response?.validationErrors?.length > 0) {
 			errorContainer.innerHTML =
