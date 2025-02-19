@@ -27,8 +27,8 @@
 
 			<button type="button" commandfor="alta-dialog" command="show-modal">Alta</button>
 
-			<dialog id="alta-dialog" closedby="any">
-				<form>
+			<dialog id="alta-dialog">
+				<form method="dialog">
 					<h3>Formulario de alta</h3>
 					<fieldset>
 						<menu>
@@ -65,7 +65,7 @@
 					<fieldset>
 						<menu>
 							<li>
-								<button type="button" value="POST">Dar de alta</button>
+								<button value="POST">Dar de alta</button>
 							</li>
 							<li>
 								<button type="button" commandfor="alta-dialog" command="close">Cancelar</button>

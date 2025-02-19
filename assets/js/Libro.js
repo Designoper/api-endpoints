@@ -51,11 +51,11 @@ export class Libro extends Categoria {
         });
 
         if (response.ok) {
-            this.resetForm({
-                form: form,
-                errorContainer: errorContainer,
-                dialog: dialog
-            });
+            // this.resetForm({
+            //     form: form,
+            //     errorContainer: errorContainer,
+            //     dialog: dialog
+            // });
 
             await this.getLibros();
         }
@@ -308,10 +308,10 @@ export class Libro extends Categoria {
         const dialog = button.closest('dialog');
         const output = form.querySelector('output');
 
-        button.onclick = () => {
-            if (form.reportValidity()) {
+        form.onsubmit = () => {
+            // if (form.reportValidity()) {
                 this.createLibro(form, output, dialog);
-            }
+            // }
         }
     }
 
