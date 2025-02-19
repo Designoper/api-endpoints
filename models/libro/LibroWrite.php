@@ -145,7 +145,31 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setPortada(): void
 	{
 		if (isset($_FILES["portada"]) && $_FILES["portada"]["error"] === UPLOAD_ERR_OK) {
-			$this->portada = $_FILES["portada"];
+
+			$fileCount = count($_FILES['portada']);
+			if ($fileCount > 1) {
+				$this->setValidationError("Por favor, sube solo una imagen.");
+				return;
+			}
+
+			$portada = $_FILES["portada"];
+
+			$fileType = exif_imagetype($portada['tmp_name']);
+
+			if ($fileType === false) {
+				$this->setValidationError("El archivo no es una imagen.");
+			}
+
+			$allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
+			if (!in_array($fileType, $allowedTypes)) {
+				$this->setValidationError("Solo se permiten archivos JPEG y PNG.");
+			}
+
+			if ($portada['size'] > 1000000) {
+				$this->setValidationError('Exceeded filesize limit.');
+			}
+
+			$this->portada = $portada;
 		} else {
 			$this->portada = null;
 		}
