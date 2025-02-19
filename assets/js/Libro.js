@@ -32,7 +32,6 @@ export class Libro extends Categoria {
 
     async filterLibros(form) {
 
-        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: Libro.librosFilterEndpoint,
             method: 'GET',
@@ -40,11 +39,6 @@ export class Libro extends Categoria {
         });
 
         await this.printLibros(response);
-
-        // this.resetForm({
-        //     form: form,
-        //     dialog: dialog
-        // });
     }
 
     // MARK: CREATE LIBRO
@@ -75,7 +69,6 @@ export class Libro extends Categoria {
 
     async updateLibro(form, errorContainer, dialog) {
 
-        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/update/',
             method: 'POST',
@@ -111,7 +104,6 @@ export class Libro extends Categoria {
 
     async deleteLibro(form) {
 
-        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/delete/',
             method: 'POST',
@@ -123,7 +115,6 @@ export class Libro extends Categoria {
 
     async deleteAllLibro(form, errorContainer, dialog) {
 
-        // this.formValidityChecker(form);
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/delete-all/',
             method: 'POST',
