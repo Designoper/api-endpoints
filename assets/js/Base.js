@@ -7,7 +7,7 @@ export class Base {
 		form
 	}) {
 
-		const fetchOptions = {};
+		const init = {};
 		const userInputs = new FormData(form);
 
 		switch (method) {
@@ -22,14 +22,14 @@ export class Base {
 			case 'PUT':
 			case 'DELETE':
 
-				fetchOptions.method = method;
-				fetchOptions.body = userInputs;
+				init.method = method;
+				init.body = userInputs;
 
 				break;
 		}
 
 		try {
-			const response = await fetch(url, fetchOptions);
+			const response = await fetch(url, init);
 
 			if (response.status === 204) {
 				return response;
