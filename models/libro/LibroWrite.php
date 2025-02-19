@@ -344,6 +344,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
+		$this->deleteAllFiles();
+
 		$statement =
 			"TRUNCATE TABLE libros";
 

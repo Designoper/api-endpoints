@@ -110,6 +110,22 @@ abstract class ImageManager extends ApiResponse
         }
     }
 
+    protected function deleteAllFiles(): void
+    {
+        $folder_path = $this->getProjectRoot() . $this->getImagePath();
+
+        // List of name of files inside
+        // specified folder
+        $files = glob($folder_path . '/*');
+
+        // Deleting all the files in the list
+        foreach ($files as $file) {
+
+            if (is_file($file))
+                unlink($file);
+        }
+    }
+
     private function getFileUrl(int $idLibro): ?string
     {
         $statement =
