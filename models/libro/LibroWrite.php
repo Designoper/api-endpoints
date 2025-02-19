@@ -144,15 +144,47 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setPortada(): void
 	{
-		if (isset($_FILES["portada"]) && $_FILES["portada"]["error"] === UPLOAD_ERR_OK) {
+		function incoming_files()
+		{
+			$files = $_FILES;
+			$files2 = [];
 
-			$fileCount = count($_FILES['portada']);
-			if ($fileCount > 1) {
-				$this->setValidationError("Por favor, sube solo una imagen.");
+			foreach ($files as $input => $infoArr) {
+				$filesByInput = [];
+
+				foreach ($infoArr as $key => $valueArr) {
+					if (is_array($valueArr)) { // file input "multiple"
+						foreach ($valueArr as $i => $value) {
+							$filesByInput[$i][$key] = $value;
+						}
+					} else { // -> string, normal file input
+						$filesByInput[] = $infoArr;
+						break;
+					}
+				}
+
+				$files2 = array_merge($files2, $filesByInput);
+			}
+
+			$files3 = [];
+
+			foreach ($files2 as $file) { // let's filter empty & errors
+				if (!$file['error']) $files3[] = $file;
+			}
+
+			return $files3;
+		}
+
+		$tmpFiles = incoming_files();
+
+		if (isset($tmpFiles[0])) {
+
+			if (isset($tmpFiles[1])) {
+				$this->setValidationError("Solo se puede subir una imagen.");
 				return;
 			}
 
-			$portada = $_FILES["portada"];
+			$portada = $tmpFiles[0];
 
 			$fileType = exif_imagetype($portada['tmp_name']);
 
@@ -165,11 +197,12 @@ final class LibroWrite extends LibroIntegrityErrors
 				$this->setValidationError("Solo se permiten archivos JPEG y PNG.");
 			}
 
-			if ($portada['size'] > 1000000) {
-				$this->setValidationError('Exceeded filesize limit.');
+			if ($portada['size'] > 7000000) {
+				$this->setValidationError('La imagen no puede superar 1MB.');
 			}
 
 			$this->portada = $portada;
+			return;
 		} else {
 			$this->portada = null;
 		}
