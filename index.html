@@ -82,7 +82,7 @@
 			<button type="button" commandfor="filter-dialog" command="show-modal">Filtrar</button>
 
 			<dialog id="filter-dialog">
-				<form>
+				<form method="dialog">
 					<h3>Filtros</h3>
 					<fieldset>
 						<menu>
@@ -130,7 +130,10 @@
 					<fieldset>
 						<menu>
 							<li>
-								<button type="button" value="GET">Buscar</button>
+								<button value="GET">Buscar</button>
+							</li>
+							<li>
+								<button type="reset">Resetear filtros</button>
 							</li>
 							<li>
 								<button type="button" commandfor="filter-dialog" command="close">Cancelar</button>

@@ -30,7 +30,7 @@ export class Libro extends Categoria {
 
     // MARK: FILTER LIBROS
 
-    async filterLibros(form, dialog) {
+    async filterLibros(form) {
 
         // this.formValidityChecker(form);
         const response = await this.fetchData({
@@ -41,10 +41,10 @@ export class Libro extends Categoria {
 
         await this.printLibros(response);
 
-        this.resetForm({
-            form: form,
-            dialog: dialog
-        })
+        // this.resetForm({
+        //     form: form,
+        //     dialog: dialog
+        // });
     }
 
     // MARK: CREATE LIBRO
@@ -303,15 +303,11 @@ export class Libro extends Categoria {
     }
 
     filterButton() {
-        const filterButton = document.querySelector('[value="GET"]');
-        const form = filterButton.closest('form');
-        const dialog = filterButton.closest('dialog');
-        // const filterButtonOutput = filterButton.closest('form output')
+        const button = document.querySelector('[value="GET"]');
+        const form = button.closest('form');
 
-        filterButton.onclick = () => {
-            if (form.reportValidity()) {
-                this.filterLibros(form, dialog);
-            }
+        form.onsubmit = () => {
+            this.filterLibros(form);
         }
     }
 
