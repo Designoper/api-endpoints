@@ -117,14 +117,12 @@ final class LibroFilter extends ApiResponse
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
-
-		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
 			$this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 			return;
 		}
 
-		$this->minimoPaginas = (int) $sanitizedInput;
+		$this->minimoPaginas = (int) $input;
 	}
 
 	private function setMaximoPaginas(): void
@@ -136,14 +134,12 @@ final class LibroFilter extends ApiResponse
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
-
-		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
 			$this->setValidationError("El campo 'max_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 			return;
 		}
 
-		$this->maximoPaginas = (int) $sanitizedInput;
+		$this->maximoPaginas = (int) $input;
 	}
 
 	private function setMinimoFechaPublicacion(): void
@@ -205,14 +201,12 @@ final class LibroFilter extends ApiResponse
 			return;
 		}
 
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
-
-		if (!filter_var($sanitizedInput, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
+		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
 			$this->setValidationError("El campo 'categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 			return;
 		}
 
-		$this->idCategoria = (int) $sanitizedInput;
+		$this->idCategoria = (int) $input;
 	}
 
 	private function setCriterioOrden(): void
