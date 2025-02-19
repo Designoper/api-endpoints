@@ -7,7 +7,7 @@ final class Categoria extends ApiResponse
 	private string $statement =
 	"SELECT *
 	FROM categorias
-	WHERE 1=1";
+	ORDER BY categoria";
 
 	public function __construct()
 	{
