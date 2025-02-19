@@ -4,24 +4,19 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 
 final class Categoria extends ApiResponse
 {
-	private string $statement =
-	"SELECT *
-	FROM categorias
-	ORDER BY categoria";
-
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	private function getStatement(): string
-	{
-		return $this->statement;
-	}
-
 	public function readCategorias(): void
 	{
-		$query = $this->getConnection()->prepare($this->getStatement());
+		$statement =
+			"SELECT *
+			FROM categorias
+			ORDER BY categoria";
+
+		$query = $this->getConnection()->prepare($statement);
 
 		$query->execute();
 

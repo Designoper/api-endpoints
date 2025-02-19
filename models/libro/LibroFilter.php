@@ -235,7 +235,7 @@ final class LibroFilter extends ApiResponse
 		$this->criterioOrden = $input;
 	}
 
-	//MARK: FUNCTION
+	//MARK: FILTER
 
 	public function filterLibros(): void
 	{
