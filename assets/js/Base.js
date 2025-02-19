@@ -7,35 +7,25 @@ export class Base {
 		form
 	}) {
 
-		let fetchOptions = {};
+		const fetchOptions = {};
+		const userInputs = new FormData(form);
 
 		switch (method) {
 			case 'GET':
+
 				url = new URL(url);
-				const params = new FormData(form);
-				url.search = new URLSearchParams(params).toString();
+				url.search = new URLSearchParams(userInputs).toString();
 
 				break;
 
 			case 'POST':
 			case 'PUT':
 			case 'DELETE':
-				const formData = new FormData(form);
 
-				fetchOptions = {
-					method: method,
-					body: formData
-				};
+				fetchOptions.method = method;
+				fetchOptions.body = userInputs;
 
 				break;
-
-				// fetchOptions = {
-				// 	method: method,
-				// 	body: JSON.stringify(data),
-				// 	headers: {
-				// 		'Content-Type': 'application/json'
-				// 	},
-				// }
 		}
 
 		try {
