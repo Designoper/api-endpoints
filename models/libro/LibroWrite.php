@@ -167,7 +167,7 @@ final class LibroWrite extends LibroIntegrityErrors
 				$this->setValidationError("Solo se permiten archivos JPEG y PNG.");
 			}
 
-			if ($portada['size'] > 7000000) {
+			if ($portada['size'] > 1000000) {
 				$this->setValidationError('La imagen no puede superar 1MB.');
 			}
 
@@ -184,7 +184,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 			if ($input === "") {
 				$this->checkbox = true;
-			} else $this->setValidationError("El único valor válido para eliminar_portada es la cadena vacía ('')");
+			} else $this->setValidationError("El único valor válido para eliminar_portada es campo vacío");
 		} else $this->checkbox = false;
 	}
 
