@@ -147,9 +147,9 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$tmpFiles = $this->flattenFilesArray();
 
-		if (isset($tmpFiles[0])) {
+		if (count($tmpFiles) > 0) {
 
-			if (isset($tmpFiles[1])) {
+			if (count($tmpFiles) > 1) {
 				$this->setValidationError("Solo se puede subir una imagen.");
 				return;
 			}
@@ -172,7 +172,6 @@ final class LibroWrite extends LibroIntegrityErrors
 			}
 
 			$this->portada = $portada;
-			return;
 		} else {
 			$this->portada = null;
 		}
