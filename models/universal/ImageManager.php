@@ -60,11 +60,14 @@ abstract class ImageManager extends ApiResponse
             $filesByInput = [];
 
             foreach ($files as $key => $valueArr) {
-                if (is_array($valueArr)) { // file input "multiple"
+                // file input "multiple"
+                if (is_array($valueArr)) {
                     foreach ($valueArr as $i => $value) {
                         $filesByInput[$i][$key] = $value;
                     }
-                } else { // -> string, normal file input
+                }
+                // string, normal file input
+                else {
                     $filesByInput[] = $files;
                     break;
                 }
@@ -75,7 +78,7 @@ abstract class ImageManager extends ApiResponse
 
         $files3 = [];
 
-        foreach ($files2 as $file) { // let's filter empty & errors
+        foreach ($files2 as $file) { // filter out empty & errors
             if (!$file['error']) {
                 $files3[] = $file;
             }
