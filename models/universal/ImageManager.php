@@ -51,21 +51,21 @@ abstract class ImageManager extends ApiResponse
 
     // MARK: FILE OPERATIONS
 
-    protected function flattenFilesArray(): array
+    protected function flattenFilesArray(string $inputFileName): array
     {
-        $files = $_FILES;
+        $files = isset($_FILES[$inputFileName]) ? $_FILES[$inputFileName] : [];
         $files2 = [];
 
-        foreach ($files as $input => $infoArr) {
+        if (!empty($files)) {
             $filesByInput = [];
 
-            foreach ($infoArr as $key => $valueArr) {
+            foreach ($files as $key => $valueArr) {
                 if (is_array($valueArr)) { // file input "multiple"
                     foreach ($valueArr as $i => $value) {
                         $filesByInput[$i][$key] = $value;
                     }
                 } else { // -> string, normal file input
-                    $filesByInput[] = $infoArr;
+                    $filesByInput[] = $files;
                     break;
                 }
             }
@@ -76,11 +76,14 @@ abstract class ImageManager extends ApiResponse
         $files3 = [];
 
         foreach ($files2 as $file) { // let's filter empty & errors
-            if (!$file['error']) $files3[] = $file;
+            if (!$file['error']) {
+                $files3[] = $file;
+            }
         }
 
         return $files3;
     }
+
 
     protected function uploadFile(?array $file): string
     {
