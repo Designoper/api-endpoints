@@ -1,65 +1,63 @@
-main {
-	article {
-		display: grid;
-		padding: 2em;
-		border-radius: 0.5em;
-		gap: 1em 10%;
-		align-content: flex-start;
+article {
+	display: grid;
+	padding: 2em;
+	border-radius: 0.5em;
+	gap: 1em 10%;
+	align-content: flex-start;
+}
+
+dialog {
+	width: 500px;
+	padding: 2em;
+	margin: auto;
+	border-radius: 0.25rem;
+
+	&::backdrop {
+		background-color: rgba(0, 0, 0, 0.9);
 	}
 
-	dialog {
-		width: 500px;
-		padding: 2em;
-		margin: auto;
-		border-radius: 0.25rem;
-
-		&::backdrop {
-			background-color: rgba(0, 0, 0, 0.9);
-		}
-
-		p {
-			margin-bottom: 1em;
-		}
+	p {
+		margin-bottom: 1em;
 	}
+}
 
-	form {
-		display: grid;
-		gap: 2em;
+form {
+	display: grid;
+	gap: 2em;
+}
+
+:is(input, select, textarea) {
+	border-radius: 0.25rem;
+	padding: 0.25em 0.75em;
+}
+
+menu {
+	display: grid;
+	gap: 1em;
+
+	&:has(button) {
+		display: flex;
+		justify-content: center;
+		gap: 1.5em;
 	}
+}
 
-	:is(input, select, textarea) {
-		border-radius: 0.25rem;
-		padding: 0.25em 0.75em;
+li {
+	display: grid;
+	gap: 0.5em;
+
+	&:has([type="checkbox"]) {
+		display: block;
 	}
+}
 
-	menu {
-		display: grid;
-		gap: 1em;
+button {
+	padding: 0.75em;
+	border-radius: 0.25rem;
+	transition: transform 0.5s;
+	justify-self: center;
 
-		&:has(button) {
-			display: flex;
-			justify-content: center;
-			gap: 1.5em;
-		}
-	}
-
-	li {
-		display: grid;
-		gap: 0.5em;
-
-		&:has([type="checkbox"]) {
-			display: block;
-		}
-	}
-
-	button {
-		padding: 0.75em;
-		border-radius: 0.25rem;
-		transition: transform 0.5s;
-		justify-self: center;
-
-		&:hover {
-			transform: scale(107%);
-		}
+	&:hover {
+		transform: scale(107%);
 	}
 }

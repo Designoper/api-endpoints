@@ -5,7 +5,6 @@ require_once __DIR__ . '/../../models/libro/Libro.php';
 require_once __DIR__ . '/../../models/libro/LibroFilter.php';
 require_once __DIR__ . '/../../models/libro/LibroWrite.php';
 require_once __DIR__ . '/../../models/categoria/Categoria.php';
-require_once __DIR__ . '/../../models/usuario/Usuario.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -47,19 +46,8 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'usuarios/',
-            function (): void {
-                $usuario = new Usuario();
-                $usuario->createUsuario();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
             $this->getCommonPath() . 'libros/create/',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }
@@ -69,8 +57,6 @@ final class ApiRouter extends Sanitizer
             'POST',
             $this->getCommonPath() . 'libros/update/',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->updateLibro();
             }
@@ -80,8 +66,6 @@ final class ApiRouter extends Sanitizer
             'POST',
             $this->getCommonPath() . 'libros/delete/',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
             }

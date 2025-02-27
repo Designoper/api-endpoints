@@ -2,12 +2,6 @@ DROP DATABASE IF EXISTS biblioteca_libros;
 CREATE DATABASE biblioteca_libros CHARACTER SET utf8mb4;
 USE biblioteca_libros;
 
-CREATE TABLE usuarios (
-	id_usuario INT PRIMARY KEY AUTO_INCREMENT,
-	nombre VARCHAR(50) NOT NULL,
-	password VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE categorias (
 	id_categoria INT PRIMARY KEY AUTO_INCREMENT,
 	categoria VARCHAR(50) NOT NULL
@@ -35,11 +29,3 @@ INSERT INTO categorias (categoria) VALUES
 ("Gastronomía"),
 ("Deporte"),
 ("Religión");
-
--- INSERT INTO libros (titulo, descripcion, paginas, fecha_publicacion, id_categoria) VALUES
--- ("Pedro y Paco", "Dos grandes amigos", 27, '2006-06-02', 4),
--- ("Don Quijote", "Un caballero con delirios", 600, '1505-12-07', 2);
-
--- INSERT INTO usuarios (nombre, password) VALUES
--- ("Juan", "1234"),
--- ("Manolo", "12345");

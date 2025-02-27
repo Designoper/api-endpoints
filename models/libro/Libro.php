@@ -41,7 +41,6 @@ final class Libro extends ApiResponse
 		$this->setStatus(200);
 		$this->setMessage($message);
 		$this->setContent($libros);
-		// header('Cache-Control: public, max-age=31536000, must-revalidate');
 		$this->getResponse();
 	}
 }

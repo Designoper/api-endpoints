@@ -311,17 +311,8 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->close();
 
 		if ($numFilas === 1) {
-			// $libroModificado = [
-			// 	"titulo" => $this->getTitulo(),
-			// 	"descripcion" => $this->getDescripcion(),
-			// 	"paginas" => $this->getPaginas(),
-			// 	"fecha_de_publicacion" => $this->getFechaPublicacion(),
-			// 	"Id categoria" => $this->getIdCategoria()
-			// ];
-
 			$this->setStatus(200);
 			$this->setMessage('¡Libro modificado!');
-			// $this->setUpdatedContent($libroModificado);
 		} else {
 			$this->setStatus(204);
 		}

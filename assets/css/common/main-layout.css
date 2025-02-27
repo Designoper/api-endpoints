@@ -3,8 +3,7 @@ main {
 	gap: 5rem 0;
 	padding: 4rem 0;
 
-	h1,
-	h2 {
+	:is(h1, h2) {
 		flex-basis: 100%;
 		grid-column: 1/-1;
 	}
@@ -13,15 +12,6 @@ main {
 		display: grid;
 		gap: 2rem 3.25rem;
 		padding: 0 10vw;
-	}
-
-	footer {
-		display: flex;
-		justify-content: space-between;
-		position: fixed;
-		bottom: 0;
-		width: 100%;
-		padding: 1em 10vw;
 	}
 
 	#fetchoutput {
