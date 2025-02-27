@@ -31,22 +31,5 @@ abstract class Sanitizer
                 $GLOBALS[$global] = $this->sanitizeValue($GLOBALS[$global]);
             }
         }
-
-        // Añadir datos de php://input a una variable global personalizada
-        $input = file_get_contents('php://input');
-        $data = json_decode($input, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            // Si es JSON válido
-            if (is_array($data)) {
-                $GLOBALS['_INPUT_DATA'] = $this->sanitizeValue($data);
-            }
-        } else {
-            // Si no es JSON, trata los datos como una cadena de consulta
-            parse_str($input, $data);
-            if (is_array($data)) {
-                $GLOBALS['_INPUT_DATA'] = $this->sanitizeValue($data);
-            }
-        }
     }
 }
