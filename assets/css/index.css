@@ -16,6 +16,10 @@ main {
 		&::backdrop {
 			background-color: rgba(0, 0, 0, 0.9);
 		}
+
+		p {
+			margin-bottom: 1em;
+		}
 	}
 
 	form {
