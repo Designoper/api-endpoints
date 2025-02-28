@@ -160,7 +160,7 @@ abstract class ImageManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $idLibro): ?string
+    private function getFileUrl(int $idLibro): string
     {
         $statement =
             "SELECT portada
