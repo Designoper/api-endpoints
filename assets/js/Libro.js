@@ -241,24 +241,25 @@ export class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
+                <form>
+
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
-                    <form>
-                        <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
+                    <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
-                        <fieldset>
+                    <fieldset>
 
-                            <menu>
-                                <li>
-                                    <button type='button' value='DELETE'>Sí, eliminar</button>
-                                </li>
-                                <li>
-                                    <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
-                                </li>
-                            </menu>
+                        <menu>
+                            <li>
+                                <button type='button' value='DELETE'>Sí, eliminar</button>
+                            </li>
+                            <li>
+                                <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
+                            </li>
+                        </menu>
 
-                        </fieldset>
-                    </form>
+                    </fieldset>
+                </form>
 
                 </dialog>
 
