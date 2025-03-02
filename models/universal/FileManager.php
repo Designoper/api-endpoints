@@ -81,6 +81,12 @@ abstract class FileManager extends ApiResponse
         return $flattened;
     }
 
+    private function generateUniqueFilename(string $originalFilename): string
+    {
+        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        $basename = pathinfo($originalFilename, PATHINFO_FILENAME);
+        return $basename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+    }
 
     protected function uploadFile(?array $file): string
     {
@@ -88,14 +94,20 @@ abstract class FileManager extends ApiResponse
             return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
         }
 
-        $filename = basename($file["name"]);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $filename;
-
-        if (!move_uploaded_file($file["tmp_name"], $destination)) {
-            throw new RuntimeException("Error uploading file: " . $filename);
+        if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
+            if (!mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true)) {
+                throw new RuntimeException("Failed to create directory: " . self::IMAGE_FOLDER_RELATIVE_RUTE);
+            }
         }
 
-        return $this->getHost() . self::IMAGE_PATH . $filename;
+        $uniqueFilename = $this->generateUniqueFilename($file['name']);
+        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
+
+        if (!move_uploaded_file($file['tmp_name'], $destination)) {
+            throw new RuntimeException("Error uploading file: " . $uniqueFilename);
+        }
+
+        return $this->getHost() . self::IMAGE_PATH . $uniqueFilename;
     }
 
     protected function updateFile(?array $file, bool $checkbox, int $fileId): string
