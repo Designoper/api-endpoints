@@ -110,14 +110,8 @@ abstract class FileManager extends ApiResponse
 
         $this->deleteFile($fileId);
 
-        $filename = basename($file["name"]);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $filename;
-
-        if (!move_uploaded_file($file["tmp_name"], $destination)) {
-            throw new RuntimeException("Failed to move the uploaded file.");
-        }
-
-        return $this->getHost() . self::IMAGE_PATH . $filename;
+        $fileUrl = $this->uploadFile($file);
+        return $fileUrl;
     }
 
     protected function deleteFile(int $fileId): void
