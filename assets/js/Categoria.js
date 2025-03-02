@@ -1,7 +1,7 @@
 import { Base } from "./Base.js";
 
 export class Categoria extends Base {
-	static categoriasEndpoint = 'http://localhost/api-endpoints/api/categorias/';
+	static categoriasEndpoint = 'http://localhost/api/categorias/';
 
 	constructor() {
 		super();

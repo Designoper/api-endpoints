@@ -1,8 +1,8 @@
 import { Categoria } from "./Categoria.js";
 
 export class Libro extends Categoria {
-    static librosEndpoint = 'http://localhost/api-endpoints/api/libros/';
-    static librosFilterEndpoint = 'http://localhost/api-endpoints/api/libros/filter/';
+    static librosEndpoint = 'http://localhost/api/libros/';
+    static librosFilterEndpoint = 'http://localhost/api/libros/filter/';
     static fetchOutput = document.getElementById('fetchoutput');
     static errorContainer = document.getElementById('errorcontainer');
 
@@ -45,7 +45,7 @@ export class Libro extends Categoria {
 
     async createLibro(form, errorContainer, dialog) {
         const response = await this.fetchData({
-            url: 'http://localhost/api-endpoints/api/libros/create/',
+            url: 'http://localhost/api/libros/create/',
             method: 'POST',
             form: form
         });
@@ -70,7 +70,7 @@ export class Libro extends Categoria {
     async updateLibro(form, errorContainer, dialog) {
 
         const response = await this.fetchData({
-            url: 'http://localhost/api-endpoints/api/libros/update/',
+            url: 'http://localhost/api/libros/update/',
             method: 'POST',
             form: form
         });
@@ -105,7 +105,7 @@ export class Libro extends Categoria {
     async deleteLibro(form) {
 
         const response = await this.fetchData({
-            url: 'http://localhost/api-endpoints/api/libros/delete/',
+            url: 'http://localhost/api/libros/delete/',
             method: 'POST',
             form: form
         });
@@ -116,7 +116,7 @@ export class Libro extends Categoria {
     async deleteAllLibro(form, errorContainer, dialog) {
 
         const response = await this.fetchData({
-            url: 'http://localhost/api-endpoints/api/libros/delete-all/',
+            url: 'http://localhost/api/libros/delete-all/',
             method: 'POST',
             form: form
         });

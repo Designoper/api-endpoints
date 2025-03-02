@@ -8,7 +8,7 @@ abstract class FileManager extends ApiResponse
 {
     private readonly string $host;
     private const string ROOT_DIRECTORY = __DIR__ . '/../../';
-    private const string IMAGE_PATH = 'assets/img/';
+    private const string IMAGE_PATH = '/assets/img/';
     private const string DEFAULT_IMAGE = 'default/default.jpg';
     private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
 
@@ -85,7 +85,7 @@ abstract class FileManager extends ApiResponse
     protected function uploadFile(?array $file): string
     {
         if ($file === null) {
-            return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+            return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
         }
 
         $filename = basename($file["name"]);
@@ -95,7 +95,7 @@ abstract class FileManager extends ApiResponse
             throw new RuntimeException("Error uploading file: " . $filename);
         }
 
-        return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . $filename;
+        return $this->getHost() . self::IMAGE_PATH . $filename;
     }
 
     protected function updateFile(?array $file, bool $checkbox, int $fileId): string
@@ -103,7 +103,7 @@ abstract class FileManager extends ApiResponse
         if ($file === null) {
             if ($checkbox) {
                 $this->deleteFile($fileId);
-                return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+                return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
             }
             return $this->getFileUrl($fileId);
         }
@@ -117,7 +117,7 @@ abstract class FileManager extends ApiResponse
             throw new RuntimeException("Failed to move the uploaded file.");
         }
 
-        return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . $filename;
+        return $this->getHost() . self::IMAGE_PATH . $filename;
     }
 
     protected function deleteFile(int $fileId): void

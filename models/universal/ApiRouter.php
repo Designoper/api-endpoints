@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../models/usuario/Usuario.php';
 
 final class ApiRouter extends Sanitizer
 {
-    private const string COMMON_PATH = '/api-endpoints/api/';
+    private const string COMMON_PATH = '/api/';
     private array $routes = [];
 
     public function __construct()
