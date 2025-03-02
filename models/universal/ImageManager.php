@@ -7,7 +7,7 @@ require_once __DIR__ . '/ApiResponse.php';
 abstract class ImageManager extends ApiResponse
 {
     private readonly string $host;
-    private const string PROJECT_ROOT = __DIR__ . '/../../';
+    private const string ROOT_DIRECTORY = __DIR__ . '/../../';
     private const string IMAGE_PATH = 'assets/img/';
     private const string DEFAULT_IMAGE = 'default/default.jpg';
 
@@ -40,38 +40,36 @@ abstract class ImageManager extends ApiResponse
 
     protected function flattenFilesArray(string $inputFileName): array
     {
-        $files = isset($_FILES[$inputFileName]) ? $_FILES[$inputFileName] : [];
-        $files2 = [];
-
-        if (!empty($files)) {
-            $filesByInput = [];
-
-            foreach ($files as $key => $valueArr) {
-                // file input "multiple"
-                if (is_array($valueArr)) {
-                    foreach ($valueArr as $i => $value) {
-                        $filesByInput[$i][$key] = $value;
-                    }
-                }
-                // string, normal file input
-                else {
-                    $filesByInput[] = $files;
-                    break;
-                }
-            }
-
-            $files2 = array_merge($files2, $filesByInput);
+        if (!isset($_FILES[$inputFileName])) {
+            return [];
         }
 
-        $files3 = [];
+        $files = $_FILES[$inputFileName];
+        $flattened = [];
 
-        foreach ($files2 as $file) { // filter out empty & errors
-            if (!$file['error']) {
-                $files3[] = $file;
+        // Check if the file input is multiple.
+        if (is_array($files['name'])) {
+            $count = count($files['name']);
+            for ($i = 0; $i < $count; $i++) {
+                // Only include files without errors.
+                if ((int)$files['error'][$i] === 0) {
+                    $flattened[] = [
+                        'name'     => $files['name'][$i],
+                        'type'     => $files['type'][$i],
+                        'tmp_name' => $files['tmp_name'][$i],
+                        'error'    => $files['error'][$i],
+                        'size'     => $files['size'][$i],
+                    ];
+                }
+            }
+        } else {
+            // Single file input.
+            if ((int)$files['error'] === 0) {
+                $flattened[] = $files;
             }
         }
 
-        return $files3;
+        return $flattened;
     }
 
 
@@ -83,7 +81,7 @@ abstract class ImageManager extends ApiResponse
 
         $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
 
-        $destination = self::PROJECT_ROOT . self::IMAGE_PATH . $file["name"];
+        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $file["name"];
 
         move_uploaded_file(
             $file["tmp_name"],
@@ -95,30 +93,28 @@ abstract class ImageManager extends ApiResponse
 
     protected function updateFile(?array $file, bool $checkbox, int $idLibro): string
     {
-        if ($file === null && $checkbox === false) {
-            $imageCurrentUrl = $this->getFileUrl($idLibro);
-            return $imageCurrentUrl;
+        // If there's no file uploaded, handle based on checkbox state.
+        if ($file === null) {
+            if ($checkbox) {
+                $this->deleteFile($idLibro);
+                return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
+            }
+            return $this->getFileUrl($idLibro);
         }
 
-        if ($file === null && $checkbox === true) {
-            $this->deleteFile($idLibro);
-            return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
+        // A new file is provided: remove the previous file.
+        $this->deleteFile($idLibro);
+
+        // Safely derive the file name.
+        $filename = basename($file["name"]);
+        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
+
+        // Move the uploaded file and verify success.
+        if (!move_uploaded_file($file["tmp_name"], $destination)) {
+            throw new RuntimeException("Failed to move the uploaded file.");
         }
 
-        if ($file) {
-            $this->deleteFile($idLibro);
-
-            $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
-
-            $destination = self::PROJECT_ROOT . self::IMAGE_PATH . $file["name"];
-
-            move_uploaded_file(
-                $file["tmp_name"],
-                $destination
-            );
-
-            return $url_completa;
-        }
+        return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
     }
 
     protected function deleteFile(int $idLibro): void
@@ -130,13 +126,13 @@ abstract class ImageManager extends ApiResponse
         if ($defaultImage === false) {
             $position = strpos($imageUrl, 'assets');
             $relativeImageRoute = substr($imageUrl, $position);
-            unlink(self::PROJECT_ROOT . $relativeImageRoute);
+            unlink(self::ROOT_DIRECTORY . $relativeImageRoute);
         }
     }
 
     protected function deleteAllFiles(): void
     {
-        $folder_path = self::PROJECT_ROOT . self::IMAGE_PATH;
+        $folder_path = self::ROOT_DIRECTORY . self::IMAGE_PATH;
 
         $files = glob($folder_path . '/*');
 
