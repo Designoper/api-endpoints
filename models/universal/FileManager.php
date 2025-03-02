@@ -27,13 +27,25 @@ abstract class FileManager extends ApiResponse
 
     // MARK: SETTERS
 
+    // private function setHost(): void
+    // {
+    //     $esquema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+    //     $host = $_SERVER['HTTP_HOST'];
+
+    //     $this->host = $esquema . $host;
+    // }
+
     private function setHost(): void
     {
-        $esquema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        // Determine protocol, default to HTTP if conditions not met.
+        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+        $protocol = $https ? 'https://' : 'http://';
 
-        $host = $_SERVER['HTTP_HOST'];
+        // Use HTTP_HOST if available, otherwise fall back to localhost.
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-        $this->host = $esquema . $host;
+        $this->host = $protocol . $host;
     }
 
     // MARK: FILE OPERATIONS
@@ -76,32 +88,30 @@ abstract class FileManager extends ApiResponse
     protected function uploadFile(?array $file): string
     {
         if ($file === null) {
-            return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
+            return $this->getHost() . '/api-endpoints/assets/img/' . self::DEFAULT_IMAGE;
         }
 
-        $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
+        $filename = basename($file["name"]);
+        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
 
-        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $file["name"];
+        if (!move_uploaded_file($file["tmp_name"], $destination)) {
+            throw new RuntimeException("Error uploading file: " . $filename);
+        }
 
-        move_uploaded_file(
-            $file["tmp_name"],
-            $destination
-        );
-
-        return $url_completa;
+        return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $idFile): string
+    protected function updateFile(?array $file, bool $checkbox, int $fileId): string
     {
         if ($file === null) {
             if ($checkbox) {
-                $this->deleteFile($idFile);
+                $this->deleteFile($fileId);
                 return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
             }
-            return $this->getFileUrl($idFile);
+            return $this->getFileUrl($fileId);
         }
 
-        $this->deleteFile($idFile);
+        $this->deleteFile($fileId);
 
         $filename = basename($file["name"]);
         $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
@@ -113,15 +123,15 @@ abstract class FileManager extends ApiResponse
         return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
     }
 
-    protected function deleteFile(int $idFile): void
+    protected function deleteFile(int $fileId): void
     {
-        $imageUrl = $this->getFileUrl($idFile);
+        $fileUrl = $this->getFileUrl($fileId);
 
-        $defaultImage = strpos($imageUrl, 'default/default.jpg');
+        $defaultImage = strpos($fileUrl, 'default/default.jpg');
 
         if ($defaultImage === false) {
-            $position = strpos($imageUrl, 'assets');
-            $relativeImageRoute = substr($imageUrl, $position);
+            $position = strpos($fileUrl, 'assets');
+            $relativeImageRoute = substr($fileUrl, $position);
             unlink(self::ROOT_DIRECTORY . $relativeImageRoute);
         }
     }
@@ -139,7 +149,7 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $idFile): string
+    private function getFileUrl(int $fileId): string
     {
         $statement =
             "SELECT portada
@@ -150,13 +160,13 @@ abstract class FileManager extends ApiResponse
 
         $query->bind_param(
             "i",
-            $idFile
+            $fileId
         );
 
         $query->execute();
-        $data = $query->get_result()->fetch_column();
+        $fileUrl = $query->get_result()->fetch_column();
         $query->close();
 
-        return $data;
+        return $fileUrl;
     }
 }
