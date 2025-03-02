@@ -192,6 +192,52 @@
 
 	</main>
 
+	<!-- Templates -->
+	<template id="categoria-template">
+		<select name="id_categoria" id="id_categoria">
+			<slot name="categoria-options">
+				<option value="">Seleccione una categoria...</option>
+			</slot>
+		</select>
+	</template>
+
+	<template id="libro-template">
+		<article>
+			<h3>
+				<slot name="libro-title">Título del libro</slot>
+			</h3>
+			<img src="" alt="Portada del libro" loading="lazy">
+			<p>
+				<slot name="libro-description">Descripción del libro</slot>
+			</p>
+			<p>
+				<slot name="libro-pages">Páginas: [número]</slot>
+			</p>
+			<p>
+				<slot name="libro-date">Fecha de publicación: [fecha]</slot>
+			</p>
+			<p>
+				<slot name="libro-category">Categoría: [categoría]</slot>
+			</p>
+			<menu>
+				<li>
+					<button type="button" commandfor="modificar-dialog-<slot name='libro-id'></slot>"
+						command="show-modal">
+						Modificar
+					</button>
+				</li>
+				<li>
+					<button type="button" commandfor="eliminar-dialog-<slot name='libro-id'></slot>"
+						command="show-modal">
+						Eliminar
+					</button>
+				</li>
+			</menu>
+			<!-- Dialogs for modifying and deleting can be added similarly, using slots if needed -->
+		</article>
+	</template>
+
 </body>
+
 
 </html>

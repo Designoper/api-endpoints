@@ -149,122 +149,27 @@ export class Libro extends Categoria {
 
     static librosTemplate(fetchedLibros, fetchedCategorias) {
 
-        const libros = fetchedLibros.map(libro =>
-            `<article>
+        const template = document.getElementById('libro-template');
+        const output = document.getElementById('fetchoutput');
+        output.innerHTML = ''; // Clear previous output
 
-                <h3>${libro['titulo']}</h3>
-                <img src="${libro['portada']}" alt="Portada de ${libro['titulo']}" loading="lazy">
-                <p>${libro['descripcion']}</p>
-                <p>Páginas: ${libro['paginas']}</p>
-                <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
-                <p>Categoria: ${libro['categoria']}</p>
+        fetchedLibros.forEach(libro => {
+            const clone = template.content.cloneNode(true);
+            clone.querySelector('slot[name="libro-title"]').textContent = libro.titulo;
+            clone.querySelector('img').src = libro.portada;
+            clone.querySelector('img').alt = 'Portada de ' + libro.titulo;
+            clone.querySelector('slot[name="libro-description"]').textContent = libro.descripcion;
+            clone.querySelector('slot[name="libro-pages"]').textContent = 'Páginas: ' + libro.paginas;
+            clone.querySelector('slot[name="libro-date"]').textContent = 'Fecha de publicación: ' + libro.fecha_publicacion_dd_mm_yyyy;
+            clone.querySelector('slot[name="libro-category"]').textContent = 'Categoría: ' + libro.categoria;
+            // For libro-id, you can insert a hidden element or modify the template; here we simply set text.
+            const idSlot = clone.querySelector('slot[name="libro-id"]');
+            if (idSlot) {
+                idSlot.textContent = libro.id_libro;
+            }
+            output.appendChild(clone);
+        });
 
-                <menu>
-                    <li>
-                        <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
-                    </li>
-                    <li>
-                        <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
-                    </li>
-                </menu>
-
-                <dialog id="modificar-dialog-${libro['id_libro']}">
-
-                    <form>
-                        <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
-
-                        <h3>Modificando ${libro['titulo']}</h3>
-
-                        <menu>
-                            <li>
-                                <label for='titulo'>Título *</label>
-                                <textarea id='titulo' name='titulo' required>${libro['titulo']}</textarea>
-                            </li>
-
-                            <li>
-                                <label for='descripcion'>Descripción *</label>
-                                <textarea id='descripcion' name='descripcion' required>${libro['descripcion']}</textarea>
-                            </li>
-
-                            <li>
-                                <label for='paginas'>Páginas *</label>
-                                <input type='number' id='paginas' name='paginas' value='${libro['paginas']}' required min='1'>
-                            </li>
-
-                            <li>
-								<label for="portada">Portada</label>
-								<input type="file" id="portada" name="portada" accept="image/*">
-							</li>
-
-                            <li>
-                                <input type="checkbox" id="eliminar_portada" name="eliminar_portada" value="">
-								<label for="eliminar_portada">Eliminar portada actual</label>
-							</li>
-
-                            <li>
-                                <label for='fecha_publicacion'>Fecha de publicación *</label>
-                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro['fecha_publicacion']}' required>
-                            </li>
-
-                            <li>
-                                <label for='categoria'>Categoria *</label>
-                                <select name='id_categoria' id='categoria' required>
-                                    <option value=''>Seleccione una categoria...</option>
-                                    ${fetchedCategorias.map(categoria =>
-                `<option
-                                            value='${categoria['id_categoria']}'
-                                            ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
-                                            ${categoria['categoria']}
-                                        </option>`
-            ).join('')}
-                                </select>
-                            </li>
-                        </menu>
-
-                        <fieldset>
-
-                            <menu>
-                                <li>
-                                    <button type='button' value='PUT'>Guardar cambios</button>
-                                </li>
-                                <li>
-                                    <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
-                                </li>
-                            </menu>
-
-                        </fieldset>
-
-                        <output></output>
-
-                    </form>
-                </dialog>
-
-                <dialog id="eliminar-dialog-${libro['id_libro']}">
-
-                <form>
-
-                    <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
-
-                    <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
-
-                    <fieldset>
-
-                        <menu>
-                            <li>
-                                <button type='button' value='DELETE'>Sí, eliminar</button>
-                            </li>
-                            <li>
-                                <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
-                            </li>
-                        </menu>
-
-                    </fieldset>
-                </form>
-
-                </dialog>
-
-            </article>`
-        ).join('');
 
         return libros;
     }
@@ -277,10 +182,27 @@ export class Libro extends Categoria {
         }
 
         else {
-            const categorias = await this.getCategorias();
-            const content = Libro.librosTemplate(libros.content, categorias.content);
-            Libro.fetchOutput.innerHTML = content;
-            Libro.errorContainer.innerHTML = "";
+            // const categorias = await this.getCategorias();
+            const template = document.getElementById('libro-template');
+            const output = document.getElementById('fetchoutput');
+            output.innerHTML = ''; // Clear previous output
+
+            libros.content.forEach(libro => {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector('slot[name="libro-title"]').textContent = libro.titulo;
+                clone.querySelector('img').src = libro.portada;
+                clone.querySelector('img').alt = 'Portada de ' + libro.titulo;
+                clone.querySelector('slot[name="libro-description"]').textContent = libro.descripcion;
+                clone.querySelector('slot[name="libro-pages"]').textContent = 'Páginas: ' + libro.paginas;
+                clone.querySelector('slot[name="libro-date"]').textContent = 'Fecha de publicación: ' + libro.fecha_publicacion_dd_mm_yyyy;
+                clone.querySelector('slot[name="libro-category"]').textContent = 'Categoría: ' + libro.categoria;
+                // For libro-id, you can insert a hidden element or modify the template; here we simply set text.
+                const idSlot = clone.querySelector('slot[name="libro-id"]');
+                if (idSlot) {
+                    idSlot.textContent = libro.id_libro;
+                }
+                output.appendChild(clone);
+            });
         }
 
         this.final();

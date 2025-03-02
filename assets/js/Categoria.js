@@ -21,6 +21,13 @@ export class Categoria extends Base {
 		fetchedCategorias,
 	}) {
 
+		// const categorias = fetchedCategorias.map(categoria =>
+		// 	`<option
+		// 		value='${categoria['id_categoria']}'>
+		// 		${categoria['categoria']}
+		// 	</option>`
+		// ).join('');
+
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
 				value='${categoria['id_categoria']}'>
