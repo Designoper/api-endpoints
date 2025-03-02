@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/ApiResponse.php';
 
 abstract class ImageManager extends ApiResponse
 {
     private readonly string $host;
-    private readonly string $projectRoot;
-    private string $imagePath = 'assets/img/';
+    private const string PROJECT_ROOT = __DIR__ . '/../../';
+    private const string IMAGE_PATH = 'assets/img/';
+    private const string DEFAULT_IMAGE = 'default/default.jpg';
 
     protected function __construct()
     {
         parent::__construct();
 
         $this->setHost();
-        $this->setProjectRoot();
     }
 
     // MARK: GETTERS
@@ -21,16 +23,6 @@ abstract class ImageManager extends ApiResponse
     private function getHost(): string
     {
         return $this->host;
-    }
-
-    private function getImagePath(): string
-    {
-        return $this->imagePath;
-    }
-
-    private function getProjectRoot(): string
-    {
-        return $this->projectRoot;
     }
 
     // MARK: SETTERS
@@ -42,11 +34,6 @@ abstract class ImageManager extends ApiResponse
         $host = $_SERVER['HTTP_HOST'];
 
         $this->host = $esquema . $host;
-    }
-
-    private function setProjectRoot(): void
-    {
-        $this->projectRoot = __DIR__ . '/../../';
     }
 
     // MARK: FILE OPERATIONS
@@ -96,7 +83,7 @@ abstract class ImageManager extends ApiResponse
 
         $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
 
-        $destination = $this->getProjectRoot() . $this->getImagePath() . $file["name"];
+        $destination = self::PROJECT_ROOT . self::IMAGE_PATH . $file["name"];
 
         move_uploaded_file(
             $file["tmp_name"],
@@ -123,7 +110,7 @@ abstract class ImageManager extends ApiResponse
 
             $url_completa = $this->getHost() . '/api-endpoints/assets/img/' . $file["name"];
 
-            $destination = $this->getProjectRoot() . $this->getImagePath() . $file["name"];
+            $destination = self::PROJECT_ROOT . self::IMAGE_PATH . $file["name"];
 
             move_uploaded_file(
                 $file["tmp_name"],
@@ -143,13 +130,13 @@ abstract class ImageManager extends ApiResponse
         if ($defaultImage === false) {
             $position = strpos($imageUrl, 'assets');
             $relativeImageRoute = substr($imageUrl, $position);
-            unlink($this->getProjectRoot() . $relativeImageRoute);
+            unlink(self::PROJECT_ROOT . $relativeImageRoute);
         }
     }
 
     protected function deleteAllFiles(): void
     {
-        $folder_path = $this->getProjectRoot() . $this->getImagePath();
+        $folder_path = self::PROJECT_ROOT . self::IMAGE_PATH;
 
         $files = glob($folder_path . '/*');
 

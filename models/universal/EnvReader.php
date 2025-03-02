@@ -1,28 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 abstract class EnvReader
 {
-	protected function __construct()
-	{
-		$this->getEnvironmentVariables();
-	}
+    protected function __construct()
+    {
+        $this->setEnvVariables();
+    }
 
-	private function getEnvironmentVariables(): void
-	{
-		$env_file = fopen('.env', 'r');
+    private function setEnvVariables(string $file = '.env'): void
+    {
+        if (!is_readable($file)) {
+            return;
+        }
 
-		if ($env_file) {
-			while (($line = fgets($env_file))) {
-				$line = trim($line);
-				if (empty($line) || $line[0] === '#') continue;
+        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            $line = trim($line);
 
-				list($key, $value) = explode('=', $line, 2);
-				if (!empty($key) && !empty($value)) {
-					putenv(sprintf('%s=%s', $key, $value));
-				}
-			}
+            if ($line === '' || str_starts_with($line, '#')) {
+                continue;
+            }
 
-			fclose($env_file);
-		}
-	}
+            $parts = explode('=', $line, 2);
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+            // if ($key !== '' && $value !== '') {
+            putenv(sprintf('%s=%s', $key, $value));
+            // }
+        }
+    }
 }

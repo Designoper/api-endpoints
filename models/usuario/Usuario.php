@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/UsuarioIntegrityErrors.php';
 
 final class Usuario extends UsuarioIntegrityErrors

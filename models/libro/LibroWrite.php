@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
@@ -145,16 +147,16 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setPortada(): void
 	{
 
-		$tmpFiles = $this->flattenFilesArray("portada");
+		$filesUploaded = $this->flattenFilesArray("portada");
 
-		if (count($tmpFiles) > 0) {
+		if (count($filesUploaded) > 0) {
 
-			if (count($tmpFiles) > 1) {
+			if (count($filesUploaded) > 1) {
 				$this->setValidationError("Solo se puede subir una imagen.");
 				return;
 			}
 
-			$portada = $tmpFiles[0];
+			$portada = $filesUploaded[0];
 
 			$fileType = exif_imagetype($portada['tmp_name']);
 

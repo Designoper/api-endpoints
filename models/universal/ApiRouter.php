@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/libro/Libro.php';
 require_once __DIR__ . '/../../models/libro/LibroFilter.php';
@@ -9,18 +11,16 @@ require_once __DIR__ . '/../../models/usuario/Usuario.php';
 
 final class ApiRouter extends Sanitizer
 {
+    private const string COMMON_PATH = '/api-endpoints/api/';
     private array $routes = [];
-    private readonly string $commonPath;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->setCommonPath('/api-endpoints/api/');
-
         $this->setRoute(
             'GET',
-            $this->getCommonPath() . 'libros/',
+            self::COMMON_PATH . 'libros/',
             function (): void {
                 $libro = new Libro();
                 $libro->readLibros();
@@ -29,7 +29,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            $this->getCommonPath() . 'libros/filter/',
+            self::COMMON_PATH . 'libros/filter/',
             function (): void {
                 $libro = new LibroFilter();
                 $libro->filterLibros();
@@ -38,7 +38,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            $this->getCommonPath() . 'categorias/',
+            self::COMMON_PATH . 'categorias/',
             function (): void {
                 $categoria = new Categoria();
                 $categoria->readCategorias();
@@ -47,7 +47,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'usuarios/',
+            self::COMMON_PATH . 'usuarios/',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->createUsuario();
@@ -56,7 +56,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'libros/create/',
+            self::COMMON_PATH . 'libros/create/',
             function (): void {
                 // $usuario = new Usuario();
                 // $usuario->login();
@@ -67,7 +67,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'libros/update/',
+            self::COMMON_PATH . 'libros/update/',
             function (): void {
                 // $usuario = new Usuario();
                 // $usuario->login();
@@ -78,7 +78,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'libros/delete/',
+            self::COMMON_PATH . 'libros/delete/',
             function (): void {
                 // $usuario = new Usuario();
                 // $usuario->login();
@@ -89,7 +89,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            $this->getCommonPath() . 'libros/delete-all/',
+            self::COMMON_PATH . 'libros/delete-all/',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteAllLibros();
@@ -97,16 +97,6 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->handleRequest();
-    }
-
-    private function getCommonPath(): string
-    {
-        return $this->commonPath;
-    }
-
-    private function setCommonPath(string $commonPath): void
-    {
-        $this->commonPath = $commonPath;
     }
 
     private function setRoute(string $method, string $path, callable $handler): void
