@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/LibroIntegrityErrors.php';
+require_once __DIR__ . '/parser.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
@@ -67,7 +68,15 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setIdLibro(): void
 	{
-		$input = $_POST['id_libro'] ?? null;
+		$method = $_SERVER['REQUEST_METHOD'];
+
+		if ($method === 'PUT' || $method === 'DELETE') {
+			// Use the custom parser for PUT requests
+			$parsedInput = parsePutMultipart();
+			$input = $parsedInput['id_libro'] ?? null;
+		} else {
+			$input = $_POST['id_libro'] ?? null;
+		}
 
 		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
 			$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");

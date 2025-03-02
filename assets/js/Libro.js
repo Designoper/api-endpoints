@@ -106,7 +106,7 @@ export class Libro extends Categoria {
 
         const response = await this.fetchData({
             url: 'http://localhost/api-endpoints/api/libros/delete/',
-            method: 'POST',
+            method: 'DELETE',
             form: form
         });
 

@@ -77,7 +77,7 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
-            'POST',
+            'DELETE',
             self::COMMON_PATH . 'libros/delete/',
             function (): void {
                 // $usuario = new Usuario();
