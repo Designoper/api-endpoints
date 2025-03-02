@@ -1,104 +1,98 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { Categoria } from "./Categoria.js";
+
 export class Libro extends Categoria {
+    static librosEndpoint: string = 'http://localhost/api-endpoints/api/libros/';
+    static librosFilterEndpoint: string = 'http://localhost/api-endpoints/api/libros/filter/';
+    static fetchOutput: HTMLElement | null = document.getElementById('fetchoutput');
+    static errorContainer: HTMLElement | null = document.getElementById('errorcontainer');
+
     constructor() {
         super();
     }
-    getLibros() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.fetchData({
-                url: Libro.librosEndpoint,
-                method: 'GET',
-            });
-            yield this.printLibros(response);
+
+    async getLibros(): Promise<any> {
+        const response = await this.fetchData({
+            url: Libro.librosEndpoint,
+            method: 'GET',
         });
+        await this.printLibros(response);
     }
-    filterLibros(form) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.fetchData({
-                url: Libro.librosFilterEndpoint,
-                method: 'GET',
-                form: form
-            });
-            yield this.printLibros(response);
+
+    async filterLibros(form: HTMLFormElement): Promise<any> {
+        const response = await this.fetchData({
+            url: Libro.librosFilterEndpoint,
+            method: 'GET',
+            form: form
         });
+        await this.printLibros(response);
     }
-    createLibro(form, errorContainer, dialog) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.fetchData({
-                url: 'http://localhost/api-endpoints/api/libros/create/',
-                method: 'POST',
-                form: form
-            });
-            if (response.ok) {
-                this.resetForm(form, errorContainer, dialog);
-                yield this.getLibros();
-            }
-            else {
-                this.errorChecker(response, errorContainer);
-            }
+
+    async createLibro(form: HTMLFormElement, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): Promise<any> {
+        const response = await this.fetchData({
+            url: 'http://localhost/api-endpoints/api/libros/create/',
+            method: 'POST',
+            form: form
         });
+
+        if (response.ok) {
+            this.resetForm(form, errorContainer, dialog);
+            await this.getLibros();
+        } else {
+            this.errorChecker(response, errorContainer);
+        }
     }
-    updateLibro(form, errorContainer, dialog) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.fetchData({
-                url: 'http://localhost/api-endpoints/api/libros/update/',
-                method: 'POST',
-                form: form
-            });
-            if (response.status === 204) {
-                this.resetForm(form, errorContainer, dialog);
-                return;
-            }
-            if (response.ok) {
-                this.resetForm(form, errorContainer, dialog);
-                yield this.getLibros();
-            }
-            else {
-                this.errorChecker(response, errorContainer);
-            }
+
+    async updateLibro(form: HTMLFormElement, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): Promise<any> {
+        const response = await this.fetchData({
+            url: 'http://localhost/api-endpoints/api/libros/update/',
+            method: 'POST',
+            form: form
         });
+
+        if (response.status === 204) {
+            this.resetForm(form, errorContainer, dialog);
+            return;
+        }
+
+        if (response.ok) {
+            this.resetForm(form, errorContainer, dialog);
+            await this.getLibros();
+        } else {
+            this.errorChecker(response, errorContainer);
+        }
     }
-    deleteLibro(form, errorContainer, dialog) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.fetchData({
-                url: 'http://localhost/api-endpoints/api/libros/delete/',
-                method: 'POST',
-                form: form
-            });
-            yield this.getLibros();
+
+    async deleteLibro(form: HTMLFormElement, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): Promise<void> {
+        await this.fetchData({
+            url: 'http://localhost/api-endpoints/api/libros/delete/',
+            method: 'POST',
+            form: form
         });
+        await this.getLibros();
     }
-    deleteAllLibro(form, errorContainer, dialog) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.fetchData({
-                url: 'http://localhost/api-endpoints/api/libros/delete-all/',
-                method: 'POST',
-                form: form
-            });
-            if (response.ok) {
-                this.resetForm(form, errorContainer, dialog);
-                yield this.getLibros();
-            }
-            else {
-                this.errorChecker(response, errorContainer);
-            }
+
+    async deleteAllLibro(form: HTMLFormElement, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): Promise<any> {
+        const response = await this.fetchData({
+            url: 'http://localhost/api-endpoints/api/libros/delete-all/',
+            method: 'POST',
+            form: form
         });
+
+        if (response.ok) {
+            this.resetForm(form, errorContainer, dialog);
+            await this.getLibros();
+        } else {
+            this.errorChecker(response, errorContainer);
+        }
     }
-    resetForm(form, errorContainer, dialog) {
+
+    resetForm(form: HTMLFormElement, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): void {
         form.reset();
         dialog.close();
         errorContainer.innerHTML = "";
     }
-    static librosTemplate(fetchedLibros, fetchedCategorias) {
+
+    static librosTemplate(fetchedLibros: any[], fetchedCategorias: any[]): string {
         return fetchedLibros.map(libro => `
             <article>
                 <h3>${libro['titulo']}</h3>
@@ -154,9 +148,11 @@ export class Libro extends Categoria {
                                 <label for="categoria">Categoria *</label>
                                 <select name="id_categoria" id="categoria" required>
                                     <option value="">Seleccione una categoria...</option>
-                                    ${fetchedCategorias.map(categoria => `<option value="${categoria['id_categoria']}" ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
+                                    ${fetchedCategorias.map(categoria =>
+            `<option value="${categoria['id_categoria']}" ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
                                             ${categoria['categoria']}
-                                        </option>`).join('')}
+                                        </option>`).join('')
+            }
                                 </select>
                             </li>
                         </menu>
@@ -197,87 +193,88 @@ export class Libro extends Categoria {
             </article>
         `).join('');
     }
-    printLibros(libros) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!libros.content || libros.content.length === 0) {
-                if (Libro.fetchOutput)
-                    Libro.fetchOutput.innerHTML = "";
-                if (Libro.errorContainer)
-                    Libro.errorContainer.innerHTML = libros.message;
-            }
-            else {
-                const categorias = yield this.getCategorias();
-                const content = Libro.librosTemplate(libros.content, categorias.content);
-                if (Libro.fetchOutput)
-                    Libro.fetchOutput.innerHTML = content;
-                if (Libro.errorContainer)
-                    Libro.errorContainer.innerHTML = "";
-            }
-            this.final();
-        });
+
+    async printLibros(libros: any): Promise<void> {
+        if (!libros.content || libros.content.length === 0) {
+            if (Libro.fetchOutput) Libro.fetchOutput.innerHTML = "";
+            if (Libro.errorContainer) Libro.errorContainer.innerHTML = libros.message;
+        } else {
+            const categorias = await this.getCategorias();
+            const content = Libro.librosTemplate(libros.content, categorias.content);
+            if (Libro.fetchOutput) Libro.fetchOutput.innerHTML = content;
+            if (Libro.errorContainer) Libro.errorContainer.innerHTML = "";
+        }
+        this.final();
     }
-    optionsDropdown() {
+
+    optionsDropdown(): void {
         const emptyOptions = document.querySelectorAll('option:not([value])');
         emptyOptions.forEach(option => {
-            this.printCategorias(option);
+            this.printCategorias(option as HTMLElement);
         });
     }
-    filterButton() {
-        const button = document.querySelector('[value="GET"]');
-        const form = button.closest('form');
+
+    filterButton(): void {
+        const button = document.querySelector('[value="GET"]') as HTMLButtonElement;
+        const form = button.closest('form') as HTMLFormElement;
         form.onsubmit = () => {
             this.filterLibros(form);
         };
     }
-    postButton() {
-        const button = document.querySelector('[value="POST"]');
-        const form = button.closest('form');
-        const dialog = button.closest('dialog');
-        const output = form.querySelector('output');
+
+    postButton(): void {
+        const button = document.querySelector('[value="POST"]') as HTMLButtonElement;
+        const form = button.closest('form') as HTMLFormElement;
+        const dialog = button.closest('dialog') as HTMLDialogElement;
+        const output = form.querySelector('output') as HTMLOutputElement;
         button.onclick = () => {
             if (form.reportValidity()) {
                 this.createLibro(form, output, dialog);
             }
         };
     }
-    putButton() {
-        const putButtons = document.querySelectorAll('[value="PUT"]');
+
+    putButton(): void {
+        const putButtons = document.querySelectorAll('[value="PUT"]') as NodeListOf<HTMLButtonElement>;
         putButtons.forEach(button => {
             button.onclick = () => {
-                const form = button.closest('form');
-                const dialog = button.closest('dialog');
-                const output = form.querySelector('output');
+                const form = button.closest('form') as HTMLFormElement;
+                const dialog = button.closest('dialog') as HTMLDialogElement;
+                const output = form.querySelector('output') as HTMLOutputElement;
                 if (form.reportValidity()) {
                     this.updateLibro(form, output, dialog);
                 }
             };
         });
     }
-    deleteButton() {
-        const deleteButtons = document.querySelectorAll('[value="DELETE"]');
+
+    deleteButton(): void {
+        const deleteButtons = document.querySelectorAll('[value="DELETE"]') as NodeListOf<HTMLButtonElement>;
         deleteButtons.forEach(button => {
             button.onclick = () => {
-                const form = button.closest('form');
-                const dialog = button.closest('dialog');
-                const output = form.querySelector('output');
+                const form = button.closest('form') as HTMLFormElement;
+                const dialog = button.closest('dialog') as HTMLDialogElement;
+                const output = form.querySelector('output') as HTMLOutputElement;
                 if (form.reportValidity()) {
                     this.deleteLibro(form, output, dialog);
                 }
             };
         });
     }
-    deleteAllButton() {
-        const button = document.querySelector('[value="DELETE_ALL"]');
+
+    deleteAllButton(): void {
+        const button = document.querySelector('[value="DELETE_ALL"]') as HTMLButtonElement;
         button.onclick = () => {
-            const form = button.closest('form');
-            const dialog = button.closest('dialog');
-            const output = form.querySelector('output');
+            const form = button.closest('form') as HTMLFormElement;
+            const dialog = button.closest('dialog') as HTMLDialogElement;
+            const output = form.querySelector('output') as HTMLOutputElement;
             if (form.reportValidity()) {
                 this.deleteAllLibro(form, output, dialog);
             }
         };
     }
-    final() {
+
+    final(): void {
         this.optionsDropdown();
         this.filterButton();
         this.postButton();
@@ -286,8 +283,5 @@ export class Libro extends Categoria {
         this.deleteAllButton();
     }
 }
-Libro.librosEndpoint = 'http://localhost/api-endpoints/api/libros/';
-Libro.librosFilterEndpoint = 'http://localhost/api-endpoints/api/libros/filter/';
-Libro.fetchOutput = document.getElementById('fetchoutput');
-Libro.errorContainer = document.getElementById('errorcontainer');
+
 new Libro().getLibros();
