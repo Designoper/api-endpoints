@@ -1,4 +1,4 @@
-import { Categoria } from "./Categoria.js";
+import { Categoria } from "./Categoria";
 
 export class Libro extends Categoria {
     static librosEndpoint: string = 'http://localhost/api-endpoints/api/libros/';

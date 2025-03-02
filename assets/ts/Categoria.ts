@@ -1,4 +1,4 @@
-import { Base } from "./Base.js";
+import { Base } from "./Base";
 
 export class Categoria extends Base {
     static categoriasEndpoint: string = 'http://localhost/api-endpoints/api/categorias/';

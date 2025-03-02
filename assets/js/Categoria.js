@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Base } from "./Base.js";
+import { Base } from "./Base";
 export class Categoria extends Base {
     constructor() {
         super();
