@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../universal/ImageManager.php';
+require_once __DIR__ . '/../universal/FileManager.php';
 
-abstract class LibroIntegrityErrors extends ImageManager
+abstract class LibroIntegrityErrors extends FileManager
 {
 	protected function __construct()
 	{

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/ApiResponse.php';
 
-abstract class ImageManager extends ApiResponse
+abstract class FileManager extends ApiResponse
 {
     private readonly string $host;
     private const string ROOT_DIRECTORY = __DIR__ . '/../../';
@@ -91,25 +91,21 @@ abstract class ImageManager extends ApiResponse
         return $url_completa;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $idLibro): string
+    protected function updateFile(?array $file, bool $checkbox, int $idFile): string
     {
-        // If there's no file uploaded, handle based on checkbox state.
         if ($file === null) {
             if ($checkbox) {
-                $this->deleteFile($idLibro);
+                $this->deleteFile($idFile);
                 return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
             }
-            return $this->getFileUrl($idLibro);
+            return $this->getFileUrl($idFile);
         }
 
-        // A new file is provided: remove the previous file.
-        $this->deleteFile($idLibro);
+        $this->deleteFile($idFile);
 
-        // Safely derive the file name.
         $filename = basename($file["name"]);
         $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
 
-        // Move the uploaded file and verify success.
         if (!move_uploaded_file($file["tmp_name"], $destination)) {
             throw new RuntimeException("Failed to move the uploaded file.");
         }
@@ -117,9 +113,9 @@ abstract class ImageManager extends ApiResponse
         return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
     }
 
-    protected function deleteFile(int $idLibro): void
+    protected function deleteFile(int $idFile): void
     {
-        $imageUrl = $this->getFileUrl($idLibro);
+        $imageUrl = $this->getFileUrl($idFile);
 
         $defaultImage = strpos($imageUrl, 'default/default.jpg');
 
@@ -143,7 +139,7 @@ abstract class ImageManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $idLibro): string
+    private function getFileUrl(int $idFile): string
     {
         $statement =
             "SELECT portada
@@ -154,7 +150,7 @@ abstract class ImageManager extends ApiResponse
 
         $query->bind_param(
             "i",
-            $idLibro
+            $idFile
         );
 
         $query->execute();
