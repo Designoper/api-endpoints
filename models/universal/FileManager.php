@@ -10,6 +10,7 @@ abstract class FileManager extends ApiResponse
     private const string ROOT_DIRECTORY = __DIR__ . '/../../';
     private const string IMAGE_PATH = 'assets/img/';
     private const string DEFAULT_IMAGE = 'default/default.jpg';
+    private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
 
     protected function __construct()
     {
@@ -84,17 +85,17 @@ abstract class FileManager extends ApiResponse
     protected function uploadFile(?array $file): string
     {
         if ($file === null) {
-            return $this->getHost() . '/api-endpoints/assets/img/' . self::DEFAULT_IMAGE;
+            return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . self::DEFAULT_IMAGE;
         }
 
         $filename = basename($file["name"]);
-        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
+        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $filename;
 
         if (!move_uploaded_file($file["tmp_name"], $destination)) {
             throw new RuntimeException("Error uploading file: " . $filename);
         }
 
-        return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
+        return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . $filename;
     }
 
     protected function updateFile(?array $file, bool $checkbox, int $fileId): string
@@ -102,7 +103,7 @@ abstract class FileManager extends ApiResponse
         if ($file === null) {
             if ($checkbox) {
                 $this->deleteFile($fileId);
-                return $this->getHost() . '/api-endpoints/assets/img/default/default.jpg';
+                return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . self::DEFAULT_IMAGE;
             }
             return $this->getFileUrl($fileId);
         }
@@ -110,20 +111,20 @@ abstract class FileManager extends ApiResponse
         $this->deleteFile($fileId);
 
         $filename = basename($file["name"]);
-        $destination = self::ROOT_DIRECTORY . self::IMAGE_PATH . $filename;
+        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $filename;
 
         if (!move_uploaded_file($file["tmp_name"], $destination)) {
             throw new RuntimeException("Failed to move the uploaded file.");
         }
 
-        return $this->getHost() . '/api-endpoints/assets/img/' . $filename;
+        return $this->getHost() . '/api-endpoints/' . self::IMAGE_PATH . $filename;
     }
 
     protected function deleteFile(int $fileId): void
     {
         $fileUrl = $this->getFileUrl($fileId);
 
-        $defaultImage = strpos($fileUrl, 'default/default.jpg');
+        $defaultImage = strpos($fileUrl, self::DEFAULT_IMAGE);
 
         if ($defaultImage === false) {
             $position = strpos($fileUrl, 'assets');
