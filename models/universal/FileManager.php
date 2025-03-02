@@ -28,18 +28,8 @@ abstract class FileManager extends ApiResponse
 
     // MARK: SETTERS
 
-    // private function setHost(): void
-    // {
-    //     $esquema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-
-    //     $host = $_SERVER['HTTP_HOST'];
-
-    //     $this->host = $esquema . $host;
-    // }
-
     private function setHost(): void
     {
-        // Determine protocol, default to HTTP if conditions not met.
         $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
         $protocol = $https ? 'https://' : 'http://';
 
