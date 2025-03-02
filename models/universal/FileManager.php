@@ -42,7 +42,6 @@ abstract class FileManager extends ApiResponse
         $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
         $protocol = $https ? 'https://' : 'http://';
 
-        // Use HTTP_HOST if available, otherwise fall back to localhost.
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
         $this->host = $protocol . $host;
@@ -59,11 +58,9 @@ abstract class FileManager extends ApiResponse
         $files = $_FILES[$inputFileName];
         $flattened = [];
 
-        // Check if the file input is multiple.
         if (is_array($files['name'])) {
             $count = count($files['name']);
             for ($i = 0; $i < $count; $i++) {
-                // Only include files without errors.
                 if ((int)$files['error'][$i] === 0) {
                     $flattened[] = [
                         'name'     => $files['name'][$i],
@@ -75,7 +72,6 @@ abstract class FileManager extends ApiResponse
                 }
             }
         } else {
-            // Single file input.
             if ((int)$files['error'] === 0) {
                 $flattened[] = $files;
             }
