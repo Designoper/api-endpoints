@@ -14,7 +14,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly int $idCategoria;
 
 	private readonly bool $checkbox;
-	private readonly ?array $portada;
+	// private readonly ?array $portada;
 
 	public function __construct()
 	{
@@ -53,10 +53,10 @@ final class LibroWrite extends LibroIntegrityErrors
 		return $this->idCategoria;
 	}
 
-	private function getPortada(): ?array
-	{
-		return $this->portada;
-	}
+	// private function getPortada(): ?array
+	// {
+	// 	return $this->portada;
+	// }
 
 	private function getCheckbox(): bool
 	{
@@ -149,7 +149,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$filesUploaded = $this->flattenFilesArray("portada");
 
 		if (empty($filesUploaded)) {
-			$this->portada = null;
+			$this->setFile(null);
 			return;
 		}
 
@@ -171,7 +171,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			$this->setValidationError('La imagen no puede superar 1MB.');
 		}
 
-		$this->portada = $portada;
+		$this->setFile($portada);
 	}
 
 	private function setCheckbox(): void
@@ -203,7 +203,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->uploadFile($this->getPortada());
+		$this->nameUploadFile();
+
+		$this->uploadFile();
+
+		$portada = $this->getFileUrl2();
 
 		$statement =
 			"INSERT INTO libros (
@@ -271,7 +275,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->updateFile($this->getPortada(), $this->getCheckbox(), $this->getIdLibro());
+		// $portada = $this->updateFile($this->getPortada(), $this->getCheckbox(), $this->getIdLibro());
 
 		$statement =
 			"UPDATE libros

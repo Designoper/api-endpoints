@@ -12,6 +12,12 @@ abstract class FileManager extends ApiResponse
     private const string DEFAULT_IMAGE = 'default/default.jpg';
     private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
 
+    private readonly ?array $file;
+    private readonly string $uniqueFilename;
+    private readonly string $fileUrl;
+    private readonly string $fileDestination;
+    private bool $deleteCurrentFileCheckbox = false;
+
     protected function __construct()
     {
         parent::__construct();
@@ -26,7 +32,29 @@ abstract class FileManager extends ApiResponse
         return $this->host;
     }
 
+    protected function getFileUrl2(): string
+    {
+        return $this->fileUrl;
+    }
+
     // MARK: SETTERS
+
+    protected function setFile(?array $file): void
+    {
+        $this->file = $file;
+    }
+
+    private function setUniqueFilename(): void
+    {
+        $extension = pathinfo($this->file['name'], PATHINFO_EXTENSION);
+        $filename = pathinfo($this->file['name'], PATHINFO_FILENAME);
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+    }
+
+    private function setFileDestination(): void
+    {
+        $this->fileDestination = self::IMAGE_FOLDER_RELATIVE_RUTE . $this->uniqueFilename;
+    }
 
     private function setHost(): void
     {
@@ -71,50 +99,62 @@ abstract class FileManager extends ApiResponse
         return $newArray;
     }
 
-    private function generateUniqueFilename(string $originalFilename): string
+    protected function nameUploadFile(): void
     {
-        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+        if ($this->file === null) {
+            $this->fileUrl = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+            return;
+        }
+
+        $this->setUniqueFilename();
+        $this->fileUrl = $this->getHost() . self::IMAGE_PATH . $this->uniqueFilename;
     }
 
-    protected function uploadFile(?array $file): string
+
+
+    protected function uploadFile(): void
     {
-        if ($file === null) {
-            return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+        if ($this->file === null) {
+            return;
         }
 
         if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
             if (!mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true)) {
-                throw new RuntimeException("Failed to create directory: " . self::IMAGE_FOLDER_RELATIVE_RUTE);
+                throw new RuntimeException("Failed to create directory:");
             }
         }
 
-        $uniqueFilename = $this->generateUniqueFilename($file['name']);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
+        $this->setFileDestination();
 
-        if (!move_uploaded_file($file['tmp_name'], $destination)) {
-            throw new RuntimeException("Error uploading file: " . $uniqueFilename);
+        if (!move_uploaded_file($this->file['tmp_name'], $this->fileDestination)) {
+            throw new RuntimeException("Error uploading file");
         }
-
-        return $this->getHost() . self::IMAGE_PATH . $uniqueFilename;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $fileId): string
+
+
+    protected function updateFile(?array $file, bool $checkbox, int $fileId)
     {
-        if ($file === null) {
-            if ($checkbox) {
-                $this->deleteFile($fileId);
-                return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
-            }
-            return $this->getFileUrl($fileId);
-        }
+        // if ($file === null) {
+        //     if ($checkbox) {
+        //         $this->deleteFile($fileId);
+        //         return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+        //     }
+        //     return $this->getFileUrl($fileId);
+        // }
 
-        $this->deleteFile($fileId);
+        // $this->deleteFile($fileId);
 
-        $fileUrl = $this->uploadFile($file);
-        return $fileUrl;
+        // $fileUrl = $this->uploadFile($file);
+        // return $fileUrl;
     }
+
+
+
+
+
+
+
 
     protected function deleteFile(int $fileId): void
     {
