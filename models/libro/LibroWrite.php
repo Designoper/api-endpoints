@@ -146,7 +146,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setPortada(): void
 	{
-
 		$filesUploaded = $this->flattenFilesArray("portada");
 
 		if (empty($filesUploaded)) {
