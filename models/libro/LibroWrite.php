@@ -198,15 +198,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
-		$this->tituloExists($this->getTitulo());
-		$this->idCategoriaExists($this->getIdCategoria());
+		try {
+			$portada = $this->uploadFile($this->getPortada());
 
-		$this->checkIntegrityErrors();
-
-		$portada = $this->uploadFile($this->getPortada());
-
-		$statement =
-			"INSERT INTO libros (
+			$statement =
+				"INSERT INTO libros (
 				titulo,
 				descripcion,
 				portada,
@@ -223,30 +219,46 @@ final class LibroWrite extends LibroIntegrityErrors
 				?
 			)";
 
-		$query = $this->getConnection()->prepare($statement);
+			$query = $this->getConnection()->prepare($statement);
 
-		$titulo = $this->getTitulo();
-		$descripcion = $this->getDescripcion();
-		$paginas = $this->getPaginas();
-		$fechaPublicacion = $this->getFechaPublicacion();
-		$idCategoria = $this->getIdCategoria();
+			$titulo = $this->getTitulo();
+			$descripcion = $this->getDescripcion();
+			$paginas = $this->getPaginas();
+			$fechaPublicacion = $this->getFechaPublicacion();
+			$idCategoria = $this->getIdCategoria();
 
-		$query->bind_param(
-			"sssisi",
-			$titulo,
-			$descripcion,
-			$portada,
-			$paginas,
-			$fechaPublicacion,
-			$idCategoria
-		);
+			$query->bind_param(
+				"sssisi",
+				$titulo,
+				$descripcion,
+				$portada,
+				$paginas,
+				$fechaPublicacion,
+				$idCategoria
+			);
 
-		$query->execute();
-		$query->close();
+			$query->execute();
+			$query->close();
 
-		$this->setStatus(201);
-		$this->setMessage("Libro creado");
-		$this->getResponse();
+			$this->setStatus(201);
+			$this->setMessage("Libro creado");
+			$this->getResponse();
+		} catch (Exception $error) {
+
+			//error 1062 clave única duplicada
+			if ($error->getCode() == 1062) {
+				$this->setStatus(409);
+				$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
+				$this->checkIntegrityErrors();
+			}
+
+			//error 1452 clave foránea no válida
+			if ($error->getCode() == 1452) {
+				$this->setStatus(404);
+				$this->setIntegrityError('¡La categoria seleccionada no existe!');
+				$this->checkIntegrityErrors();
+			}
+		}
 	}
 
 	// MARK: UPDATE
@@ -266,63 +278,76 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->checkValidationErrors();
 
 		$this->idLibroExists($this->getIdLibro());
-		$this->tituloUpdateExists($this->getTitulo(), $this->getIdLibro());
-		$this->idCategoriaExists($this->getIdCategoria());
 
-		$this->checkIntegrityErrors();
+		try {
+			$portada = $this->updateFile($this->getPortada(), $this->getCheckbox(), $this->getIdLibro());
 
-		$portada = $this->updateFile($this->getPortada(), $this->getCheckbox(), $this->getIdLibro());
+			$statement =
+				"UPDATE libros
+					SET titulo = ?,
+					descripcion = ?,
+					portada = ?,
+					paginas = ?,
+					fecha_publicacion = ?,
+					id_categoria = ?
+				WHERE id_libro = ?";
 
-		$statement =
-			"UPDATE libros
-				SET titulo = ?,
-				descripcion = ?,
-				portada = ?,
-				paginas = ?,
-				fecha_publicacion = ?,
-				id_categoria = ?
-			WHERE id_libro = ?";
+			$query = $this->getConnection()->prepare($statement);
 
-		$query = $this->getConnection()->prepare($statement);
+			$idLibro = $this->getIdLibro();
+			$titulo = $this->getTitulo();
+			$descripcion = $this->getDescripcion();
+			$paginas = $this->getPaginas();
+			$fechaPublicacion = $this->getFechaPublicacion();
+			$idCategoria = $this->getIdCategoria();
 
-		$idLibro = $this->getIdLibro();
-		$titulo = $this->getTitulo();
-		$descripcion = $this->getDescripcion();
-		$paginas = $this->getPaginas();
-		$fechaPublicacion = $this->getFechaPublicacion();
-		$idCategoria = $this->getIdCategoria();
+			$query->bind_param(
+				"sssisii",
+				$titulo,
+				$descripcion,
+				$portada,
+				$paginas,
+				$fechaPublicacion,
+				$idCategoria,
+				$idLibro
+			);
 
-		$query->bind_param(
-			"sssisii",
-			$titulo,
-			$descripcion,
-			$portada,
-			$paginas,
-			$fechaPublicacion,
-			$idCategoria,
-			$idLibro
-		);
+			$query->execute();
+			$numFilas = $query->affected_rows;
+			$query->close();
 
-		$query->execute();
-		$numFilas = $query->affected_rows;
-		$query->close();
+			if ($numFilas === 1) {
+				// $libroModificado = [
+				// 	"titulo" => $this->getTitulo(),
+				// 	"descripcion" => $this->getDescripcion(),
+				// 	"paginas" => $this->getPaginas(),
+				// 	"fecha_de_publicacion" => $this->getFechaPublicacion(),
+				// 	"Id categoria" => $this->getIdCategoria()
+				// ];
 
-		if ($numFilas === 1) {
-			// $libroModificado = [
-			// 	"titulo" => $this->getTitulo(),
-			// 	"descripcion" => $this->getDescripcion(),
-			// 	"paginas" => $this->getPaginas(),
-			// 	"fecha_de_publicacion" => $this->getFechaPublicacion(),
-			// 	"Id categoria" => $this->getIdCategoria()
-			// ];
+				$this->setStatus(200);
+				$this->setMessage('¡Libro modificado!');
+				// $this->setUpdatedContent($libroModificado);
+			} else {
+				$this->setStatus(204);
+			}
+			$this->getResponse();
+		} catch (Exception $error) {
 
-			$this->setStatus(200);
-			$this->setMessage('¡Libro modificado!');
-			// $this->setUpdatedContent($libroModificado);
-		} else {
-			$this->setStatus(204);
+			//error 1062 clave única duplicada
+			if ($error->getCode() == 1062) {
+				$this->setStatus(409);
+				$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
+				$this->checkIntegrityErrors();
+			}
+
+			//error 1452 clave foránea no válida
+			if ($error->getCode() == 1452) {
+				$this->setStatus(404);
+				$this->setIntegrityError('¡La categoria seleccionada no existe!');
+				$this->checkIntegrityErrors();
+			}
 		}
-		$this->getResponse();
 	}
 
 	// MARK: DELETE
@@ -332,12 +357,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->setIdLibro();
 
 		$this->checkValidationErrors();
-
-		$this->idLibroExists($this->getIdLibro());
-
-		$this->checkIntegrityErrors();
-
-		$this->deleteFile($this->getIdLibro());
 
 		$statement =
 			"DELETE FROM libros
@@ -353,31 +372,41 @@ final class LibroWrite extends LibroIntegrityErrors
 		);
 
 		$query->execute();
+		$numFilas = $query->affected_rows;
 		$query->close();
 
-		$this->setStatus(204);
-		$this->getResponse();
+		if ($numFilas === 1) {
+			$this->setStatus(204);
+			$this->deleteFile($this->getIdLibro());
+			$this->getResponse();
+		}
+
+		$this->setStatus(404);
+		$this->setIntegrityError('¡El libro solicitado no existe!');
+		$this->checkIntegrityErrors();
 	}
 
 	// MARK: DELETE ALL
 
 	public function deleteAllLibros(): void
 	{
-		$this->librosExists();
-
-		$this->checkIntegrityErrors();
-
-		$this->deleteAllFiles();
-
 		$statement =
 			"TRUNCATE TABLE libros";
 
 		$query = $this->getConnection()->prepare($statement);
-		$query->execute();
 
+		$query->execute();
+		$numFilas = $query->affected_rows;
 		$query->close();
 
+		if ($numFilas === 0) {
+			$this->setStatus(404);
+			$this->setIntegrityError('¡No hay ningún libro!');
+			$this->checkIntegrityErrors();
+		}
+
 		$this->setStatus(204);
+		$this->deleteAllFiles();
 		$this->getResponse();
 	}
 }
