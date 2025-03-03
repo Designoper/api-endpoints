@@ -47,13 +47,13 @@ abstract class FileManager extends ApiResponse
         }
 
         $files = $_FILES[$inputFileName];
-        $flattened = [];
+        $newArray = [];
 
         if (is_array($files['name'])) {
             $count = count($files['name']);
             for ($i = 0; $i < $count; $i++) {
                 if ((int)$files['error'][$i] === 0) {
-                    $flattened[] = [
+                    $newArray[] = [
                         'name'     => $files['name'][$i],
                         'type'     => $files['type'][$i],
                         'tmp_name' => $files['tmp_name'][$i],
@@ -64,18 +64,18 @@ abstract class FileManager extends ApiResponse
             }
         } else {
             if ((int)$files['error'] === 0) {
-                $flattened[] = $files;
+                $newArray[] = $files;
             }
         }
 
-        return $flattened;
+        return $newArray;
     }
 
     private function generateUniqueFilename(string $originalFilename): string
     {
         $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-        $basename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        return $basename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
+        return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
     protected function uploadFile(?array $file): string

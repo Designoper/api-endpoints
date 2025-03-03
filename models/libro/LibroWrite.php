@@ -149,34 +149,30 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$filesUploaded = $this->flattenFilesArray("portada");
 
-		if (count($filesUploaded) > 0) {
-
-			if (count($filesUploaded) > 1) {
-				$this->setValidationError("Solo se puede subir una imagen.");
-				return;
-			}
-
-			$portada = $filesUploaded[0];
-
-			$fileType = exif_imagetype($portada['tmp_name']);
-
-			if ($fileType === false) {
-				$this->setValidationError("El archivo no es una imagen.");
-			}
-
-			$allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
-			if (!in_array($fileType, $allowedTypes)) {
-				$this->setValidationError("Solo se permiten archivos JPEG y PNG.");
-			}
-
-			if ($portada['size'] > 1000000) {
-				$this->setValidationError('La imagen no puede superar 1MB.');
-			}
-
-			$this->portada = $portada;
-		} else {
+		if (empty($filesUploaded)) {
 			$this->portada = null;
+			return;
 		}
+
+		if (count($filesUploaded) > 1) {
+			$this->setValidationError('Solo se puede subir una imagen.');
+			return;
+		}
+
+		$portada = $filesUploaded[0];
+
+		$fileType = exif_imagetype($portada['tmp_name']);
+
+		$allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
+		if (!in_array($fileType, $allowedTypes)) {
+			$this->setValidationError("Solo se permiten imágenes JPEG y PNG.");
+		}
+
+		if ($portada['size'] > 1048576) {
+			$this->setValidationError('La imagen no puede superar 1MB.');
+		}
+
+		$this->portada = $portada;
 	}
 
 	private function setCheckbox(): void
