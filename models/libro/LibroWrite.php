@@ -163,13 +163,17 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setCheckbox(): void
 	{
-		if (isset($_POST['eliminar_portada'])) {
-			$input = $_POST['eliminar_portada'];
+		if (!isset($_POST['eliminar_portada'])) {
+			$this->setDeleteCheckbox(false);
+			return;
+		}
 
-			if ($input === "") {
-				$this->setDeleteCheckbox(true);
-			} else $this->setValidationError("El único valor válido para eliminar_portada es campo vacío");
-		} else $this->setDeleteCheckbox(false);
+		if ($_POST['eliminar_portada'] !== "") {
+			$this->setValidationError("El único valor válido para eliminar_portada es campo vacío");
+			return;
+		}
+
+		$this->setDeleteCheckbox(true);
 	}
 
 	// MARK: CREATE
