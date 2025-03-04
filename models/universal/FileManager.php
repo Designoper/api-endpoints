@@ -103,9 +103,7 @@ abstract class FileManager extends ApiResponse
         $uniqueFilename = $this->generateUniqueFilename($file['name']);
         $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
 
-        if (!move_uploaded_file($file['tmp_name'], $destination)) {
-            throw new RuntimeException("Error uploading file: " . $uniqueFilename);
-        }
+        move_uploaded_file($file['tmp_name'], $destination);
 
         return self::IMAGE_PATH . $uniqueFilename;
     }
