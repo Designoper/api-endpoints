@@ -3,6 +3,11 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ controller.php [QSA,L]
 
+# Add new rule for image 404s
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_URI} ^/assets/img/
+# RewriteRule ^assets/img/(.*)$ assets/img/default/default.jpg [L]
+
 <FilesMatch "^\.(env|gitignore)$">
     Require all denied
 </FilesMatch>
