@@ -14,6 +14,7 @@ abstract class FileManager extends ApiResponse
     private readonly string $defaultImage;
 
     private readonly ?array $file;
+    private readonly bool $deleteCheckbox;
 
     protected function __construct()
     {
@@ -40,6 +41,11 @@ abstract class FileManager extends ApiResponse
         return $this->file;
     }
 
+    protected function getDeleteCheckbox(): bool
+    {
+        return $this->deleteCheckbox;
+    }
+
     // MARK: SETTERS
 
     private function setHost(): void
@@ -60,6 +66,11 @@ abstract class FileManager extends ApiResponse
     protected function setFile(?array $file): void
     {
         $this->file = $file;
+    }
+
+    protected function setDeleteCheckbox(bool $checkbox): void
+    {
+        $this->deleteCheckbox = $checkbox;
     }
 
     // MARK: FILE OPERATIONS
@@ -120,10 +131,10 @@ abstract class FileManager extends ApiResponse
         return self::IMAGE_PATH . $uniqueFilename;
     }
 
-    protected function updateFile(bool $checkbox, int $fileId): ?string
+    protected function updateFile(int $fileId): ?string
     {
         if ($this->getFile() === null) {
-            if ($checkbox === true) {
+            if ($this->getDeleteCheckbox() === true) {
                 $this->deleteFile($fileId);
                 return null;
             }

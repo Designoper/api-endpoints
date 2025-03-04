@@ -13,8 +13,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly string $fechaPublicacion;
 	private readonly int $idCategoria;
 
-	private readonly bool $checkbox;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -50,11 +48,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function getIdCategoria(): int
 	{
 		return $this->idCategoria;
-	}
-
-	private function getCheckbox(): bool
-	{
-		return $this->checkbox;
 	}
 
 	// MARK: SETTERS
@@ -174,9 +167,9 @@ final class LibroWrite extends LibroIntegrityErrors
 			$input = $_POST['eliminar_portada'];
 
 			if ($input === "") {
-				$this->checkbox = true;
+				$this->setDeleteCheckbox(true);
 			} else $this->setValidationError("El único valor válido para eliminar_portada es campo vacío");
-		} else $this->checkbox = false;
+		} else $this->setDeleteCheckbox(false);
 	}
 
 	// MARK: CREATE
@@ -265,7 +258,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->updateFile($this->getCheckbox(), $this->getIdLibro());
+		$portada = $this->updateFile($this->getIdLibro());
 
 		$statement =
 			"UPDATE libros
