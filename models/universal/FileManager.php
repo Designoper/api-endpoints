@@ -56,6 +56,11 @@ abstract class FileManager extends ApiResponse
         $this->fileDestination = self::IMAGE_FOLDER_RELATIVE_RUTE . $this->uniqueFilename;
     }
 
+    protected function setDeleteCheckbox(bool $checkbox): void
+    {
+        $this->deleteCurrentFileCheckbox = $checkbox;
+    }
+
     private function setHost(): void
     {
         $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
@@ -110,6 +115,21 @@ abstract class FileManager extends ApiResponse
         $this->fileUrl = $this->getHost() . self::IMAGE_PATH . $this->uniqueFilename;
     }
 
+    protected function nameUpdateFile(int $fileId): void
+    {
+        if ($this->file === null) {
+            if ($this->deleteCurrentFileCheckbox === true) {
+                $this->fileUrl = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+            }
+            $currentUrl = $this->getFileUrl($fileId);
+            $this->fileUrl = $currentUrl;
+            return;
+        }
+
+        $this->setUniqueFilename();
+        $this->fileUrl = $this->getHost() . self::IMAGE_PATH . $this->uniqueFilename;
+    }
+
 
 
     protected function uploadFile(): void
@@ -132,20 +152,18 @@ abstract class FileManager extends ApiResponse
 
 
 
-    protected function updateFile(?array $file, bool $checkbox, int $fileId)
+    protected function updateFile(int $fileId): void
     {
-        // if ($file === null) {
-        //     if ($checkbox) {
-        //         $this->deleteFile($fileId);
-        //         return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
-        //     }
-        //     return $this->getFileUrl($fileId);
-        // }
+        if ($this->file === null) {
+            if ($this->deleteCurrentFileCheckbox === true) {
+                $this->deleteFile($fileId);
+                // return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+            }
+            // return $this->getFileUrl($fileId);
+        }
 
-        // $this->deleteFile($fileId);
-
-        // $fileUrl = $this->uploadFile($file);
-        // return $fileUrl;
+        $this->deleteFile($fileId);
+        $this->uploadFile($this->file);
     }
 
 
