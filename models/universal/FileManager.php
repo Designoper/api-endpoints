@@ -119,16 +119,15 @@ abstract class FileManager extends ApiResponse
         }
 
         if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
-            if (!mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true)) {
-                throw new RuntimeException("Failed to create directory:");
-            }
+            mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true);
         }
 
         $this->setFileDestination();
 
-        if (!move_uploaded_file($this->file['tmp_name'], $this->fileDestination)) {
-            throw new RuntimeException("Error uploading file");
-        }
+        move_uploaded_file(
+            $this->file['tmp_name'],
+            $this->fileDestination
+        );
     }
 
 
