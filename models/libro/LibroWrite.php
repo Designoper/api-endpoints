@@ -56,48 +56,36 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$input = $_POST['id_libro'] ?? null;
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->idLibro = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->idLibro = (int) $input
+			: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setTitulo(): void
 	{
 		$input = $_POST['titulo'] ?? "";
 
-		if ($input === "") {
-			$this->setValidationError("El campo 'titulo' no puede estar vacío.");
-			return;
-		}
-
-		$this->titulo = $input;
+		$input === ""
+			? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
+			: $this->titulo = $input;
 	}
 
 	private function setDescripcion(): void
 	{
 		$input = $_POST['descripcion'] ?? "";
 
-		if ($input === "") {
-			$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
-			return;
-		}
-
-		$this->descripcion = $input;
+		$input === ""
+			? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
+			: $this->descripcion = $input;
 	}
 
 	private function setPaginas(): void
 	{
 		$input = $_POST['paginas'] ?? null;
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->paginas = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->paginas = (int) $input
+			: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setFechaPublicacion(): void
@@ -123,12 +111,9 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$input = $_POST['id_categoria'] ?? null;
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->idCategoria = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->idCategoria = (int) $input
+			: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setPortada(): void
