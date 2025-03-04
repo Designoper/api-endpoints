@@ -194,7 +194,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->uploadFile();
+		$portada = $this->getUniqueFilename();
 
 		$statement =
 			"INSERT INTO libros (
@@ -262,7 +262,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->updateFile($this->getIdLibro());
+		// $portada = $this->updateFile($this->getIdLibro());
 
 		$statement =
 			"UPDATE libros

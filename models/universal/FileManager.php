@@ -15,6 +15,7 @@ abstract class FileManager extends ApiResponse
 
     private readonly ?array $file;
     private readonly bool $deleteCheckbox;
+    private readonly ?string $uniqueFilename;
 
     protected function __construct()
     {
@@ -46,6 +47,11 @@ abstract class FileManager extends ApiResponse
         return $this->deleteCheckbox;
     }
 
+    protected function getUniqueFilename(): ?string
+    {
+        return $this->uniqueFilename;
+    }
+
     // MARK: SETTERS
 
     private function setHost(): void
@@ -71,6 +77,11 @@ abstract class FileManager extends ApiResponse
     protected function setDeleteCheckbox(bool $checkbox): void
     {
         $this->deleteCheckbox = $checkbox;
+    }
+
+    protected function setUniqueFilename(string $uniqueFilename): void
+    {
+        $this->uniqueFilename = $uniqueFilename;
     }
 
     // MARK: FILE OPERATIONS
@@ -113,39 +124,46 @@ abstract class FileManager extends ApiResponse
         return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function uploadFile(): ?string
-    {
+    protected function nameUploadFile(): ?string{
         if ($this->getFile() === null) {
             return null;
+        }
+
+        $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
+        return self::IMAGE_PATH . $uniqueFilename;
+    }
+
+    protected function uploadFile(): void
+    {
+        if ($this->getFile() === null) {
+            return;
         }
 
         if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
             mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true);
         }
 
-        $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
+        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $this->uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
 
-        return self::IMAGE_PATH . $uniqueFilename;
     }
 
-    protected function updateFile(int $fileId): ?string
-    {
-        if ($this->getFile() === null) {
-            if ($this->getDeleteCheckbox() === true) {
-                $this->deleteFile($fileId);
-                return null;
-            }
-            return $this->getFileUrl($fileId);
-        }
+    // protected function updateFile(int $fileId): ?string
+    // {
+    //     if ($this->getFile() === null) {
+    //         if ($this->getDeleteCheckbox() === true) {
+    //             $this->deleteFile($fileId);
+    //             return null;
+    //         }
+    //         return $this->getFileUrl($fileId);
+    //     }
 
-        $this->deleteFile($fileId);
+    //     $this->deleteFile($fileId);
 
-        $fileUrl = $this->uploadFile();
-        return $fileUrl;
-    }
+    //     $fileUrl = $this->uploadFile();
+    //     return $fileUrl;
+    // }
 
     protected function deleteFile(int $fileId): void
     {
