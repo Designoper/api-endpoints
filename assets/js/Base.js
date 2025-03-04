@@ -1,11 +1,7 @@
 export class Base {
 	constructor() { }
 
-	async fetchData({
-		url,
-		method = 'GET',
-		form
-	}) {
+	async fetchData({ url, method = 'GET', form }) {
 
 		const init = {};
 		const userInputs = new FormData(form);
