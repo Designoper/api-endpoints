@@ -100,12 +100,9 @@ final class LibroFilter extends FileManager
 			return;
 		}
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->minimoPaginas = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->minimoPaginas = (int) $input
+			: $this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setMaximoPaginas(): void
@@ -117,12 +114,9 @@ final class LibroFilter extends FileManager
 			return;
 		}
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'max_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->maximoPaginas = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->maximoPaginas = (int) $input
+			: $this->setValidationError("El campo 'max_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setMinimoFechaPublicacion(): void
@@ -167,12 +161,9 @@ final class LibroFilter extends FileManager
 	{
 		$input = $_GET['titulo'] ?? "";
 
-		if ($input === "") {
-			$this->titulo = null;
-			return;
-		}
-
-		$this->titulo = $input;
+		$input === ""
+			? $this->titulo = null
+			: $this->titulo = $input;
 	}
 
 	private function setIdCategoria(): void
@@ -184,12 +175,9 @@ final class LibroFilter extends FileManager
 			return;
 		}
 
-		if (!filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1))) || !preg_match('/^[0-9]+$/', $input)) {
-			$this->setValidationError("El campo 'categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->idCategoria = (int) $input;
+		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->idCategoria = (int) $input
+			: $this->setValidationError("El campo 'categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setCriterioOrden(): void

@@ -92,19 +92,11 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$input = $_POST['fecha_publicacion'] ?? "";
 
-		if ($input === "") {
-			$this->setValidationError("El campo 'fecha_publicacion' no puede estar vacío.");
-			return;
-		}
-
 		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
-			$this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.");
-			return;
-		}
-
-		$this->fechaPublicacion = $input;
+		(!$dateTime || $dateTime->format('Y-m-d') !== $input)
+			? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
+			: $this->fechaPublicacion = $input;
 	}
 
 	private function setIdCategoria(): void
