@@ -13,6 +13,8 @@ abstract class FileManager extends ApiResponse
     private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
     private readonly string $defaultImage;
 
+    private readonly ?array $file;
+
     protected function __construct()
     {
         parent::__construct();
@@ -33,12 +35,12 @@ abstract class FileManager extends ApiResponse
         return $this->defaultImage;
     }
 
-    // MARK: SETTERS
-
-    private function setDefaultImage(): void
+    protected function getFile(): ?array
     {
-        $this->defaultImage = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+        return $this->file;
     }
+
+    // MARK: SETTERS
 
     private function setHost(): void
     {
@@ -48,6 +50,16 @@ abstract class FileManager extends ApiResponse
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
         $this->host = $protocol . $host;
+    }
+
+    private function setDefaultImage(): void
+    {
+        $this->defaultImage = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+    }
+
+    protected function setFile(?array $file): void
+    {
+        $this->file = $file;
     }
 
     // MARK: FILE OPERATIONS
@@ -90,9 +102,9 @@ abstract class FileManager extends ApiResponse
         return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function uploadFile(?array $file): ?string
+    protected function uploadFile(): ?string
     {
-        if ($file === null) {
+        if ($this->getFile() === null) {
             return null;
         }
 
@@ -100,17 +112,17 @@ abstract class FileManager extends ApiResponse
             mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true);
         }
 
-        $uniqueFilename = $this->generateUniqueFilename($file['name']);
+        $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
         $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
 
-        move_uploaded_file($file['tmp_name'], $destination);
+        move_uploaded_file($this->getFile()['tmp_name'], $destination);
 
         return self::IMAGE_PATH . $uniqueFilename;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $fileId): ?string
+    protected function updateFile(bool $checkbox, int $fileId): ?string
     {
-        if ($file === null) {
+        if ($this->getFile() === null) {
             if ($checkbox === true) {
                 $this->deleteFile($fileId);
                 return null;
@@ -120,7 +132,7 @@ abstract class FileManager extends ApiResponse
 
         $this->deleteFile($fileId);
 
-        $fileUrl = $this->uploadFile($file);
+        $fileUrl = $this->uploadFile();
         return $fileUrl;
     }
 
