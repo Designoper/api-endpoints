@@ -2,24 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../universal/ApiResponse.php';
+require_once __DIR__ . '/../universal/FileManager.php';
 
-final class LibroFilter extends ApiResponse
+final class LibroFilter extends FileManager
 {
-	private string $statement =
-	"SELECT
-		libros.id_libro,
-		libros.titulo,
-		libros.portada,
-		libros.descripcion,
-		libros.paginas,
-		libros.fecha_publicacion,
-		DATE_FORMAT(libros.fecha_publicacion, '%d/%m/%Y')
-		AS fecha_publicacion_dd_mm_yyyy,
-		categorias.categoria
-	FROM libros
-	NATURAL JOIN categorias
-	WHERE 1=1";
 	private array $params = [];
 	private string $types = '';
 
@@ -31,17 +17,17 @@ final class LibroFilter extends ApiResponse
 	private readonly ?int $idCategoria;
 	private readonly ?string $criterioOrden;
 
+	private readonly string $default;
+	private readonly string $host;
+
 	public function __construct()
 	{
 		parent::__construct();
+		$this->default = $this->getDefaultImage();
+		$this->host = $this->getHost();
 	}
 
 	//MARK: GETTERS
-
-	private function getStatement(): string
-	{
-		return $this->statement;
-	}
 
 	private function getParams(): array
 	{
@@ -51,11 +37,6 @@ final class LibroFilter extends ApiResponse
 	private function getTypes(): string
 	{
 		return $this->types;
-	}
-
-	private function addStatement(string $statement): void
-	{
-		$this->statement .= ' ' . $statement;
 	}
 
 	private function addParam(string|int $param): void
@@ -251,40 +232,58 @@ final class LibroFilter extends ApiResponse
 
 		$this->checkValidationErrors();
 
+		$statement =
+		"SELECT
+			libros.id_libro,
+			libros.titulo,
+					CASE
+						WHEN libros.portada IS NULL THEN '$this->default'
+						ELSE CONCAT('$this->host', libros.portada)
+					END AS portada,
+			libros.descripcion,
+			libros.paginas,
+			libros.fecha_publicacion,
+			DATE_FORMAT(libros.fecha_publicacion, '%d/%m/%Y')
+			AS fecha_publicacion_dd_mm_yyyy,
+			categorias.categoria
+		FROM libros
+		NATURAL JOIN categorias
+		WHERE 1=1";
+
 		if ($this->getMinimoPaginas()) {
 			$this->addParam($this->getMinimoPaginas());
 			$this->addType('i');
-			$this->addStatement("AND libros.paginas >= ?");
+			$statement .= " AND libros.paginas >= ?";
 		}
 
 		if ($this->getMaximoPaginas()) {
 			$this->addParam($this->getMaximoPaginas());
 			$this->addType('i');
-			$this->addStatement("AND libros.paginas <= ?");
+			$statement .= " AND libros.paginas <= ?";
 		}
 
 		if ($this->getMinimoFechaPublicacion()) {
 			$this->addParam($this->getMinimoFechaPublicacion());
 			$this->addType('s');
-			$this->addStatement("AND libros.fecha_publicacion >= ?");
+			$statement .= " AND libros.fecha_publicacion >= ?";
 		}
 
 		if ($this->getMaximoFechaPublicacion()) {
 			$this->addParam($this->getMaximoFechaPublicacion());
 			$this->addType('s');
-			$this->addStatement("AND libros.fecha_publicacion <= ?");
+			$statement .= " AND libros.fecha_publicacion <= ?";
 		}
 
 		if ($this->getTitulo()) {
 			$this->addParam("%" . $this->getTitulo() . "%");
 			$this->addType('s');
-			$this->addStatement("AND libros.titulo LIKE ?");
+			$statement .= " AND libros.titulo LIKE ?";
 		}
 
 		if ($this->getIdCategoria()) {
 			$this->addParam($this->getIdCategoria());
 			$this->addType('i');
-			$this->addStatement("AND libros.id_categoria = ?");
+			$statement .= " AND libros.id_categoria = ?";
 		}
 
 		if ($this->getCriterioOrden()) {
@@ -309,10 +308,10 @@ final class LibroFilter extends ApiResponse
 					break;
 			}
 
-			$this->addStatement("ORDER BY " . $param);
+			$statement .= " ORDER BY " . $param;
 		}
 
-		$query = $this->getConnection()->prepare($this->getStatement());
+		$query = $this->getConnection()->prepare($statement);
 
 		if ($this->getParams()) {
 			$query->bind_param($this->getTypes(), ...$this->getParams());
