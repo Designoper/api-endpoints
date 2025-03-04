@@ -21,7 +21,7 @@ final class Libro extends FileManager
 			libros.titulo,
 			CASE
 				WHEN libros.portada IS NULL THEN '$default'
-				ELSE libros.portada
+				ELSE CONCAT('$host', libros.portada)
 			END AS portada,
 			libros.descripcion,
 			libros.paginas,

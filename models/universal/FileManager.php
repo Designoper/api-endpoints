@@ -97,9 +97,7 @@ abstract class FileManager extends ApiResponse
         }
 
         if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
-            if (!mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true)) {
-                throw new RuntimeException("Failed to create directory: " . self::IMAGE_FOLDER_RELATIVE_RUTE);
-            }
+            mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true);
         }
 
         $uniqueFilename = $this->generateUniqueFilename($file['name']);
@@ -109,13 +107,13 @@ abstract class FileManager extends ApiResponse
             throw new RuntimeException("Error uploading file: " . $uniqueFilename);
         }
 
-        return $this->getHost() . self::IMAGE_PATH . $uniqueFilename;
+        return self::IMAGE_PATH . $uniqueFilename;
     }
 
     protected function updateFile(?array $file, bool $checkbox, int $fileId): ?string
     {
         if ($file === null) {
-            if ($checkbox) {
+            if ($checkbox === true) {
                 $this->deleteFile($fileId);
                 return null;
             }
@@ -132,12 +130,8 @@ abstract class FileManager extends ApiResponse
     {
         $fileUrl = $this->getFileUrl($fileId);
 
-        $defaultImage = strpos($fileUrl, self::DEFAULT_IMAGE);
-
-        if ($defaultImage === false) {
-            $position = strpos($fileUrl, 'assets');
-            $relativeImageRoute = substr($fileUrl, $position);
-            unlink(self::ROOT_DIRECTORY . $relativeImageRoute);
+        if ($fileUrl !== null) {
+            unlink(self::ROOT_DIRECTORY . $fileUrl);
         }
     }
 
@@ -154,7 +148,7 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $fileId): string
+    private function getFileUrl(int $fileId): ?string
     {
         $statement =
             "SELECT portada
