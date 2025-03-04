@@ -91,10 +91,9 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setFechaPublicacion(): void
 	{
 		$input = $_POST['fecha_publicacion'] ?? "";
-
 		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
 
-		(!$dateTime || $dateTime->format('Y-m-d') !== $input)
+		!$dateTime || $dateTime->format('Y-m-d') !== $input
 			? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
 			: $this->fechaPublicacion = $input;
 	}

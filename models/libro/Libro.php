@@ -43,7 +43,7 @@ final class Libro extends FileManager
 		$message =
 			$libros
 			? 'Libros obtenidos'
-			: 'No hay ningún libro';
+			: 'No hay ningún libro.';
 
 		$query->close();
 
