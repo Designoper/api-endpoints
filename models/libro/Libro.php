@@ -18,8 +18,6 @@ final class Libro extends FileManager
 
 	public function readLibros(): void
 	{
-		// $host = $this->getHost();
-		// $default = $this->getDefaultImage();
 		$statement =
 			"SELECT
 				libros.id_libro,
@@ -36,7 +34,6 @@ final class Libro extends FileManager
 			FROM libros
 			NATURAL JOIN categorias
 			ORDER BY libros.titulo";
-
 
 		$query = $this->getConnection()->prepare($statement);
 
