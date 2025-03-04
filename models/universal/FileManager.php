@@ -11,22 +11,34 @@ abstract class FileManager extends ApiResponse
     private const string IMAGE_PATH = '/assets/img/';
     private const string DEFAULT_IMAGE = 'default/default.jpg';
     private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
+    private readonly string $defaultImage;
 
     protected function __construct()
     {
         parent::__construct();
 
         $this->setHost();
+        $this->setDefaultImage();
     }
 
     // MARK: GETTERS
 
-    private function getHost(): string
+    protected function getHost(): string
     {
         return $this->host;
     }
 
+    protected function getDefaultImage(): string
+    {
+        return $this->defaultImage;
+    }
+
     // MARK: SETTERS
+
+    private function setDefaultImage(): void
+    {
+        $this->defaultImage = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+    }
 
     private function setHost(): void
     {
@@ -78,10 +90,10 @@ abstract class FileManager extends ApiResponse
         return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function uploadFile(?array $file): string
+    protected function uploadFile(?array $file): ?string
     {
         if ($file === null) {
-            return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+            return null;
         }
 
         if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
@@ -100,12 +112,12 @@ abstract class FileManager extends ApiResponse
         return $this->getHost() . self::IMAGE_PATH . $uniqueFilename;
     }
 
-    protected function updateFile(?array $file, bool $checkbox, int $fileId): string
+    protected function updateFile(?array $file, bool $checkbox, int $fileId): ?string
     {
         if ($file === null) {
             if ($checkbox) {
                 $this->deleteFile($fileId);
-                return $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
+                return null;
             }
             return $this->getFileUrl($fileId);
         }
