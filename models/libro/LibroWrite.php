@@ -6,6 +6,8 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
+	private const string FOLDER = 'libros/';
+
 	private int $idLibro {
 		set(mixed $value) {
 			filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
@@ -65,7 +67,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$filesUploaded = $this->flattenFilesArray("portada");
 
-		if (empty($filesUploaded)) {
+		if (count($filesUploaded) === 0) {
 			$this->setFile(null);
 			return;
 		}
@@ -78,8 +80,8 @@ final class LibroWrite extends LibroIntegrityErrors
 		$portada = $filesUploaded[0];
 
 		$fileType = exif_imagetype($portada['tmp_name']);
-
 		$allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
+
 		if (!in_array($fileType, $allowedTypes)) {
 			$this->setValidationError("Solo se permiten imágenes JPEG y PNG.");
 		}
