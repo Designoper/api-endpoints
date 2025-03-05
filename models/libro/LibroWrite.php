@@ -70,6 +70,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function __construct()
 	{
 		parent::__construct();
+		$this->idLibro = $_POST['id_libro'] ?? null;
 		$this->titulo = $_POST['titulo'] ?? null;
 		$this->descripcion = $_POST['descripcion'] ?? null;
 		$this->paginas = $_POST['paginas'] ?? null;
@@ -183,104 +184,94 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	// MARK: UPDATE
 
-	// public function updateLibro(): void
-	// {
-	// 	$this->setIdLibro();
-	// 	$this->setTitulo();
-	// 	$this->setDescripcion();
-	// 	$this->setPaginas();
-	// 	$this->setFechaPublicacion();
-	// 	$this->setIdCategoria();
+	public function updateLibro(): void
+	{
+		$idLibro = $this->idLibro;
+		$titulo = $this->titulo;
+		$descripcion = $this->descripcion;
+		$paginas = $this->paginas;
+		$fechaPublicacion = $this->fechaPublicacion;
+		$idCategoria = $this->idCategoria;
+		$this->setPortada();
+		$this->setCheckbox();
 
-	// 	$this->setPortada();
-	// 	$this->setCheckbox();
+		$this->checkValidationErrors();
 
-	// 	$this->checkValidationErrors();
+		$this->idLibroExists($idLibro);
+		$this->tituloUpdateExists($this->titulo, $this->idLibro);
+		$this->idCategoriaExists($this->idCategoria);
 
-	// 	$this->idLibroExists($this->getIdLibro());
-	// 	$this->tituloUpdateExists($this->titulo, $this->getIdLibro());
-	// 	$this->idCategoriaExists($this->getIdCategoria());
+		$this->checkIntegrityErrors();
 
-	// 	$this->checkIntegrityErrors();
+		$portada = $this->updateFile($this->idLibro);
 
-	// 	$portada = $this->updateFile($this->getIdLibro());
+		$statement =
+			"UPDATE libros
+				SET titulo = ?,
+				descripcion = ?,
+				portada = ?,
+				paginas = ?,
+				fecha_publicacion = ?,
+				id_categoria = ?
+			WHERE id_libro = ?";
 
-	// 	$statement =
-	// 		"UPDATE libros
-	// 			SET titulo = ?,
-	// 			descripcion = ?,
-	// 			portada = ?,
-	// 			paginas = ?,
-	// 			fecha_publicacion = ?,
-	// 			id_categoria = ?
-	// 		WHERE id_libro = ?";
+		$query = $this->getConnection()->prepare($statement);
 
-	// 	$query = $this->getConnection()->prepare($statement);
+		$query->bind_param(
+			"sssisii",
+			$titulo,
+			$descripcion,
+			$portada,
+			$paginas,
+			$fechaPublicacion,
+			$idCategoria,
+			$idLibro
+		);
 
-	// 	$idLibro = $this->getIdLibro();
-	// 	$titulo = $this->titulo;
-	// 	$descripcion = $this->getDescripcion();
-	// 	$paginas = $this->getPaginas();
-	// 	$fechaPublicacion = $this->getFechaPublicacion();
-	// 	$idCategoria = $this->getIdCategoria();
+		$query->execute();
+		$numFilas = $query->affected_rows;
+		$query->close();
 
-	// 	$query->bind_param(
-	// 		"sssisii",
-	// 		$titulo,
-	// 		$descripcion,
-	// 		$portada,
-	// 		$paginas,
-	// 		$fechaPublicacion,
-	// 		$idCategoria,
-	// 		$idLibro
-	// 	);
+		if ($numFilas === 1) {
+			$this->setStatus(200);
+			$this->setMessage('¡Libro modificado!');
+		} else {
+			$this->setStatus(204);
+		}
+		$this->getResponse();
+	}
 
-	// 	$query->execute();
-	// 	$numFilas = $query->affected_rows;
-	// 	$query->close();
+	// MARK: DELETE
 
-	// 	if ($numFilas === 1) {
-	// 		$this->setStatus(200);
-	// 		$this->setMessage('¡Libro modificado!');
-	// 	} else {
-	// 		$this->setStatus(204);
-	// 	}
-	// 	$this->getResponse();
-	// }
+	public function deleteLibro(): void
+	{
+		$idLibro = $this->idLibro;
 
-	// // MARK: DELETE
+		$this->checkValidationErrors();
 
-	// public function deleteLibro(): void
-	// {
-	// 	$this->setIdLibro();
+		$this->idLibroExists($idLibro);
 
-	// 	$this->checkValidationErrors();
+		$this->checkIntegrityErrors();
 
-	// 	$this->idLibroExists($this->getIdLibro());
+		$this->deleteFile($idLibro);
 
-	// 	$this->checkIntegrityErrors();
+		$statement =
+			"DELETE FROM libros
+			WHERE id_libro = ?";
 
-	// 	$this->deleteFile($this->getIdLibro());
+		$query = $this->getConnection()->prepare($statement);
 
-	// 	$statement =
-	// 		"DELETE FROM libros
-	// 		WHERE id_libro = ?";
+		$query->bind_param(
+			"i",
+			$idLibro
+		);
 
-	// 	$query = $this->getConnection()->prepare($statement);
+		$query->execute();
+		$query->close();
 
-	// 	$idLibro = $this->getIdLibro();
-
-	// 	$query->bind_param(
-	// 		"i",
-	// 		$idLibro
-	// 	);
-
-	// 	$query->execute();
-	// 	$query->close();
-
-	// 	$this->setStatus(204);
-	// 	$this->getResponse();
-	// }
+		$this->setStatus(204);
+		$this->getResponse();
+	}
 
 	// MARK: DELETE ALL
 
