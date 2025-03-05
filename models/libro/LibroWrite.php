@@ -61,6 +61,8 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->extraDirectories = self::FOLDER;
 	}
 
 	private function setPortada(): void
@@ -132,7 +134,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->uploadFile(self::FOLDER);
+		$portada = $this->uploadFile();
 
 		$statement =
 			"INSERT INTO libros (
@@ -201,7 +203,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$portada = $this->updateFile($this->idLibro, self::FOLDER);
+		$portada = $this->updateFile($this->idLibro);
 
 		$statement =
 			"UPDATE libros
@@ -281,7 +283,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->deleteAllFiles(self::FOLDER);
+		$this->deleteAllFiles();
 
 		$statement =
 			"TRUNCATE TABLE libros";
