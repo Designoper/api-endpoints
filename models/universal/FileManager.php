@@ -103,25 +103,25 @@ abstract class FileManager extends ApiResponse
         return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function uploadFile(): ?string
+    protected function uploadFile(string $extraDirectories = ""): ?string
     {
         if ($this->getFile() === null) {
             return null;
         }
 
-        if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE)) {
-            mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE, 0755, true);
+        if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE . $extraDirectories)) {
+            mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE . $extraDirectories, 0755, true);
         }
 
         $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $uniqueFilename;
+        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $extraDirectories . $uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
 
-        return self::IMAGE_PATH . $uniqueFilename;
+        return self::IMAGE_PATH . $extraDirectories . $uniqueFilename;
     }
 
-    protected function updateFile(int $fileId): ?string
+    protected function updateFile(int $fileId, string $extraDirectories = ""): ?string
     {
         if ($this->getFile() === null) {
             if ($this->deleteCheckbox === true) {
@@ -133,7 +133,7 @@ abstract class FileManager extends ApiResponse
 
         $this->deleteFile($fileId);
 
-        $fileUrl = $this->uploadFile();
+        $fileUrl = $this->uploadFile($extraDirectories);
         return $fileUrl;
     }
 
@@ -146,15 +146,19 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    protected function deleteAllFiles(): void
+    protected function deleteAllFiles(string $extraDirectories = ""): void
     {
-        $folder_path = self::ROOT_DIRECTORY . self::IMAGE_PATH;
+        $folderPath = self::ROOT_DIRECTORY . self::IMAGE_PATH . $extraDirectories;
 
-        $files = glob($folder_path . '/*');
+        if (!is_dir($folderPath)) {
+            return;
+        }
 
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                unlink($file);
+        $directoryIterator = new DirectoryIterator($folderPath);
+
+        foreach ($directoryIterator as $file) {
+            if ($file->isFile()) {
+                unlink($file->getRealPath());
             }
         }
     }
