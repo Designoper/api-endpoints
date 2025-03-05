@@ -17,14 +17,9 @@ final class LibroFilter extends FileManager
 	private readonly ?int $idCategoria;
 	private readonly ?string $criterioOrden;
 
-	private readonly string $default;
-	private readonly string $host;
-
 	public function __construct()
 	{
 		parent::__construct();
-		$this->default = $this->getDefaultImage();
-		$this->host = $this->getHost();
 	}
 
 	//MARK: GETTERS
@@ -220,13 +215,16 @@ final class LibroFilter extends FileManager
 
 		$this->checkValidationErrors();
 
+		$defaultImage = $this->getDefaultImage();
+		$host = $this->getHost();
+
 		$statement =
 			"SELECT
 				libros.id_libro,
 				libros.titulo,
 				CASE
-					WHEN libros.portada IS NULL THEN '$this->default'
-					ELSE CONCAT('$this->host', libros.portada)
+					WHEN libros.portada IS NULL THEN '$defaultImage'
+					ELSE CONCAT('$host', libros.portada)
 				END AS portada,
 				libros.descripcion,
 				libros.paginas,

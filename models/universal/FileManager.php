@@ -7,10 +7,8 @@ require_once __DIR__ . '/ApiResponse.php';
 abstract class FileManager extends ApiResponse
 {
     private readonly string $host;
-    private const string ROOT_DIRECTORY = __DIR__ . '/../../';
     private const string IMAGE_PATH = '/assets/img/';
     private const string DEFAULT_IMAGE = 'default/default.jpg';
-    private const string IMAGE_FOLDER_RELATIVE_RUTE = self::ROOT_DIRECTORY . self::IMAGE_PATH;
     private readonly string $defaultImage;
     protected string $extraDirectories = '';
 
@@ -107,12 +105,12 @@ abstract class FileManager extends ApiResponse
             return null;
         }
 
-        if (!file_exists(self::IMAGE_FOLDER_RELATIVE_RUTE . $this->extraDirectories)) {
-            mkdir(self::IMAGE_FOLDER_RELATIVE_RUTE . $this->extraDirectories, 0755, true);
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories)) {
+            mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories, 0755, true);
         }
 
         $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
-        $destination = self::IMAGE_FOLDER_RELATIVE_RUTE . $this->extraDirectories . $uniqueFilename;
+        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories . $uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
 
@@ -140,13 +138,13 @@ abstract class FileManager extends ApiResponse
         $fileUrl = $this->getFileUrl($fileId);
 
         if ($fileUrl !== null) {
-            unlink(self::ROOT_DIRECTORY . $fileUrl);
+            unlink($_SERVER['DOCUMENT_ROOT'] . $fileUrl);
         }
     }
 
     protected function deleteAllFiles(): void
     {
-        $folderPath = self::ROOT_DIRECTORY . self::IMAGE_PATH . $this->extraDirectories;
+        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
 
         if (!is_dir($folderPath)) {
             return;
