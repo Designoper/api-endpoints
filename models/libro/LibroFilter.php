@@ -9,7 +9,18 @@ final class LibroFilter extends FileManager
 	private array $params = [];
 	private string $types = '';
 
-	private readonly ?int $minimoPaginas;
+	private ?int $minimoPaginas {
+		set(mixed $value) {
+			if ($value === "") {
+				$this->minimoPaginas = null;
+				return;
+			}
+
+			filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->minimoPaginas = (int) $value
+				: $this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+		}
+	}
 	private readonly ?int $maximoPaginas;
 	private readonly ?string $minimoFechaPublicacion;
 	private readonly ?string $maximoFechaPublicacion;
@@ -54,11 +65,6 @@ final class LibroFilter extends FileManager
 		return $this->titulo;
 	}
 
-	private function getMinimoPaginas(): ?int
-	{
-		return $this->minimoPaginas;
-	}
-
 	private function getMaximoPaginas(): ?int
 	{
 		return $this->maximoPaginas;
@@ -85,20 +91,6 @@ final class LibroFilter extends FileManager
 	}
 
 	//MARK: SETTERS
-
-	private function setMinimoPaginas(): void
-	{
-		$input = $_GET['min_paginas'] ?? "";
-
-		if ($input === "") {
-			$this->minimoPaginas = null;
-			return;
-		}
-
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->minimoPaginas = (int) $input
-			: $this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-	}
 
 	private function setMaximoPaginas(): void
 	{
@@ -205,7 +197,7 @@ final class LibroFilter extends FileManager
 
 	public function filterLibros(): void
 	{
-		$this->setMinimoPaginas();
+		$this->minimoPaginas = $_GET['min_paginas'] ?? null;
 		$this->setMaximoPaginas();
 		$this->setMinimoFechaPublicacion();
 		$this->setMaximoFechaPublicacion();
@@ -214,6 +206,8 @@ final class LibroFilter extends FileManager
 		$this->setCriterioOrden();
 
 		$this->checkValidationErrors();
+
+		$minimoPaginas = $this->minimoPaginas;
 
 		$defaultImage = $this->getDefaultImage();
 		$host = $this->getHost();
@@ -235,8 +229,8 @@ final class LibroFilter extends FileManager
 			NATURAL JOIN categorias
 			WHERE 1=1";
 
-		if ($this->getMinimoPaginas()) {
-			$this->addParam($this->getMinimoPaginas());
+		if ($minimoPaginas) {
+			$this->addParam($minimoPaginas);
 			$this->addType('i');
 			$statement .= " AND libros.paginas >= ?";
 		}
