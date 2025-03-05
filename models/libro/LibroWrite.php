@@ -6,76 +6,59 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
-	private ?int $idLibro {
-		get {
-			if (!filter_var($this->idLibro, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-				$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
-			}
-			return $this->idLibro;
+	private int $idLibro {
+		set(mixed $value) {
+			filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->idLibro = (int) $value
+				: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
 		}
-		set(string|int|null $input) => $this->idLibro = (int) $input;
 	}
 
-	private ?string $titulo {
-		get {
-			if (empty($this->titulo)) {
-				$this->setValidationError("El campo 'titulo' no puede estar vacío.");
-			}
-			return $this->titulo;
+	private string $titulo {
+		set {
+			$value === ""
+				? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
+				: $this->titulo = $value;
 		}
-		set(?string $input) => $this->titulo = $input;
 	}
 
-	private ?string $descripcion {
-		get {
-			if (empty($this->descripcion)) {
-				$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
-			}
-			return $this->descripcion;
+	private string $descripcion {
+		set {
+			$value === ""
+				? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
+				: $this->descripcion = $value;
 		}
-		set(?string $input) => $this->descripcion = $input;
 	}
 
-	private ?int $paginas {
-		get {
-			if (!filter_var($this->paginas, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-				$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-			}
-			return $this->paginas;
+	private int $paginas {
+		set(mixed $value) {
+			filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->paginas = (int) $value
+				: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 		}
-		set(string|int|null $input) => $this->paginas = (int) $input;
 	}
 
-	private ?string $fechaPublicacion {
-		get {
-			$dateTime = DateTime::createFromFormat('Y-m-d', $this->fechaPublicacion);
-			if (!$dateTime || $dateTime->format('Y-m-d') !== $this->fechaPublicacion) {
-				$this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.");
-			}
-			return $this->fechaPublicacion;
+	private string $fechaPublicacion {
+		set {
+			$dateTime = DateTime::createFromFormat('Y-m-d', $value);
+
+			(!$dateTime || $dateTime->format('Y-m-d') !== $value)
+				? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
+				: $this->fechaPublicacion = $value;
 		}
-		set(?string $input) => $this->fechaPublicacion = $input;
 	}
 
-	private ?int $idCategoria {
-		get {
-			if (!filter_var($this->idCategoria, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-				$this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
-			}
-			return $this->idCategoria;
+	private int $idCategoria {
+		set(mixed $value) {
+			filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->idCategoria = (int) $value
+				: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 		}
-		set(string|int|null $input) => $this->idCategoria = (int) $input;
 	}
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->idLibro = $_POST['id_libro'] ?? null;
-		$this->titulo = $_POST['titulo'] ?? null;
-		$this->descripcion = $_POST['descripcion'] ?? null;
-		$this->paginas = $_POST['paginas'] ?? null;
-		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? null;
-		$this->idCategoria = $_POST['id_categoria'] ?? null;
 	}
 
 	private function setPortada(): void
@@ -127,15 +110,21 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
+		$this->titulo = $_POST['titulo'] ?? "";
+		$this->descripcion = $_POST['descripcion'] ?? "";
+		$this->paginas = $_POST['paginas'] ?? null;
+		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
+		$this->idCategoria = $_POST['id_categoria'] ?? null;
+
+		$this->setPortada();
+
+		$this->checkValidationErrors();
+
 		$titulo = $this->titulo;
 		$descripcion = $this->descripcion;
 		$paginas = $this->paginas;
 		$fechaPublicacion = $this->fechaPublicacion;
 		$idCategoria = $this->idCategoria;
-
-		$this->setPortada();
-
-		$this->checkValidationErrors();
 
 		$this->tituloExists($titulo);
 		$this->idCategoriaExists($idCategoria);
@@ -186,16 +175,24 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function updateLibro(): void
 	{
+		$this->idLibro = $_POST['id_libro'] ?? null;
+		$this->titulo = $_POST['titulo'] ?? "";
+		$this->descripcion = $_POST['descripcion'] ?? "";
+		$this->paginas = $_POST['paginas'] ?? null;
+		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
+		$this->idCategoria = $_POST['id_categoria'] ?? null;
+
+		$this->setPortada();
+		$this->setCheckbox();
+
+		$this->checkValidationErrors();
+
 		$idLibro = $this->idLibro;
 		$titulo = $this->titulo;
 		$descripcion = $this->descripcion;
 		$paginas = $this->paginas;
 		$fechaPublicacion = $this->fechaPublicacion;
 		$idCategoria = $this->idCategoria;
-		$this->setPortada();
-		$this->setCheckbox();
-
-		$this->checkValidationErrors();
 
 		$this->idLibroExists($idLibro);
 		$this->tituloUpdateExists($this->titulo, $this->idLibro);
@@ -245,9 +242,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteLibro(): void
 	{
-		$idLibro = $this->idLibro;
+		$this->idLibro = $_POST['id_libro'] ?? null;
 
 		$this->checkValidationErrors();
+
+		$idLibro = $this->idLibro;
 
 		$this->idLibroExists($idLibro);
 

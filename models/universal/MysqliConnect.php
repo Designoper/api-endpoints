@@ -6,32 +6,28 @@ require_once __DIR__ . '/EnvReader.php';
 
 abstract class MysqliConnect extends EnvReader
 {
-	private string $hostname {
-		get => getenv('HOSTNAME');
-	}
-
-	private string $username {
-		get => getenv('USERNAME');
-	}
-
-	private string $password {
-		get => getenv('PASSWORD');
-	}
-
-	private string $database {
-		get => getenv('DATABASE');
-	}
-
-	protected mysqli $connection {
-		final get {
-			$this->connection = new mysqli($this->hostname, $this->username, $this->password, $this->database);
-			$this->connection->set_charset('utf8');
-			return $this->connection;
-		}
-	}
+	private readonly string $hostname;
+	private readonly string $username;
+	private readonly string $password;
+	private readonly string $database;
+	protected readonly mysqli $connection;
 
 	protected function __construct()
 	{
 		parent::__construct();
+
+		$this->hostname = getenv('HOSTNAME');
+		$this->username = getenv('USERNAME');
+		$this->password = getenv('PASSWORD');
+		$this->database = getenv('DATABASE');
+
+		$this->connection = new mysqli(
+			$this->hostname,
+			$this->username,
+			$this->password,
+			$this->database
+		);
+
+		$this->connection->set_charset('utf8');
 	}
 }
