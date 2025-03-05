@@ -176,7 +176,7 @@ abstract class FileManager extends ApiResponse
             FROM libros
             WHERE id_libro = ?";
 
-        $query = $this->getConnection()->prepare($statement);
+        $query = $this->connection->prepare($statement);
 
         $query->bind_param(
             "i",

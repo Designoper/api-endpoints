@@ -298,7 +298,7 @@ final class LibroFilter extends FileManager
 			$statement .= " ORDER BY " . $param;
 		}
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		if ($this->getParams()) {
 			$query->bind_param($this->getTypes(), ...$this->getParams());

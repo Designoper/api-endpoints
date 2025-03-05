@@ -18,7 +18,7 @@ final class Categoria extends ApiResponse
 			FROM categorias
 			ORDER BY categoria";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->execute();
 

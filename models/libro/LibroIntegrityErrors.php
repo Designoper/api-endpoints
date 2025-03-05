@@ -18,7 +18,7 @@ abstract class LibroIntegrityErrors extends FileManager
 			FROM libros
 			LIMIT 1";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 		$query->execute();
 
 		$libros = $query->get_result()->fetch_assoc();
@@ -40,7 +40,7 @@ abstract class LibroIntegrityErrors extends FileManager
 			WHERE titulo = ?
 			LIMIT 1";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 		$query->bind_param("s", $titulo);
 		$query->execute();
 
@@ -64,7 +64,7 @@ abstract class LibroIntegrityErrors extends FileManager
 			AND id_libro != ?
 			LIMIT 1";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 		$query->bind_param("si", $titulo, $idLibro);
 		$query->execute();
 
@@ -87,7 +87,7 @@ abstract class LibroIntegrityErrors extends FileManager
 			WHERE id_libro = ?
 			LIMIT 1";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 		$query->bind_param("i", $idLibro);
 		$query->execute();
 
@@ -110,7 +110,7 @@ abstract class LibroIntegrityErrors extends FileManager
 			WHERE id_categoria = ?
 			LIMIT 1";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 		$query->bind_param("i", $idCategoria);
 		$query->execute();
 
