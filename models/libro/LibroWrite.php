@@ -70,7 +70,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function __construct()
 	{
 		parent::__construct();
-
 		$this->idLibro = $_POST['id_libro'] ?? null;
 		$this->titulo = $_POST['titulo'] ?? null;
 		$this->descripcion = $_POST['descripcion'] ?? null;
