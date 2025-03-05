@@ -7,7 +7,15 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 final class LibroWrite extends LibroIntegrityErrors
 {
 	private readonly int $idLibro;
-	private readonly string $titulo;
+	private string $titulo {
+		get => $this->titulo;
+		set(string $input) {
+
+			$input === ""
+				? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
+				: $this->titulo = $input;
+		}
+	}
 	private readonly string $descripcion;
 	private readonly int $paginas;
 	private readonly string $fechaPublicacion;
@@ -61,14 +69,14 @@ final class LibroWrite extends LibroIntegrityErrors
 			: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
-	private function setTitulo(): void
-	{
-		$input = $_POST['titulo'] ?? "";
+	// private function setTitulo(): void
+	// {
+	// 	$input = $_POST['titulo'] ?? "";
 
-		$input === ""
-			? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
-			: $this->titulo = $input;
-	}
+	// 	$input === ""
+	// 		? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
+	// 		: $this->titulo = $input;
+	// }
 
 	private function setDescripcion(): void
 	{
@@ -156,7 +164,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-		$this->setTitulo();
+		$this->titulo = $_POST['titulo'] ?? "";
 		$this->setDescripcion();
 		$this->setPaginas();
 		$this->setFechaPublicacion();
@@ -192,7 +200,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$query = $this->getConnection()->prepare($statement);
 
-		$titulo = $this->getTitulo();
+		$titulo = $this->titulo;
 		$descripcion = $this->getDescripcion();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
@@ -221,7 +229,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function updateLibro(): void
 	{
 		$this->setIdLibro();
-		$this->setTitulo();
+		// $this->setTitulo();
 		$this->setDescripcion();
 		$this->setPaginas();
 		$this->setFechaPublicacion();
