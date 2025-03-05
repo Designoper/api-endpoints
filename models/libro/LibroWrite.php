@@ -6,7 +6,15 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
-	private readonly int $idLibro;
+	private int $idLibro {
+		get => $this->idLibro;
+		set(string|int $input) {
+
+			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->idLibro = (int) $input
+				: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+		}
+	}
 	private string $titulo {
 		get => $this->titulo;
 		set(string $input) {
@@ -16,103 +24,48 @@ final class LibroWrite extends LibroIntegrityErrors
 				: $this->titulo = $input;
 		}
 	}
-	private readonly string $descripcion;
-	private readonly int $paginas;
-	private readonly string $fechaPublicacion;
-	private readonly int $idCategoria;
+	private string $descripcion {
+		get => $this->descripcion;
+		set(string $input) {
+
+			$input === ""
+				? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
+				: $this->descripcion = $input;
+		}
+	}
+	private int $paginas {
+		get => $this->paginas;
+		set(string|int $input) {
+
+			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->paginas = (int) $input
+				: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+		}
+	}
+	private string $fechaPublicacion {
+		get => $this->fechaPublicacion;
+		set(string $input) {
+
+			$dateTime = DateTime::createFromFormat('Y-m-d', $input);
+
+			!$dateTime || $dateTime->format('Y-m-d') !== $input
+				? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
+				: $this->fechaPublicacion = $input;
+		}
+	}
+	private int $idCategoria {
+		get => $this->idCategoria;
+		set(string|int $input) {
+
+			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+				? $this->idCategoria = (int) $input
+				: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+		}
+	}
 
 	public function __construct()
 	{
 		parent::__construct();
-	}
-
-	// MARK: GETTERS
-
-	private function getIdLibro(): int
-	{
-		return $this->idLibro;
-	}
-
-	private function getTitulo(): string
-	{
-		return $this->titulo;
-	}
-
-	private function getDescripcion(): string
-	{
-		return $this->descripcion;
-	}
-
-	private function getPaginas(): int
-	{
-		return $this->paginas;
-	}
-
-	private function getFechaPublicacion(): string
-	{
-		return $this->fechaPublicacion;
-	}
-
-	private function getIdCategoria(): int
-	{
-		return $this->idCategoria;
-	}
-
-	// MARK: SETTERS
-
-	private function setIdLibro(): void
-	{
-		$input = $_POST['id_libro'] ?? null;
-
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->idLibro = (int) $input
-			: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
-	}
-
-	// private function setTitulo(): void
-	// {
-	// 	$input = $_POST['titulo'] ?? "";
-
-	// 	$input === ""
-	// 		? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
-	// 		: $this->titulo = $input;
-	// }
-
-	private function setDescripcion(): void
-	{
-		$input = $_POST['descripcion'] ?? "";
-
-		$input === ""
-			? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
-			: $this->descripcion = $input;
-	}
-
-	private function setPaginas(): void
-	{
-		$input = $_POST['paginas'] ?? null;
-
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->paginas = (int) $input
-			: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
-	}
-
-	private function setFechaPublicacion(): void
-	{
-		$input = $_POST['fecha_publicacion'] ?? "";
-		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
-
-		!$dateTime || $dateTime->format('Y-m-d') !== $input
-			? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
-			: $this->fechaPublicacion = $input;
-	}
-
-	private function setIdCategoria(): void
-	{
-		$input = $_POST['id_categoria'] ?? null;
-
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->idCategoria = (int) $input
-			: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setPortada(): void
@@ -165,16 +118,17 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function createLibro(): void
 	{
 		$this->titulo = $_POST['titulo'] ?? "";
-		$this->setDescripcion();
-		$this->setPaginas();
-		$this->setFechaPublicacion();
-		$this->setIdCategoria();
+		$this->descripcion = $_POST['descripcion'] ?? "";
+		$this->paginas = $_POST['paginas'] ?? "";
+		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
+		$this->idCategoria = $_POST['id_categoria'] ?? "";
+
 		$this->setPortada();
 
 		$this->checkValidationErrors();
 
-		$this->tituloExists($this->getTitulo());
-		$this->idCategoriaExists($this->getIdCategoria());
+		$this->tituloExists($this->titulo);
+		$this->idCategoriaExists($this->idCategoria);
 
 		$this->checkIntegrityErrors();
 
@@ -201,10 +155,10 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query = $this->getConnection()->prepare($statement);
 
 		$titulo = $this->titulo;
-		$descripcion = $this->getDescripcion();
-		$paginas = $this->getPaginas();
-		$fechaPublicacion = $this->getFechaPublicacion();
-		$idCategoria = $this->getIdCategoria();
+		$descripcion = $this->descripcion;
+		$paginas = $this->paginas;
+		$fechaPublicacion = $this->fechaPublicacion;
+		$idCategoria = $this->idCategoria;
 
 		$query->bind_param(
 			"sssisi",
@@ -226,104 +180,104 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	// MARK: UPDATE
 
-	public function updateLibro(): void
-	{
-		$this->setIdLibro();
-		// $this->setTitulo();
-		$this->setDescripcion();
-		$this->setPaginas();
-		$this->setFechaPublicacion();
-		$this->setIdCategoria();
+	// public function updateLibro(): void
+	// {
+	// 	$this->setIdLibro();
+	// 	$this->setTitulo();
+	// 	$this->setDescripcion();
+	// 	$this->setPaginas();
+	// 	$this->setFechaPublicacion();
+	// 	$this->setIdCategoria();
 
-		$this->setPortada();
-		$this->setCheckbox();
+	// 	$this->setPortada();
+	// 	$this->setCheckbox();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$this->idLibroExists($this->getIdLibro());
-		$this->tituloUpdateExists($this->getTitulo(), $this->getIdLibro());
-		$this->idCategoriaExists($this->getIdCategoria());
+	// 	$this->idLibroExists($this->getIdLibro());
+	// 	$this->tituloUpdateExists($this->titulo, $this->getIdLibro());
+	// 	$this->idCategoriaExists($this->getIdCategoria());
 
-		$this->checkIntegrityErrors();
+	// 	$this->checkIntegrityErrors();
 
-		$portada = $this->updateFile($this->getIdLibro());
+	// 	$portada = $this->updateFile($this->getIdLibro());
 
-		$statement =
-			"UPDATE libros
-				SET titulo = ?,
-				descripcion = ?,
-				portada = ?,
-				paginas = ?,
-				fecha_publicacion = ?,
-				id_categoria = ?
-			WHERE id_libro = ?";
+	// 	$statement =
+	// 		"UPDATE libros
+	// 			SET titulo = ?,
+	// 			descripcion = ?,
+	// 			portada = ?,
+	// 			paginas = ?,
+	// 			fecha_publicacion = ?,
+	// 			id_categoria = ?
+	// 		WHERE id_libro = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+	// 	$query = $this->getConnection()->prepare($statement);
 
-		$idLibro = $this->getIdLibro();
-		$titulo = $this->getTitulo();
-		$descripcion = $this->getDescripcion();
-		$paginas = $this->getPaginas();
-		$fechaPublicacion = $this->getFechaPublicacion();
-		$idCategoria = $this->getIdCategoria();
+	// 	$idLibro = $this->getIdLibro();
+	// 	$titulo = $this->titulo;
+	// 	$descripcion = $this->getDescripcion();
+	// 	$paginas = $this->getPaginas();
+	// 	$fechaPublicacion = $this->getFechaPublicacion();
+	// 	$idCategoria = $this->getIdCategoria();
 
-		$query->bind_param(
-			"sssisii",
-			$titulo,
-			$descripcion,
-			$portada,
-			$paginas,
-			$fechaPublicacion,
-			$idCategoria,
-			$idLibro
-		);
+	// 	$query->bind_param(
+	// 		"sssisii",
+	// 		$titulo,
+	// 		$descripcion,
+	// 		$portada,
+	// 		$paginas,
+	// 		$fechaPublicacion,
+	// 		$idCategoria,
+	// 		$idLibro
+	// 	);
 
-		$query->execute();
-		$numFilas = $query->affected_rows;
-		$query->close();
+	// 	$query->execute();
+	// 	$numFilas = $query->affected_rows;
+	// 	$query->close();
 
-		if ($numFilas === 1) {
-			$this->setStatus(200);
-			$this->setMessage('¡Libro modificado!');
-		} else {
-			$this->setStatus(204);
-		}
-		$this->getResponse();
-	}
+	// 	if ($numFilas === 1) {
+	// 		$this->setStatus(200);
+	// 		$this->setMessage('¡Libro modificado!');
+	// 	} else {
+	// 		$this->setStatus(204);
+	// 	}
+	// 	$this->getResponse();
+	// }
 
-	// MARK: DELETE
+	// // MARK: DELETE
 
-	public function deleteLibro(): void
-	{
-		$this->setIdLibro();
+	// public function deleteLibro(): void
+	// {
+	// 	$this->setIdLibro();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$this->idLibroExists($this->getIdLibro());
+	// 	$this->idLibroExists($this->getIdLibro());
 
-		$this->checkIntegrityErrors();
+	// 	$this->checkIntegrityErrors();
 
-		$this->deleteFile($this->getIdLibro());
+	// 	$this->deleteFile($this->getIdLibro());
 
-		$statement =
-			"DELETE FROM libros
-			WHERE id_libro = ?";
+	// 	$statement =
+	// 		"DELETE FROM libros
+	// 		WHERE id_libro = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+	// 	$query = $this->getConnection()->prepare($statement);
 
-		$idLibro = $this->getIdLibro();
+	// 	$idLibro = $this->getIdLibro();
 
-		$query->bind_param(
-			"i",
-			$idLibro
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$idLibro
+	// 	);
 
-		$query->execute();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->close();
 
-		$this->setStatus(204);
-		$this->getResponse();
-	}
+	// 	$this->setStatus(204);
+	// 	$this->getResponse();
+	// }
 
 	// MARK: DELETE ALL
 
