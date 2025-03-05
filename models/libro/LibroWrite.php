@@ -6,66 +6,75 @@ require_once __DIR__ . '/LibroIntegrityErrors.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
-	private int $idLibro {
-		get => $this->idLibro;
-		set(string|int $input) {
-
-			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-				? $this->idLibro = (int) $input
-				: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+	private ?int $idLibro {
+		get {
+			if (!filter_var($this->idLibro, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
+				$this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+			}
+			return $this->idLibro;
 		}
+		set(string|int|null $input) => $this->idLibro = (int) $input;
 	}
-	private string $titulo {
-		get => $this->titulo;
-		set(string $input) {
 
-			$input === ""
-				? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
-				: $this->titulo = $input;
+	private ?string $titulo {
+		get {
+			if (empty($this->titulo)) {
+				$this->setValidationError("El campo 'titulo' no puede estar vacío.");
+			}
+			return $this->titulo;
 		}
+		set(?string $input) => $this->titulo = $input;
 	}
-	private string $descripcion {
-		get => $this->descripcion;
-		set(string $input) {
 
-			$input === ""
-				? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
-				: $this->descripcion = $input;
+	private ?string $descripcion {
+		get {
+			if (empty($this->descripcion)) {
+				$this->setValidationError("El campo 'descripcion' no puede estar vacío.");
+			}
+			return $this->descripcion;
 		}
+		set(?string $input) => $this->descripcion = $input;
 	}
-	private int $paginas {
-		get => $this->paginas;
-		set(string|int $input) {
 
-			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-				? $this->paginas = (int) $input
-				: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+	private ?int $paginas {
+		get {
+			if (!filter_var($this->paginas, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
+				$this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+			}
+			return $this->paginas;
 		}
+		set(string|int|null $input) => $this->paginas = (int) $input;
 	}
-	private string $fechaPublicacion {
-		get => $this->fechaPublicacion;
-		set(string $input) {
 
-			$dateTime = DateTime::createFromFormat('Y-m-d', $input);
-
-			!$dateTime || $dateTime->format('Y-m-d') !== $input
-				? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
-				: $this->fechaPublicacion = $input;
+	private ?string $fechaPublicacion {
+		get {
+			$dateTime = DateTime::createFromFormat('Y-m-d', $this->fechaPublicacion);
+			if (!$dateTime || $dateTime->format('Y-m-d') !== $this->fechaPublicacion) {
+				$this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.");
+			}
+			return $this->fechaPublicacion;
 		}
+		set(?string $input) => $this->fechaPublicacion = $input;
 	}
-	private int $idCategoria {
-		get => $this->idCategoria;
-		set(string|int $input) {
 
-			filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-				? $this->idCategoria = (int) $input
-				: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+	private ?int $idCategoria {
+		get {
+			if (!filter_var($this->idCategoria, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
+				$this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+			}
+			return $this->idCategoria;
 		}
+		set(string|int|null $input) => $this->idCategoria = (int) $input;
 	}
 
 	public function __construct()
 	{
 		parent::__construct();
+		$this->titulo = $_POST['titulo'] ?? null;
+		$this->descripcion = $_POST['descripcion'] ?? null;
+		$this->paginas = $_POST['paginas'] ?? null;
+		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? null;
+		$this->idCategoria = $_POST['id_categoria'] ?? null;
 	}
 
 	private function setPortada(): void
@@ -117,18 +126,18 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-		$this->titulo = $_POST['titulo'] ?? "";
-		$this->descripcion = $_POST['descripcion'] ?? "";
-		$this->paginas = $_POST['paginas'] ?? "";
-		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
-		$this->idCategoria = $_POST['id_categoria'] ?? "";
+		$titulo = $this->titulo;
+		$descripcion = $this->descripcion;
+		$paginas = $this->paginas;
+		$fechaPublicacion = $this->fechaPublicacion;
+		$idCategoria = $this->idCategoria;
 
 		$this->setPortada();
 
 		$this->checkValidationErrors();
 
-		$this->tituloExists($this->titulo);
-		$this->idCategoriaExists($this->idCategoria);
+		$this->tituloExists($titulo);
+		$this->idCategoriaExists($idCategoria);
 
 		$this->checkIntegrityErrors();
 
@@ -153,12 +162,6 @@ final class LibroWrite extends LibroIntegrityErrors
 			)";
 
 		$query = $this->getConnection()->prepare($statement);
-
-		$titulo = $this->titulo;
-		$descripcion = $this->descripcion;
-		$paginas = $this->paginas;
-		$fechaPublicacion = $this->fechaPublicacion;
-		$idCategoria = $this->idCategoria;
 
 		$query->bind_param(
 			"sssisi",
