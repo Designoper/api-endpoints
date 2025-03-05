@@ -46,12 +46,9 @@ abstract class FileManager extends ApiResponse
 
     private function setHost(): void
     {
-        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
-        $protocol = $https ? 'https://' : 'http://';
-
+        $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-
-        $this->host = $protocol . $host;
+        $this->host = $protocol . '://' . $host;
     }
 
     private function setDefaultImage(): void
