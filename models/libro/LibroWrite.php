@@ -321,7 +321,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			$this->deleteFile($libroPath);
 		} else {
 			$this->setStatus(404);
-			$this->setMessage('¡El ibro solicitado no existe!');
+			$this->setMessage('¡El libro solicitado no existe!');
 		}
 
 		$this->getResponse();
@@ -331,19 +331,18 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteAllLibros(): void
 	{
-		$this->librosExists();
-
-		$this->checkIntegrityErrors();
-
-		$this->deleteAllFiles();
-
 		$statement =
-			"TRUNCATE TABLE libros";
+			"DELETE FROM libros";
 
 		$query = $this->getConnection()->prepare($statement);
-		$query->execute();
 
+		$query->execute();
+		$numFilas = $query->affected_rows;
 		$query->close();
+
+		if ($numFilas > 0) {
+			$this->deleteAllFiles();
+		}
 
 		$this->setStatus(204);
 		$this->getResponse();

@@ -45,6 +45,13 @@ abstract class ApiResponse extends MysqliConnect
         return $this->integrityErrors;
     }
 
+    protected function getResponse(): void
+    {
+        http_response_code($this->getStatus());
+        header('Content-Type: application/json');
+        echo json_encode($this->response);
+    }
+
     //MARK: SETTERS
 
     protected function setStatus(int $status): void
@@ -84,6 +91,8 @@ abstract class ApiResponse extends MysqliConnect
         $this->response['integrityErrors'] = $this->getIntegrityErrors();
     }
 
+    //MARK: CHECKERS
+
     protected function checkValidationErrors(): void
     {
         if (count($this->getValidationErrors()) > 0) {
@@ -111,14 +120,5 @@ abstract class ApiResponse extends MysqliConnect
         $this->setMessage("Credenciales incorrectas");
         $this->getResponse();
         exit();
-    }
-
-    //MARK: FINAL
-
-    protected function getResponse(): void
-    {
-        http_response_code($this->getStatus());
-        header('Content-Type: application/json');
-        echo json_encode($this->response);
     }
 }
