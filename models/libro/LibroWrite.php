@@ -59,11 +59,10 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setIdLibro(): void
 	{
 		$name = 'id_libro';
-		$value = $_POST[$name] ?? null;
-		$property = &$this->idLibro;
+		$value = $_POST[$name] ?? "";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $property = (int) $value
+			? $this->idLibro = (int) $value
 			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
@@ -73,45 +72,50 @@ final class LibroWrite extends LibroIntegrityErrors
 		$value = $_POST[$name] ?? "";
 
 		$value === ""
-			? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
+			? $this->setValidationError("El campo '$name' no puede estar vacío.")
 			: $this->titulo = $value;
 	}
 
 	private function setDescripcion(): void
 	{
-		$value = $_POST['descripcion'] ?? "";
+		$name = 'descripcion';
+		$value = $_POST[$name] ?? "";
 
 		$value === ""
-			? $this->setValidationError("El campo 'descripcion' no puede estar vacío.")
+			? $this->setValidationError("El campo '$name' no puede estar vacío.")
 			: $this->descripcion = $value;
 	}
 
 	private function setPaginas(): void
 	{
-		$value = $_POST['paginas'] ?? null;
+		$name = 'paginas';
+		$value = $_POST[$name] ?? "";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->paginas = (int) $value
-			: $this->setValidationError("El campo 'paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setFechaPublicacion(): void
 	{
-		$value = $_POST['fecha_publicacion'] ?? "";
+		$name = 'fecha_publicacion';
+		$value = $_POST[$name] ?? "";
+
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
 		!$dateTime || $dateTime->format('Y-m-d') !== $value
-			? $this->setValidationError("El campo 'fecha_publicacion' debe tener el formato yyyy-mm-dd.")
+			? $this->setValidationError("El campo '$name' debe tener el formato yyyy-mm-dd.")
 			: $this->fechaPublicacion = $value;
 	}
 
 	private function setIdCategoria(): void
 	{
-		$value = $_POST['id_categoria'] ?? null;
+		$name = 'id_categoria';
+		$value = $_POST[$name] ?? "";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->idCategoria = (int) $value
-			: $this->setValidationError("El campo 'id_categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setPortada(): void
