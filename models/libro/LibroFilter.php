@@ -88,98 +88,98 @@ final class LibroFilter extends FileManager
 
 	private function setMinimoPaginas(): void
 	{
-		$input = $_GET['min_paginas'] ?? "";
+		$value = $_GET['min_paginas'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->minimoPaginas = null;
 			return;
 		}
 
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->minimoPaginas = (int) $input
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->minimoPaginas = (int) $value
 			: $this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setMaximoPaginas(): void
 	{
-		$input = $_GET['max_paginas'] ?? "";
+		$value = $_GET['max_paginas'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->maximoPaginas = null;
 			return;
 		}
 
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->maximoPaginas = (int) $input
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->maximoPaginas = (int) $value
 			: $this->setValidationError("El campo 'max_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setMinimoFechaPublicacion(): void
 	{
-		$input = $_GET['min_fecha'] ?? "";
+		$value = $_GET['min_fecha'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->minimoFechaPublicacion = null;
 			return;
 		}
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
+		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
 			$this->setValidationError("El campo 'min_fecha' debe tener el formato yyyy-mm-dd");
 			return;
 		}
 
-		$this->minimoFechaPublicacion = $input;
+		$this->minimoFechaPublicacion = $value;
 	}
 
 	private function setMaximoFechaPublicacion(): void
 	{
-		$input = $_GET['max_fecha'] ?? "";
+		$value = $_GET['max_fecha'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->maximoFechaPublicacion = null;
 			return;
 		}
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $input);
+		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $input) {
+		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
 			$this->setValidationError("El campo 'max_fecha' debe tener el formato yyyy-mm-dd");
 			return;
 		}
 
-		$this->maximoFechaPublicacion = $input;
+		$this->maximoFechaPublicacion = $value;
 	}
 
 	private function setTitulo(): void
 	{
-		$input = $_GET['titulo'] ?? "";
+		$value = $_GET['titulo'] ?? "";
 
-		$input === ""
+		$value === ""
 			? $this->titulo = null
-			: $this->titulo = $input;
+			: $this->titulo = $value;
 	}
 
 	private function setIdCategoria(): void
 	{
-		$input = $_GET['id_categoria'] ?? "";
+		$value = $_GET['id_categoria'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->idCategoria = null;
 			return;
 		}
 
-		filter_var($input, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->idCategoria = (int) $input
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->idCategoria = (int) $value
 			: $this->setValidationError("El campo 'categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setCriterioOrden(): void
 	{
-		$input = $_GET['criterio_orden'] ?? "";
+		$value = $_GET['criterio_orden'] ?? "";
 
-		if ($input === "") {
+		if ($value === "") {
 			$this->criterioOrden = null;
 			return;
 		}
@@ -193,12 +193,12 @@ final class LibroFilter extends FileManager
 			'fechaDesc'
 		];
 
-		if (!in_array($input, $permitedValues, true)) {
+		if (!in_array($value, $permitedValues, true)) {
 			$this->setValidationError("El campo 'criterio_orden' solo acepta los siguientes valores: 'tituloAsc','tituloDesc','paginasAsc','paginasDesc','fechaAsc','fechaDesc'.");
 			return;
 		}
 
-		$this->criterioOrden = $input;
+		$this->criterioOrden = $value;
 	}
 
 	//MARK: FILTER

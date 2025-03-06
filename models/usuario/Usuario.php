@@ -26,8 +26,8 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	private function setUsuario(): void
 	{
-		$input = $_POST['usuario'] ?? null;
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$value = $_POST['usuario'] ?? null;
+		$sanitizedInput = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 		if (empty($sanitizedInput)) {
 			$this->setValidationError("El campo 'usuario' no puede estar vacío.");
@@ -39,8 +39,8 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	private function setPassword(): void
 	{
-		$input = $_POST['password'] ?? null;
-		$sanitizedInput = filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$value = $_POST['password'] ?? null;
+		$sanitizedInput = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 		if (empty($sanitizedInput)) {
 			$this->setValidationError("El campo 'password' no puede estar vacío.");
