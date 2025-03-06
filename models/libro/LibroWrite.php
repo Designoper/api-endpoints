@@ -134,7 +134,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-
 		$portada = $this->uploadFileName();
 
 		$statement =
