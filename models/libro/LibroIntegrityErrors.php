@@ -32,6 +32,53 @@ abstract class LibroIntegrityErrors extends FileManager
 		}
 	}
 
+	protected function tituloExists(string $titulo): void
+	{
+		$statement =
+			"SELECT 1
+			FROM libros
+			WHERE titulo = ?
+			LIMIT 1";
+
+		$query = $this->getConnection()->prepare($statement);
+		$query->bind_param("s", $titulo);
+		$query->execute();
+
+		$libro = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
+		if ($libro) {
+			$this->setStatus(409);
+			$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
+			$this->checkIntegrityErrors();
+		}
+	}
+
+	protected function tituloUpdateExists(string $titulo, int $idLibro): void
+	{
+		$statement =
+			"SELECT 1
+			FROM libros
+			WHERE titulo = ?
+			AND id_libro != ?
+			LIMIT 1";
+
+		$query = $this->getConnection()->prepare($statement);
+		$query->bind_param("si", $titulo, $idLibro);
+		$query->execute();
+
+		$libro = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
+		if ($libro) {
+			$this->setStatus(409);
+			$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	protected function idLibroExists(int $idLibro): void
 	{
 		$statement =
