@@ -114,8 +114,6 @@ final class ApiRouter extends Sanitizer
         switch ($method) {
             case 'GET':
             case 'POST':
-            case 'PUT':
-            case 'DELETE':
                 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
                 foreach ($this->routes as $route) {
@@ -136,7 +134,7 @@ final class ApiRouter extends Sanitizer
             default:
                 http_response_code(405);
                 header('Content-Type: application/json');
-                header('Allow: GET, POST, PUT, DELETE');
+                header('Allow: GET, POST');
         }
     }
 }
