@@ -34,21 +34,6 @@ final class LibroFilter extends FileManager
 		return $this->types;
 	}
 
-	private function addParam(string|int $param): void
-	{
-		$this->params[] = $param;
-	}
-
-	private function addType(string $type): void
-	{
-		$this->types .= $type;
-	}
-
-
-
-
-
-
 	private function getTitulo(): ?string
 	{
 		return $this->titulo;
@@ -199,6 +184,16 @@ final class LibroFilter extends FileManager
 		}
 
 		$this->criterioOrden = $value;
+	}
+
+	private function addParam(string|int $param): void
+	{
+		$this->params[] = $param;
+	}
+
+	private function addType(string $type): void
+	{
+		$this->types .= $type;
 	}
 
 	//MARK: FILTER
