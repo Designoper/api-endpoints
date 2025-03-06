@@ -118,7 +118,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->paginas = $_POST['paginas'] ?? null;
 		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
 		$this->idCategoria = $_POST['id_categoria'] ?? null;
-
 		$this->setPortada();
 
 		$this->checkValidationErrors();
@@ -128,12 +127,6 @@ final class LibroWrite extends LibroIntegrityErrors
 		$paginas = $this->paginas;
 		$fechaPublicacion = $this->fechaPublicacion;
 		$idCategoria = $this->idCategoria;
-
-		$this->tituloExists($titulo);
-		$this->idCategoriaExists($idCategoria);
-
-		$this->checkIntegrityErrors();
-
 		$portada = $this->uploadFileName();
 
 		$statement =
@@ -166,9 +159,27 @@ final class LibroWrite extends LibroIntegrityErrors
 			$idCategoria
 		);
 
-		$query->execute();
-		$query->close();
+		try {
+			$query->execute();
+		} catch (Exception $error) {
+			$query->close();
 
+			//error 1062 clave única duplicada
+			if ($error->getCode() == 1062) {
+				$this->setStatus(409);
+				$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
+				$this->checkIntegrityErrors();
+			}
+
+			//error 1452 clave foránea no válida
+			if ($error->getCode() == 1452) {
+				$this->setStatus(404);
+				$this->setIntegrityError('¡La categoria seleccionada no existe!');
+				$this->checkIntegrityErrors();
+			}
+		}
+
+		$query->close();
 		$this->setStatus(201);
 		$this->setMessage("Libro creado");
 		$this->uploadFile();
