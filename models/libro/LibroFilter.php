@@ -209,15 +209,15 @@ final class LibroFilter extends FileManager
 
 		$minimoPaginas = $this->minimoPaginas;
 
-		$defaultImage = $this->getDefaultImage();
 		$host = $this->getHost();
+		$defaultImage = self::DEFAULT_IMAGE;
 
 		$statement =
 			"SELECT
 				libros.id_libro,
 				libros.titulo,
 				CASE
-					WHEN libros.portada IS NULL THEN '$defaultImage'
+					WHEN libros.portada IS NULL THEN CONCAT('$host', '$defaultImage')
 					ELSE CONCAT('$host', libros.portada)
 				END AS portada,
 				libros.descripcion,

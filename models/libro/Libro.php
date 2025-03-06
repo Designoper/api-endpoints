@@ -13,15 +13,15 @@ final class Libro extends FileManager
 
 	public function readLibros(): void
 	{
-		$defaultImage = $this->getDefaultImage();
 		$host = $this->getHost();
+		$defaultImage = self::DEFAULT_IMAGE;
 
 		$statement =
 			"SELECT
 				libros.id_libro,
 				libros.titulo,
 				CASE
-					WHEN libros.portada IS NULL THEN '$defaultImage'
+					WHEN libros.portada IS NULL THEN CONCAT('$host', '$defaultImage')
 					ELSE CONCAT('$host', libros.portada)
 				END AS portada,
 				libros.descripcion,
@@ -34,6 +34,7 @@ final class Libro extends FileManager
 			ORDER BY libros.titulo";
 
 		$query = $this->connection->prepare($statement);
+		// $query->bind_param('ss', $defaultImage, $host);
 
 		$query->execute();
 

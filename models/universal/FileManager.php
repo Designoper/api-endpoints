@@ -8,8 +8,7 @@ abstract class FileManager extends ApiResponse
 {
     private readonly string $host;
     private const string IMAGE_PATH = '/assets/img/';
-    private const string DEFAULT_IMAGE = 'default/default.jpg';
-    private readonly string $defaultImage;
+    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
     protected string $extraDirectories = '';
 
     private readonly ?array $file;
@@ -20,7 +19,6 @@ abstract class FileManager extends ApiResponse
         parent::__construct();
 
         $this->setHost();
-        $this->setDefaultImage();
     }
 
     // MARK: GETTERS
@@ -28,11 +26,6 @@ abstract class FileManager extends ApiResponse
     protected function getHost(): string
     {
         return $this->host;
-    }
-
-    protected function getDefaultImage(): string
-    {
-        return $this->defaultImage;
     }
 
     protected function getFile(): ?array
@@ -47,11 +40,6 @@ abstract class FileManager extends ApiResponse
         $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $this->host = $protocol . '://' . $host;
-    }
-
-    private function setDefaultImage(): void
-    {
-        $this->defaultImage = $this->getHost() . self::IMAGE_PATH . self::DEFAULT_IMAGE;
     }
 
     protected function setFile(?array $file): void
