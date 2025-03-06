@@ -10,6 +10,7 @@ abstract class FileManager extends ApiResponse
     private const string IMAGE_PATH = '/assets/img/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
     protected string $extraDirectories = '';
+    protected string $uniqueFilename;
 
     private readonly ?array $file;
     protected readonly bool $deleteCheckbox;
@@ -80,45 +81,63 @@ abstract class FileManager extends ApiResponse
         return $newArray;
     }
 
-    private function generateUniqueFilename(string $originalFilename): string
+    private function generateUniqueFilename(string $originalFilename): void
     {
         $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        return $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function uploadFile(): ?string
+    protected function uploadFileName(): ?string
     {
         if ($this->getFile() === null) {
             return null;
+        }
+
+        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+    }
+
+    protected function uploadFile(): void
+    {
+        if ($this->getFile() === null) {
+            return;
         }
 
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories)) {
             mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories, 0755, true);
         }
 
-        $uniqueFilename = $this->generateUniqueFilename($this->getFile()['name']);
-        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories . $uniqueFilename;
+        $this->generateUniqueFilename($this->getFile()['name']);
+        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
-
-        return self::IMAGE_PATH . $this->extraDirectories . $uniqueFilename;
     }
 
-    protected function updateFile(int $fileId): ?string
+    protected function updateFileName(int $fileId): ?string
+    {
+        if ($this->getFile() === null) {
+            if ($this->deleteCheckbox === true) {
+                return null;
+            }
+            $fileUrl = $this->getFileUrl($fileId);
+            return $fileUrl;
+        }
+
+        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+    }
+
+    protected function updateFile(int $fileId): void
     {
         if ($this->getFile() === null) {
             if ($this->deleteCheckbox === true) {
                 $this->deleteFile($fileId);
-                return null;
+                return;
             }
-            return $this->getFileUrl($fileId);
+            return;
         }
 
         $this->deleteFile($fileId);
-
-        $fileUrl = $this->uploadFile($this->extraDirectories);
-        return $fileUrl;
+        $this->uploadFile();
     }
 
     protected function deleteFile(int $fileId): void
