@@ -150,7 +150,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setCheckbox(): void
 	{
-		$value = $_POST['eliminar_portada'] ?? false;
+		$name = 'eliminar_portada';
+		$value = $_POST[$name] ?? false;
 
 		if ($value === false) {
 			$this->deleteCheckbox = false;
@@ -158,7 +159,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		}
 
 		$value !== ""
-			? $this->setValidationError("El único valor válido para eliminar_portada es campo vacío")
+			? $this->setValidationError("El único valor válido para '$name' es campo vacío")
 			: $this->deleteCheckbox = true;
 	}
 
@@ -175,11 +176,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
-		$titulo = $this->titulo;
-		$descripcion = $this->descripcion;
-		$paginas = $this->paginas;
-		$fechaPublicacion = $this->fechaPublicacion;
-		$idCategoria = $this->idCategoria;
+		$titulo = $this->getTitulo();
+		$descripcion = $this->getDescripcion();
+		$paginas = $this->getPaginas();
+		$fechaPublicacion = $this->getFechaPublicacion();
+		$idCategoria = $this->getIdCategoria();
 		$portada = $this->uploadFileName();
 
 		$statement =
@@ -274,12 +275,12 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
-		$idLibro = $this->idLibro;
-		$titulo = $this->titulo;
-		$descripcion = $this->descripcion;
-		$paginas = $this->paginas;
-		$fechaPublicacion = $this->fechaPublicacion;
-		$idCategoria = $this->idCategoria;
+		$idLibro = $this->getIdLibro();
+		$titulo = $this->getTitulo();
+		$descripcion = $this->getDescripcion();
+		$paginas = $this->getPaginas();
+		$fechaPublicacion = $this->getFechaPublicacion();
+		$idCategoria = $this->getIdCategoria();
 
 		$this->idLibroExists($idLibro);
 
@@ -351,7 +352,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
-		$idLibro = $this->idLibro;
+		$idLibro = $this->getIdLibro();
 		$libroPath = $this->getFileUrl($idLibro);
 
 		$statement =
