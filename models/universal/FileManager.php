@@ -94,6 +94,8 @@ abstract class FileManager extends ApiResponse
             return null;
         }
 
+        $this->generateUniqueFilename($this->getFile()['name']);
+
         return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
     }
 
@@ -107,7 +109,6 @@ abstract class FileManager extends ApiResponse
             mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories, 0755, true);
         }
 
-        $this->generateUniqueFilename($this->getFile()['name']);
         $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
@@ -123,29 +124,29 @@ abstract class FileManager extends ApiResponse
             return $fileUrl;
         }
 
+        $this->generateUniqueFilename($this->getFile()['name']);
+
         return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
     }
 
-    protected function updateFile(int $fileId): void
+    protected function updateFile(?string $filePath): void
     {
         if ($this->getFile() === null) {
             if ($this->deleteCheckbox === true) {
-                $this->deleteFile($fileId);
+                $this->deleteFile($filePath);
                 return;
             }
             return;
         }
 
-        $this->deleteFile($fileId);
+        $this->deleteFile($filePath);
         $this->uploadFile();
     }
 
-    protected function deleteFile(int $fileId): void
+    protected function deleteFile(?string $filePath): void
     {
-        $fileUrl = $this->getFileUrl($fileId);
-
-        if ($fileUrl !== null) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . $fileUrl);
+        if ($filePath !== null) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . $filePath);
         }
     }
 
@@ -166,7 +167,7 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    private function getFileUrl(int $fileId): ?string
+    protected function getFileUrl(int $fileId): ?string
     {
         $statement =
             "SELECT portada

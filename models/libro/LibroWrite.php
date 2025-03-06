@@ -134,7 +134,6 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->uploadFile();
 
 		$portada = $this->uploadFileName();
 
@@ -173,6 +172,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->setStatus(201);
 		$this->setMessage("Libro creado");
+		$this->uploadFile();
 		$this->getResponse();
 	}
 
@@ -205,9 +205,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->updateFile($idLibro);
-
 		$portada = $this->updateFileName($idLibro);
+		$libroPath = $this->getFileUrl($idLibro);
 
 		$statement =
 			"UPDATE libros
@@ -242,6 +241,8 @@ final class LibroWrite extends LibroIntegrityErrors
 		} else {
 			$this->setStatus(204);
 		}
+
+		$this->updateFile($libroPath);
 		$this->getResponse();
 	}
 
@@ -259,7 +260,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkIntegrityErrors();
 
-		$this->deleteFile($idLibro);
+		$libroPath = $this->getFileUrl($idLibro);
 
 		$statement =
 			"DELETE FROM libros
@@ -276,6 +277,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->close();
 
 		$this->setStatus(204);
+		$this->deleteFile($libroPath);
 		$this->getResponse();
 	}
 
