@@ -58,16 +58,19 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setIdLibro(): void
 	{
-		$value = $_POST['id_libro'] ?? null;
+		$name = 'id_libro';
+		$value = $_POST[$name] ?? null;
+		$property = &$this->idLibro;
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
-			? $this->idLibro = (int) $value
-			: $this->setValidationError("El campo 'id_libro' debe ser un número entero superior o igual a 1 y solo contener números.");
+			? $property = (int) $value
+			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
 	}
 
 	private function setTitulo(): void
 	{
-		$value = $_POST['titulo'] ?? "";
+		$name = 'titulo';
+		$value = $_POST[$name] ?? "";
 
 		$value === ""
 			? $this->setValidationError("El campo 'titulo' no puede estar vacío.")
@@ -159,11 +162,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function createLibro(): void
 	{
-		$this->titulo = $_POST['titulo'] ?? "";
-		$this->descripcion = $_POST['descripcion'] ?? "";
-		$this->paginas = $_POST['paginas'] ?? null;
-		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
-		$this->idCategoria = $_POST['id_categoria'] ?? null;
+		$this->setTitulo();
+		$this->setDescripcion();
+		$this->setPaginas();
+		$this->setFechaPublicacion();
+		$this->setIdCategoria();
 		$this->setPortada();
 
 		$this->checkValidationErrors();
@@ -256,12 +259,12 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function updateLibro(): void
 	{
-		$this->idLibro = $_POST['id_libro'] ?? null;
-		$this->titulo = $_POST['titulo'] ?? "";
-		$this->descripcion = $_POST['descripcion'] ?? "";
-		$this->paginas = $_POST['paginas'] ?? null;
-		$this->fechaPublicacion = $_POST['fecha_publicacion'] ?? "";
-		$this->idCategoria = $_POST['id_categoria'] ?? null;
+		$this->setIdLibro();
+		$this->setTitulo();
+		$this->setDescripcion();
+		$this->setPaginas();
+		$this->setFechaPublicacion();
+		$this->setIdCategoria();
 		$this->setPortada();
 		$this->setCheckbox();
 
@@ -340,7 +343,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteLibro(): void
 	{
-		$this->idLibro = $_POST['id_libro'] ?? null;
+		$this->setIdLibro();
 
 		$this->checkValidationErrors();
 
