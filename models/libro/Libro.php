@@ -33,7 +33,7 @@ final class Libro extends FileManager
 			NATURAL JOIN categorias
 			ORDER BY libros.titulo";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 		// $query->bind_param('ss', $defaultImage, $host);
 
 		$query->execute();

@@ -147,7 +147,7 @@ final class LibroWrite extends LibroIntegrityErrors
 				?
 			)";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
 			"sssisi",
@@ -243,7 +243,7 @@ final class LibroWrite extends LibroIntegrityErrors
 				id_categoria = ?
 			WHERE id_libro = ?";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
 			"sssisii",
@@ -305,7 +305,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			"DELETE FROM libros
 			WHERE id_libro = ?";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -340,7 +340,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$statement =
 			"TRUNCATE TABLE libros";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 		$query->execute();
 
 		$query->close();

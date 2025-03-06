@@ -6,7 +6,6 @@ require_once __DIR__ . '/ApiResponse.php';
 
 abstract class FileManager extends ApiResponse
 {
-    private readonly string $host;
     private const string IMAGE_PATH = '/assets/img/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
     protected string $extraDirectories = '';
@@ -18,16 +17,9 @@ abstract class FileManager extends ApiResponse
     protected function __construct()
     {
         parent::__construct();
-
-        $this->setHost();
     }
 
     // MARK: GETTERS
-
-    protected function getHost(): string
-    {
-        return $this->host;
-    }
 
     protected function getFile(): ?array
     {
@@ -35,13 +27,6 @@ abstract class FileManager extends ApiResponse
     }
 
     // MARK: SETTERS
-
-    private function setHost(): void
-    {
-        $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $this->host = $protocol . '://' . $host;
-    }
 
     protected function setFile(?array $file): void
     {
@@ -174,7 +159,7 @@ abstract class FileManager extends ApiResponse
             FROM libros
             WHERE id_libro = ?";
 
-        $query = $this->connection->prepare($statement);
+        $query = $this->getConnection()->prepare($statement);
 
         $query->bind_param(
             "i",

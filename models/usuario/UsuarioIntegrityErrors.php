@@ -17,7 +17,7 @@ abstract class UsuarioIntegrityErrors extends ApiResponse
 			"SELECT * FROM usuarios
 		WHERE nombre = ?";
 
-		$query = $this->connection->prepare($statement);
+		$query = $this->getConnection()->prepare($statement);
 		$query->bind_param("s", $nombre);
 		$query->execute();
 
