@@ -2,7 +2,6 @@ import { Categoria } from "./Categoria.js";
 
 class Libro extends Categoria {
     static librosEndpoint = 'http://localhost/api/libros/';
-    static librosFilterEndpoint = 'http://localhost/api/libros/filter/';
     static fetchOutput = document.getElementById('fetchoutput');
     static errorContainer = document.getElementById('errorcontainer');
 
@@ -26,15 +25,17 @@ class Libro extends Categoria {
 
     // MARK: FILTER LIBROS
 
-    async filterLibros(form) {
+    async filterLibros(form, errorContainer, dialog) {
 
-        const response = await this.fetchData({
-            url: Libro.librosFilterEndpoint,
-            method: 'GET',
-            form: form
-        });
+        const response = await this.fetchData(form);
 
         await this.printLibros(response);
+
+        this.resetForm({
+            form: form,
+            errorContainer: errorContainer,
+            dialog: dialog
+        });
     }
 
     // MARK: CREATE LIBRO
@@ -61,11 +62,7 @@ class Libro extends Categoria {
 
     async updateLibro(form, errorContainer, dialog) {
 
-        const response = await this.fetchData({
-            url: 'http://localhost/api/libros/update/',
-            method: 'POST',
-            form: form
-        });
+        const response = await this.fetchData(form);
 
         if (response.status === 204) {
             this.resetForm({
@@ -96,22 +93,14 @@ class Libro extends Categoria {
 
     async deleteLibro(form) {
 
-        const response = await this.fetchData({
-            url: 'http://localhost/api/libros/delete/',
-            method: 'POST',
-            form: form
-        });
+        const response = await this.fetchData(form);
 
         await this.getLibros();
     }
 
     async deleteAllLibro(form, errorContainer, dialog) {
 
-        const response = await this.fetchData({
-            url: 'http://localhost/api/libros/delete-all/',
-            method: 'POST',
-            form: form
-        });
+        const response = await this.fetchData(form);
 
         if (response.ok) {
             this.resetForm({
@@ -162,7 +151,7 @@ class Libro extends Categoria {
 
                 <dialog id="modificar-dialog-${libro['id_libro']}">
 
-                    <form>
+                    <form action="http://localhost/api/libros/update/" method="POST">
                         <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
                         <h3>Modificando ${libro['titulo']}</h3>
@@ -217,7 +206,7 @@ class Libro extends Categoria {
 
                             <menu>
                                 <li>
-                                    <button type='button' value='PUT'>Guardar cambios</button>
+                                    <button value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
                                     <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
@@ -233,7 +222,7 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
-                <form>
+                <form action="http://localhost/api/libros/delete/" method="POST">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
@@ -243,7 +232,7 @@ class Libro extends Categoria {
 
                         <menu>
                             <li>
-                                <button type='button' value='DELETE'>Sí, eliminar</button>
+                                <button value='DELETE'>Sí, eliminar</button>
                             </li>
                             <li>
                                 <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
@@ -286,80 +275,40 @@ class Libro extends Categoria {
         });
     }
 
-    filterButton() {
-        const button = document.querySelector('[value="GET"]');
-        const form = button.closest('form');
+    bigForms() {
+        const forms = document.querySelectorAll('form');
 
-        form.onsubmit = () => {
-            this.filterLibros(form);
-        }
-    }
-
-    postButton() {
-        const button = document.querySelector('[value="POST"]');
-        const form = button.closest('form');
-        const dialog = button.closest('dialog');
-        const output = form.querySelector('output');
-
-        form.onsubmit = (e) => {
-            e.preventDefault();
-            this.createLibro(form, output, dialog);
-        }
-    }
-
-    putButton() {
-        const putButtons = document.querySelectorAll('[value="PUT"]');
-
-        putButtons.forEach(button => {
-            button.onclick = () => {
-                const form = button.closest('form');
-                const dialog = button.closest('dialog');
-                const output = form.querySelector('output');
-
-                if (form.reportValidity()) {
-                    this.updateLibro(form, output, dialog);
-                }
-            }
-        });
-    }
-
-    deleteButton() {
-        const deleteButtons = document.querySelectorAll('[value="DELETE"]');
-
-        deleteButtons.forEach(button => {
-            button.onclick = () => {
-                const form = button.closest('form');
-                const dialog = button.closest('dialog');
-                const output = form.querySelector('output');
-
-                if (form.reportValidity()) {
-                    this.deleteLibro(form, output, dialog);
-                }
-            }
-        });
-    }
-
-    deleteAllButton() {
-        const button = document.querySelector('[value="DELETE_ALL"]');
-
-        button.onclick = () => {
-            const form = button.closest('form');
-            const dialog = button.closest('dialog');
+        forms.forEach(form => {
+            const button = form.querySelector('button');
+            const value = button.getAttribute('value');
             const output = form.querySelector('output');
-
-            if (form.reportValidity()) {
-                this.deleteAllLibro(form, output, dialog);
+            const dialog = form.closest('dialog');
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                switch (value) {
+                    case 'GET':
+                        this.filterLibros(form, output, dialog);
+                        break;
+                    case 'POST':
+                        this.createLibro(form, output, dialog);
+                        break;
+                    case 'PUT':
+                        this.updateLibro(form, output, dialog);
+                        break;
+                    case 'DELETE':
+                        this.deleteLibro(form, output, dialog);
+                        break;
+                    case 'DELETE_ALL':
+                        this.deleteAllLibro(form, output, dialog);
+                        break;
+                }
             }
-        }
+        });
     }
 
     final() {
         this.optionsDropdown();
-        this.filterButton();
-        this.postButton();
-        this.putButton();
-        this.deleteButton();
-        this.deleteAllButton();
+        this.bigForms();
     }
 }
 

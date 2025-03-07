@@ -12,23 +12,17 @@ export class Base {
 		const init = {};
 		const userInputs = new FormData(form);
 		let url = form.getAttribute("action");
-		const method = form.getAttribute("method").toUpperCase();
+		const method = form.getAttribute("method")?.toUpperCase() ?? 'GET';
 
 		switch (method) {
 			case 'GET':
-
 				url = new URL(url);
 				url.search = new URLSearchParams(userInputs);
-
 				break;
 
 			case 'POST':
-			case 'PUT':
-			case 'DELETE':
-
 				init.method = method;
 				init.body = userInputs;
-
 				break;
 		}
 

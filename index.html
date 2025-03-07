@@ -82,7 +82,7 @@
 			<button type="button" commandfor="filter-dialog" command="show-modal">Filtrar</button>
 
 			<dialog id="filter-dialog">
-				<form method="dialog">
+				<form action="http://localhost/api/libros/filter/">
 					<h3>Filtros</h3>
 					<fieldset>
 						<menu>
@@ -149,13 +149,13 @@
 
 			<dialog id="delete-all-dialog">
 
-				<form>
+				<form action="http://localhost/api/libros/delete-all/" method="POST">
 
 					<p>¿Seguro que quiere eliminar todos los libros?</p>
 
 					<menu>
 						<li>
-							<button type="button" value="DELETE_ALL">Sí, eliminar todos</button>
+							<button value="DELETE_ALL">Sí, eliminar todos</button>
 						</li>
 						<li>
 							<button type="button" commandfor="delete-all-dialog" command="close">Cancelar</button>
