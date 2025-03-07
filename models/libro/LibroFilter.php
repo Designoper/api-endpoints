@@ -24,16 +24,6 @@ final class LibroFilter extends FileManager
 
 	//MARK: GETTERS
 
-	private function getParams(): array
-	{
-		return $this->params;
-	}
-
-	private function getTypes(): array
-	{
-		return $this->types;
-	}
-
 	private function getTitulo(): ?string
 	{
 		return $this->titulo;
@@ -67,6 +57,16 @@ final class LibroFilter extends FileManager
 	private function getCriterioOrden(): ?string
 	{
 		return $this->criterioOrden;
+	}
+
+	private function getParams(): array
+	{
+		return $this->params;
+	}
+
+	private function getTypes(): array
+	{
+		return $this->types;
 	}
 
 	//MARK: SETTERS
@@ -116,12 +116,9 @@ final class LibroFilter extends FileManager
 
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
-			$this->setValidationError($errorMessage);
-			return;
-		}
-
-		$this->minimoFechaPublicacion = $value;
+		!$dateTime || $dateTime->format('Y-m-d') !== $value
+		? $this->setValidationError($errorMessage)
+		: $this->minimoFechaPublicacion = $value;
 	}
 
 	private function setMaximoFechaPublicacion(): void
@@ -137,12 +134,9 @@ final class LibroFilter extends FileManager
 
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
-		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
-			$this->setValidationError($errorMessage);
-			return;
-		}
-
-		$this->maximoFechaPublicacion = $value;
+		!$dateTime || $dateTime->format('Y-m-d') !== $value
+			? $this->setValidationError($errorMessage)
+			: $this->maximoFechaPublicacion = $value;
 	}
 
 	private function setTitulo(): void
