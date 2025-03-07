@@ -1,6 +1,6 @@
 import { Categoria } from "./Categoria.js";
 
-export class Libro extends Categoria {
+class Libro extends Categoria {
     static librosEndpoint = 'http://localhost/api/libros/';
     static librosFilterEndpoint = 'http://localhost/api/libros/filter/';
     static fetchOutput = document.getElementById('fetchoutput');
@@ -8,6 +8,7 @@ export class Libro extends Categoria {
 
     constructor() {
         super();
+        this.getLibros();
     }
 
     // MARK: CRUD FUNCTIONS
@@ -19,12 +20,7 @@ export class Libro extends Categoria {
     // MARK: GET LIBROS
 
     async getLibros() {
-
-        const response = await this.fetchData({
-            url: Libro.librosEndpoint,
-            method: 'GET'
-        });
-
+        const response = await this.simpleFetch(Libro.librosEndpoint);
         await this.printLibros(response);
     }
 
@@ -372,4 +368,4 @@ export class Libro extends Categoria {
     }
 }
 
-new Libro().getLibros();
+new Libro();
