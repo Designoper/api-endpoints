@@ -21,7 +21,7 @@ abstract class FileManager extends ApiResponse
 
     // MARK: GETTERS
 
-    protected function getFile(): ?array
+    private function getFile(): ?array
     {
         return $this->file;
     }
@@ -99,13 +99,13 @@ abstract class FileManager extends ApiResponse
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
     }
 
-    protected function updateFileName(int $fileId): ?string
+    protected function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         if ($this->getFile() === null) {
             if ($this->deleteCheckbox === true) {
                 return null;
             }
-            $fileUrl = $this->getFileUrl($fileId);
+            $fileUrl = $this->getFileUrl($column, $table, $primaryKey, $primaryKeyValue);
             return $fileUrl;
         }
 
@@ -152,18 +152,18 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    protected function getFileUrl(int $fileId): ?string
+    protected function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         $statement =
-            "SELECT portada
-            FROM libros
-            WHERE id_libro = ?";
+            "SELECT $column
+            FROM $table
+            WHERE $primaryKey = ?";
 
         $query = $this->getConnection()->prepare($statement);
 
         $query->bind_param(
             "i",
-            $fileId
+            $primaryKeyValue
         );
 
         $query->execute();

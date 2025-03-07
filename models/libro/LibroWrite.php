@@ -15,6 +15,10 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private const string FOLDER = 'libros/';
 
+	private const string SQL_COLUMN = 'portada';
+	private const string SQL_TABLE = 'libros';
+	private const string SQL_PRIMARY_KEY = 'id_libro';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -161,7 +165,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'eliminar_portada';
 		$value = $_POST[$name] ?? false;
-		$errorMessage = "El campo '$name' solo es válido si esta vacío.";
+		$errorMessage = "El campo '$name' solo es válido si está vacío.";
 
 		if ($value === false) {
 			$this->deleteCheckbox = false;
@@ -294,8 +298,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->idLibroExists($idLibro);
 
-		$portada = $this->updateFileName($idLibro);
-		$libroPath = $this->getFileUrl($idLibro);
+		$portada = $this->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
+		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 
 		$statement =
 			"UPDATE libros
@@ -363,7 +367,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$this->checkValidationErrors();
 
 		$idLibro = $this->getIdLibro();
-		$libroPath = $this->getFileUrl($idLibro);
+		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 
 		$statement =
 			"DELETE FROM libros
