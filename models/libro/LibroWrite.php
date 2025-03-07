@@ -13,6 +13,9 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly string $fechaPublicacion;
 	private readonly int $idCategoria;
 
+	private readonly ?array $portada;
+	private readonly bool $eliminarPortada;
+
 	private const string FOLDER = 'libros/';
 
 	private const string SQL_COLUMN = 'portada';
@@ -56,6 +59,16 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function getIdCategoria(): int
 	{
 		return $this->idCategoria;
+	}
+
+	private function getPortada(): ?array
+	{
+		return $this->portada;
+	}
+
+	private function getEliminarPortada(): bool
+	{
+		return $this->eliminarPortada;
 	}
 
 	// MARK: SETTERS
@@ -136,7 +149,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$filesUploaded = $this->flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
-			$this->setFile(null);
+			$this->portada = null;
 			return;
 		}
 
@@ -158,7 +171,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			$this->setValidationError('La imagen no puede superar 1MB.');
 		}
 
-		$this->setFile($portada);
+		$this->portada = $portada;
 	}
 
 	private function setCheckbox(): void
@@ -168,13 +181,13 @@ final class LibroWrite extends LibroIntegrityErrors
 		$errorMessage = "El campo '$name' solo es válido si está vacío.";
 
 		if ($value === false) {
-			$this->deleteCheckbox = false;
+			$this->eliminarPortada = false;
 			return;
 		}
 
 		$value !== ""
 			? $this->setValidationError($errorMessage)
-			: $this->deleteCheckbox = true;
+			: $this->eliminarPortada = true;
 	}
 
 	// MARK: CREATE
@@ -190,12 +203,15 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
+		$portada = $this->getPortada();
+		$this->setFile($portada);
+
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
-		$portada = $this->uploadFileName();
+		$portadaName = $this->uploadFileName();
 
 		$statement =
 			"INSERT INTO libros (
@@ -221,7 +237,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			"sssisi",
 			$titulo,
 			$descripcion,
-			$portada,
+			$portadaName,
 			$paginas,
 			$fechaPublicacion,
 			$idCategoria
@@ -298,7 +314,13 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->idLibroExists($idLibro);
 
-		$portada = $this->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
+		$portada = $this->getPortada();
+		$eliminarPortada = $this->getEliminarPortada();
+
+		$this->setFile($portada);
+		$this->setDeleteCheckbox($eliminarPortada);
+
+		$portadaName = $this->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 
 		$statement =
@@ -317,7 +339,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			"sssisii",
 			$titulo,
 			$descripcion,
-			$portada,
+			$portadaName,
 			$paginas,
 			$fechaPublicacion,
 			$idCategoria,

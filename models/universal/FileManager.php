@@ -9,10 +9,10 @@ abstract class FileManager extends ApiResponse
     private const string IMAGE_PATH = '/assets/img/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
     protected string $extraDirectories = '';
-    protected string $uniqueFilename;
+    private string $uniqueFilename;
 
     private readonly ?array $file;
-    protected readonly bool $deleteCheckbox;
+    private readonly bool $deleteCheckbox;
 
     protected function __construct()
     {
@@ -26,11 +26,21 @@ abstract class FileManager extends ApiResponse
         return $this->file;
     }
 
+    private function getDeleteCheckbox(): bool
+    {
+        return $this->deleteCheckbox;
+    }
+
     // MARK: SETTERS
 
     protected function setFile(?array $file): void
     {
         $this->file = $file;
+    }
+
+    protected function setDeleteCheckbox(bool $deleteCheckbox): void
+    {
+        $this->deleteCheckbox = $deleteCheckbox;
     }
 
     // MARK: FILE OPERATIONS
@@ -102,7 +112,7 @@ abstract class FileManager extends ApiResponse
     protected function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         if ($this->getFile() === null) {
-            if ($this->deleteCheckbox === true) {
+            if ($this->getDeleteCheckbox() === true) {
                 return null;
             }
             $fileUrl = $this->getFileUrl($column, $table, $primaryKey, $primaryKeyValue);
@@ -117,7 +127,7 @@ abstract class FileManager extends ApiResponse
     protected function updateFile(?string $filePath): void
     {
         if ($this->getFile() === null) {
-            if ($this->deleteCheckbox === true) {
+            if ($this->getDeleteCheckbox() === true) {
                 $this->deleteFile($filePath);
                 return;
             }
