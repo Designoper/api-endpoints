@@ -126,7 +126,9 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setPortada(): void
 	{
-		$filesUploaded = $this->flattenFilesArray("portada");
+		$name = 'portada';
+
+		$filesUploaded = $this->flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
 			$this->setFile(null);
@@ -158,7 +160,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'eliminar_portada';
 		$value = $_POST[$name] ?? false;
-		$errorMessage = "El campo '$name' solo puede ser campo vacío.";
+		$errorMessage = "El campo '$name' solo es válido si esta vacío.";
 
 		if ($value === false) {
 			$this->deleteCheckbox = false;

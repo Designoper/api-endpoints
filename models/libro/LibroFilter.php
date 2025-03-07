@@ -7,7 +7,7 @@ require_once __DIR__ . '/../universal/FileManager.php';
 final class LibroFilter extends FileManager
 {
 	private array $params = [];
-	private string $types = '';
+	private array $types = [];
 
 	private readonly ?int $minimoPaginas;
 	private readonly ?int $maximoPaginas;
@@ -29,7 +29,7 @@ final class LibroFilter extends FileManager
 		return $this->params;
 	}
 
-	private function getTypes(): string
+	private function getTypes(): array
 	{
 		return $this->types;
 	}
@@ -73,7 +73,9 @@ final class LibroFilter extends FileManager
 
 	private function setMinimoPaginas(): void
 	{
-		$value = $_GET['min_paginas'] ?? "";
+		$name = 'min_paginas';
+		$value = $_GET[$name] ?? "";
+		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		if ($value === "") {
 			$this->minimoPaginas = null;
@@ -82,12 +84,14 @@ final class LibroFilter extends FileManager
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->minimoPaginas = (int) $value
-			: $this->setValidationError("El campo 'min_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setMaximoPaginas(): void
 	{
-		$value = $_GET['max_paginas'] ?? "";
+		$name = 'max_paginas';
+		$value = $_GET[$name] ?? "";
+		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
 
 		if ($value === "") {
 			$this->maximoPaginas = null;
@@ -96,12 +100,14 @@ final class LibroFilter extends FileManager
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->maximoPaginas = (int) $value
-			: $this->setValidationError("El campo 'max_paginas' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setMinimoFechaPublicacion(): void
 	{
-		$value = $_GET['min_fecha'] ?? "";
+		$name = 'min_fecha';
+		$value = $_GET[$name] ?? "";
+		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
 
 		if ($value === "") {
 			$this->minimoFechaPublicacion = null;
@@ -111,7 +117,7 @@ final class LibroFilter extends FileManager
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
 		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
-			$this->setValidationError("El campo 'min_fecha' debe tener el formato yyyy-mm-dd");
+			$this->setValidationError($errorMessage);
 			return;
 		}
 
@@ -120,7 +126,9 @@ final class LibroFilter extends FileManager
 
 	private function setMaximoFechaPublicacion(): void
 	{
-		$value = $_GET['max_fecha'] ?? "";
+		$name = 'max_fecha';
+		$value = $_GET[$name] ?? "";
+		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
 
 		if ($value === "") {
 			$this->maximoFechaPublicacion = null;
@@ -130,7 +138,7 @@ final class LibroFilter extends FileManager
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
 		if (!$dateTime || $dateTime->format('Y-m-d') !== $value) {
-			$this->setValidationError("El campo 'max_fecha' debe tener el formato yyyy-mm-dd");
+			$this->setValidationError($errorMessage);
 			return;
 		}
 
@@ -139,7 +147,8 @@ final class LibroFilter extends FileManager
 
 	private function setTitulo(): void
 	{
-		$value = $_GET['titulo'] ?? "";
+		$name = 'titulo';
+		$value = $_GET[$name] ?? "";
 
 		$value === ""
 			? $this->titulo = null
@@ -148,7 +157,9 @@ final class LibroFilter extends FileManager
 
 	private function setIdCategoria(): void
 	{
-		$value = $_GET['id_categoria'] ?? "";
+		$name = 'id_categoria';
+		$value = $_GET[$name] ?? "";
+		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		if ($value === "") {
 			$this->idCategoria = null;
@@ -157,18 +168,13 @@ final class LibroFilter extends FileManager
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->idCategoria = (int) $value
-			: $this->setValidationError("El campo 'categoria' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setCriterioOrden(): void
 	{
-		$value = $_GET['criterio_orden'] ?? "";
-
-		if ($value === "") {
-			$this->criterioOrden = null;
-			return;
-		}
-
+		$name = 'criterio_orden';
+		$value = $_GET[$name] ?? "";
 		$permitedValues = [
 			'tituloAsc',
 			'tituloDesc',
@@ -177,13 +183,16 @@ final class LibroFilter extends FileManager
 			'fechaAsc',
 			'fechaDesc'
 		];
+		$errorMessage = "El campo '$name' solo acepta los siguientes valores: " . implode(",", $permitedValues) . ".";
 
-		if (!in_array($value, $permitedValues, true)) {
-			$this->setValidationError("El campo 'criterio_orden' solo acepta los siguientes valores: 'tituloAsc','tituloDesc','paginasAsc','paginasDesc','fechaAsc','fechaDesc'.");
+		if ($value === "") {
+			$this->criterioOrden = null;
 			return;
 		}
 
-		$this->criterioOrden = $value;
+		in_array($value, $permitedValues, true)
+			? $this->criterioOrden = $value
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function addParam(string|int $param): void
@@ -191,9 +200,9 @@ final class LibroFilter extends FileManager
 		$this->params[] = $param;
 	}
 
-	private function addType(string $type): void
+	private function setType(string $type): void
 	{
-		$this->types .= $type;
+		$this->types[] = $type;
 	}
 
 	//MARK: FILTER
@@ -232,37 +241,37 @@ final class LibroFilter extends FileManager
 
 		if ($this->getMinimoPaginas()) {
 			$this->addParam($this->getMinimoPaginas());
-			$this->addType('i');
+			$this->setType('i');
 			$statement .= " AND libros.paginas >= ?";
 		}
 
 		if ($this->getMaximoPaginas()) {
 			$this->addParam($this->getMaximoPaginas());
-			$this->addType('i');
+			$this->setType('i');
 			$statement .= " AND libros.paginas <= ?";
 		}
 
 		if ($this->getMinimoFechaPublicacion()) {
 			$this->addParam($this->getMinimoFechaPublicacion());
-			$this->addType('s');
+			$this->setType('s');
 			$statement .= " AND libros.fecha_publicacion >= ?";
 		}
 
 		if ($this->getMaximoFechaPublicacion()) {
 			$this->addParam($this->getMaximoFechaPublicacion());
-			$this->addType('s');
+			$this->setType('s');
 			$statement .= " AND libros.fecha_publicacion <= ?";
 		}
 
 		if ($this->getTitulo()) {
 			$this->addParam("%" . $this->getTitulo() . "%");
-			$this->addType('s');
+			$this->setType('s');
 			$statement .= " AND libros.titulo LIKE ?";
 		}
 
 		if ($this->getIdCategoria()) {
 			$this->addParam($this->getIdCategoria());
-			$this->addType('i');
+			$this->setType('i');
 			$statement .= " AND libros.id_categoria = ?";
 		}
 
@@ -293,8 +302,12 @@ final class LibroFilter extends FileManager
 
 		$query = $this->getConnection()->prepare($statement);
 
-		if ($this->getParams()) {
-			$query->bind_param($this->getTypes(), ...$this->getParams());
+		$params = $this->getParams();
+
+		if (count($params) > 0) {
+			$types = $this->getTypes();
+			$types = implode($types);
+			$query->bind_param($types, ...$params);
 		}
 
 		$query->execute();
