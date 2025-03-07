@@ -8,7 +8,7 @@ abstract class FileManager extends ApiResponse
 {
     private const string IMAGE_PATH = '/assets/img/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
-    protected string $extraDirectories = '';
+    private string $extraDirectories = '';
     private string $uniqueFilename;
 
     private readonly ?array $file;
@@ -31,6 +31,11 @@ abstract class FileManager extends ApiResponse
         return $this->deleteCheckbox;
     }
 
+    private function getExtraDirectories(): string
+    {
+        return $this->extraDirectories;
+    }
+
     // MARK: SETTERS
 
     protected function setFile(?array $file): void
@@ -41,6 +46,18 @@ abstract class FileManager extends ApiResponse
     protected function setDeleteCheckbox(bool $deleteCheckbox): void
     {
         $this->deleteCheckbox = $deleteCheckbox;
+    }
+
+    private function setUniqueFilename(string $originalFilename): void
+    {
+        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+    }
+
+    protected function setExtraDirectories(string $extraDirectories): void
+    {
+        $this->extraDirectories = $extraDirectories;
     }
 
     // MARK: FILE OPERATIONS
@@ -76,22 +93,15 @@ abstract class FileManager extends ApiResponse
         return $newArray;
     }
 
-    private function generateUniqueFilename(string $originalFilename): void
-    {
-        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
-    }
-
     protected function uploadFileName(): ?string
     {
         if ($this->getFile() === null) {
             return null;
         }
 
-        $this->generateUniqueFilename($this->getFile()['name']);
+        $this->setUniqueFilename($this->getFile()['name']);
 
-        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
     }
 
     protected function uploadFile(): void
@@ -100,11 +110,11 @@ abstract class FileManager extends ApiResponse
             return;
         }
 
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories)) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories, 0755, true);
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories())) {
+            mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories(), 0755, true);
         }
 
-        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
 
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
     }
@@ -119,9 +129,9 @@ abstract class FileManager extends ApiResponse
             return $fileUrl;
         }
 
-        $this->generateUniqueFilename($this->getFile()['name']);
+        $this->setUniqueFilename($this->getFile()['name']);
 
-        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
     }
 
     protected function updateFile(?string $filePath): void
@@ -147,7 +157,7 @@ abstract class FileManager extends ApiResponse
 
     protected function deleteAllFiles(): void
     {
-        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
+        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories();
 
         if (!is_dir($folderPath)) {
             return;

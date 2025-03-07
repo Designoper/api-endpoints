@@ -16,7 +16,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private readonly ?array $portada;
 	private readonly bool $eliminarPortada;
 
-	private const string FOLDER = 'libros/';
+	// private const string FOLDER = 'libros/';
 
 	private const string SQL_COLUMN = 'portada';
 	private const string SQL_TABLE = 'libros';
@@ -26,7 +26,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		parent::__construct();
 
-		$this->extraDirectories = self::FOLDER;
+		// $this->extraDirectories = self::FOLDER;
 	}
 
 	// MARK: GETTERS
@@ -205,6 +205,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$portada = $this->getPortada();
 		$this->setFile($portada);
+		$this->setExtraDirectories('libros/');
 
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
@@ -319,6 +320,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->setFile($portada);
 		$this->setDeleteCheckbox($eliminarPortada);
+		$this->setExtraDirectories('libros/');
 
 		$portadaName = $this->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
@@ -421,6 +423,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteAllLibros(): void
 	{
+		$this->setExtraDirectories('libros/');
+
 		$statement =
 			"DELETE FROM libros";
 
