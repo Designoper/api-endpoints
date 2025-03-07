@@ -195,7 +195,7 @@ final class LibroFilter extends FileManager
 			: $this->setValidationError($errorMessage);
 	}
 
-	private function addParam(string|int $param): void
+	private function setParam(string|int $param): void
 	{
 		$this->params[] = $param;
 	}
@@ -240,37 +240,37 @@ final class LibroFilter extends FileManager
 			WHERE 1=1";
 
 		if ($this->getMinimoPaginas()) {
-			$this->addParam($this->getMinimoPaginas());
+			$this->setParam($this->getMinimoPaginas());
 			$this->setType('i');
 			$statement .= " AND libros.paginas >= ?";
 		}
 
 		if ($this->getMaximoPaginas()) {
-			$this->addParam($this->getMaximoPaginas());
+			$this->setParam($this->getMaximoPaginas());
 			$this->setType('i');
 			$statement .= " AND libros.paginas <= ?";
 		}
 
 		if ($this->getMinimoFechaPublicacion()) {
-			$this->addParam($this->getMinimoFechaPublicacion());
+			$this->setParam($this->getMinimoFechaPublicacion());
 			$this->setType('s');
 			$statement .= " AND libros.fecha_publicacion >= ?";
 		}
 
 		if ($this->getMaximoFechaPublicacion()) {
-			$this->addParam($this->getMaximoFechaPublicacion());
+			$this->setParam($this->getMaximoFechaPublicacion());
 			$this->setType('s');
 			$statement .= " AND libros.fecha_publicacion <= ?";
 		}
 
 		if ($this->getTitulo()) {
-			$this->addParam("%" . $this->getTitulo() . "%");
+			$this->setParam("%" . $this->getTitulo() . "%");
 			$this->setType('s');
 			$statement .= " AND libros.titulo LIKE ?";
 		}
 
 		if ($this->getIdCategoria()) {
-			$this->addParam($this->getIdCategoria());
+			$this->setParam($this->getIdCategoria());
 			$this->setType('i');
 			$statement .= " AND libros.id_categoria = ?";
 		}
