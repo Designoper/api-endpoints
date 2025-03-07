@@ -18,7 +18,7 @@ abstract class ApiResponse extends MysqliConnect
         parent::__construct();
     }
 
-    //MARK: GETTERS
+    // MARK: GETTERS
 
     private function getStatus(): int
     {
@@ -52,7 +52,7 @@ abstract class ApiResponse extends MysqliConnect
         echo json_encode($this->response);
     }
 
-    //MARK: SETTERS
+    // MARK: SETTERS
 
     protected function setStatus(int $status): void
     {
@@ -91,30 +91,42 @@ abstract class ApiResponse extends MysqliConnect
         $this->response['integrityErrors'] = $this->getIntegrityErrors();
     }
 
-    //MARK: CHECKERS
+    // MARK: CHECKERS
 
     protected function checkValidationErrors(): void
     {
         if (count($this->getValidationErrors()) > 0) {
-            $this->setStatus(400);
-            $this->setMessage("Hay errores de validación");
-            $this->setValidationErrors();
-            $this->getResponse();
-            exit();
+            $this->validationErrorsExit();
         }
     }
 
     protected function checkIntegrityErrors(): void
     {
         if (count($this->getIntegrityErrors()) > 0) {
-            $this->setMessage("Hay errores de integridad");
-            $this->setIntegrityErrors();
-            $this->getResponse();
-            exit();
+            $this->integrityErrorsExit();
         }
     }
 
-    protected function invalidUser(): void
+    // MARK: TERMINATORS
+
+    private function validationErrorsExit(): never
+    {
+        $this->setStatus(400);
+        $this->setMessage("Hay errores de validación");
+        $this->setValidationErrors();
+        $this->getResponse();
+        exit();
+    }
+
+    private function integrityErrorsExit(): never
+    {
+        $this->setMessage("Hay errores de integridad");
+        $this->setIntegrityErrors();
+        $this->getResponse();
+        exit();
+    }
+
+    protected function invalidUser(): never
     {
         $this->setStatus(401);
         $this->setMessage("Credenciales incorrectas");

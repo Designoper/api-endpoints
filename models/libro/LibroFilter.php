@@ -22,7 +22,7 @@ final class LibroFilter extends FileManager
 		parent::__construct();
 	}
 
-	//MARK: GETTERS
+	// MARK: GETTERS
 
 	private function getTitulo(): ?string
 	{
@@ -69,7 +69,7 @@ final class LibroFilter extends FileManager
 		return $this->types;
 	}
 
-	//MARK: SETTERS
+	// MARK: SETTERS
 
 	private function setMinimoPaginas(): void
 	{
@@ -201,7 +201,7 @@ final class LibroFilter extends FileManager
 		$this->types[] = $type;
 	}
 
-	//MARK: FILTER
+	// MARK: FILTER
 
 	public function filterLibros(): void
 	{
