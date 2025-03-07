@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../universal/ApiResponse.php';
 require_once __DIR__ . '/../universal/FileManager.php';
 
-final class Libro extends FileManager
+final class Libro extends ApiResponse
 {
 	public function __construct()
 	{
@@ -14,7 +15,7 @@ final class Libro extends FileManager
 	public function readLibros(): void
 	{
 		$host = $this->getHost();
-		$defaultImage = self::DEFAULT_IMAGE;
+		$defaultImage = FileManager::DEFAULT_IMAGE;
 
 		$statement =
 			"SELECT

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/LibroIntegrityErrors.php';
+require_once __DIR__ . '/../universal/FileManager.php';
 
 final class LibroWrite extends LibroIntegrityErrors
 {
@@ -25,8 +26,6 @@ final class LibroWrite extends LibroIntegrityErrors
 	public function __construct()
 	{
 		parent::__construct();
-
-		// $this->extraDirectories = self::FOLDER;
 	}
 
 	// MARK: GETTERS
@@ -146,7 +145,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'portada';
 
-		$filesUploaded = $this->flattenFilesArray($name);
+		$filesUploaded = FileManager::flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
 			$this->portada = null;
@@ -203,16 +202,18 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
+		$createLibro = new FileManager();
+
 		$portada = $this->getPortada();
-		$this->setFile($portada);
-		$this->setExtraDirectories('libros/');
+		$createLibro->setFile($portada);
+		$createLibro->setExtraDirectories('libros/');
 
 		$titulo = $this->getTitulo();
 		$descripcion = $this->getDescripcion();
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
-		$portadaName = $this->uploadFileName();
+		$portadaName = $createLibro->uploadFileName();
 
 		$statement =
 			"INSERT INTO libros (
@@ -287,7 +288,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->close();
 		$this->setStatus(201);
 		$this->setMessage("Libro creado");
-		$this->uploadFile();
+		$createLibro->uploadFile();
 		$this->getResponse();
 	}
 
@@ -318,12 +319,14 @@ final class LibroWrite extends LibroIntegrityErrors
 		$portada = $this->getPortada();
 		$eliminarPortada = $this->getEliminarPortada();
 
-		$this->setFile($portada);
-		$this->setDeleteCheckbox($eliminarPortada);
-		$this->setExtraDirectories('libros/');
+		$updateLibro = new FileManager();
 
-		$portadaName = $this->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
-		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
+		$updateLibro->setFile($portada);
+		$updateLibro->setDeleteCheckbox($eliminarPortada);
+		$updateLibro->setExtraDirectories('libros/');
+
+		$portadaName = $updateLibro->updateFileName(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
+		$libroPath = $updateLibro->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 
 		$statement =
 			"UPDATE libros
@@ -378,7 +381,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			$this->setStatus(204);
 		}
 
-		$this->updateFile($libroPath);
+		$updateLibro->updateFile($libroPath);
 		$this->getResponse();
 	}
 
@@ -390,8 +393,10 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		$this->checkValidationErrors();
 
+		$deleteLibro = new FileManager();
+
 		$idLibro = $this->getIdLibro();
-		$libroPath = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
+		$libroPath = $deleteLibro->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $idLibro);
 
 		$statement =
 			"DELETE FROM libros
@@ -410,7 +415,7 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		if ($numFilas === 1) {
 			$this->setStatus(204);
-			$this->deleteFile($libroPath);
+			$deleteLibro->deleteFile($libroPath);
 		} else {
 			$this->setStatus(404);
 			$this->setMessage('¡El libro solicitado no existe!');
@@ -423,7 +428,8 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	public function deleteAllLibros(): void
 	{
-		$this->setExtraDirectories('libros/');
+		$deleteAllLibros = new FileManager();
+		$deleteAllLibros->setExtraDirectories('libros/');
 
 		$statement =
 			"DELETE FROM libros";
@@ -435,7 +441,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		$query->close();
 
 		if ($numFilas > 0) {
-			$this->deleteAllFiles();
+			$deleteAllLibros->deleteAllFiles();
 		}
 
 		$this->setStatus(204);

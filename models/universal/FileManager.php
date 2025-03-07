@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/ApiResponse.php';
+require_once __DIR__ . '/MysqliConnect.php';
 
-abstract class FileManager extends ApiResponse
+final class FileManager extends MysqliConnect
 {
     private const string IMAGE_PATH = '/assets/img/';
-    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
+    public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
     private string $extraDirectories = '';
     private string $uniqueFilename;
 
     private readonly ?array $file;
     private readonly bool $deleteCheckbox;
 
-    protected function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
@@ -38,12 +37,12 @@ abstract class FileManager extends ApiResponse
 
     // MARK: SETTERS
 
-    protected function setFile(?array $file): void
+    public function setFile(?array $file): void
     {
         $this->file = $file;
     }
 
-    protected function setDeleteCheckbox(bool $deleteCheckbox): void
+    public function setDeleteCheckbox(bool $deleteCheckbox): void
     {
         $this->deleteCheckbox = $deleteCheckbox;
     }
@@ -55,14 +54,14 @@ abstract class FileManager extends ApiResponse
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    protected function setExtraDirectories(string $extraDirectories): void
+    public function setExtraDirectories(string $extraDirectories): void
     {
         $this->extraDirectories = $extraDirectories;
     }
 
     // MARK: FILE OPERATIONS
 
-    protected function flattenFilesArray(string $inputFileName): array
+    static public function flattenFilesArray(string $inputFileName): array
     {
         if (!isset($_FILES[$inputFileName])) {
             return [];
@@ -93,7 +92,7 @@ abstract class FileManager extends ApiResponse
         return $newArray;
     }
 
-    protected function uploadFileName(): ?string
+    public function uploadFileName(): ?string
     {
         if ($this->getFile() === null) {
             return null;
@@ -104,7 +103,7 @@ abstract class FileManager extends ApiResponse
         return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
     }
 
-    protected function uploadFile(): void
+    public function uploadFile(): void
     {
         if ($this->getFile() === null) {
             return;
@@ -119,7 +118,7 @@ abstract class FileManager extends ApiResponse
         move_uploaded_file($this->getFile()['tmp_name'], $destination);
     }
 
-    protected function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
+    public function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         if ($this->getFile() === null) {
             if ($this->getDeleteCheckbox() === true) {
@@ -134,7 +133,7 @@ abstract class FileManager extends ApiResponse
         return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
     }
 
-    protected function updateFile(?string $filePath): void
+    public function updateFile(?string $filePath): void
     {
         if ($this->getFile() === null) {
             if ($this->getDeleteCheckbox() === true) {
@@ -148,14 +147,14 @@ abstract class FileManager extends ApiResponse
         $this->uploadFile();
     }
 
-    protected function deleteFile(?string $filePath): void
+    public function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
             unlink($_SERVER['DOCUMENT_ROOT'] . $filePath);
         }
     }
 
-    protected function deleteAllFiles(): void
+    public function deleteAllFiles(): void
     {
         $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories();
 
@@ -172,7 +171,7 @@ abstract class FileManager extends ApiResponse
         }
     }
 
-    protected function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
+    public function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         $statement =
             "SELECT $column

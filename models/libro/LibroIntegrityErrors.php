@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../universal/FileManager.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
-abstract class LibroIntegrityErrors extends FileManager
+abstract class LibroIntegrityErrors extends ApiResponse
 {
 	protected function __construct()
 	{

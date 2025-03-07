@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../universal/FileManager.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
-final class LibroFilter extends FileManager
+final class LibroFilter extends ApiResponse
 {
 	private array $params = [];
 	private array $types = [];
@@ -216,7 +216,7 @@ final class LibroFilter extends FileManager
 		$this->checkValidationErrors();
 
 		$host = $this->getHost();
-		$defaultImage = self::DEFAULT_IMAGE;
+		$defaultImage = FileManager::DEFAULT_IMAGE;
 
 		$statement =
 			"SELECT
