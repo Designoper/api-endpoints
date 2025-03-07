@@ -40,11 +40,7 @@ class Libro extends Categoria {
     // MARK: CREATE LIBRO
 
     async createLibro(form, errorContainer, dialog) {
-        const response = await this.fetchData({
-            url: 'http://localhost/api/libros/create/',
-            method: 'POST',
-            form: form
-        });
+        const response = await this.fetchData(form);
 
         if (response.ok) {
             this.resetForm({
@@ -305,10 +301,9 @@ class Libro extends Categoria {
         const dialog = button.closest('dialog');
         const output = form.querySelector('output');
 
-        button.onclick = () => {
-            if (form.reportValidity()) {
-                this.createLibro(form, output, dialog);
-            }
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            this.createLibro(form, output, dialog);
         }
     }
 

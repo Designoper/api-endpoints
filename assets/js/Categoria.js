@@ -8,12 +8,7 @@ export class Categoria extends Base {
 	}
 
 	async getCategorias() {
-
-		const response = await this.fetchData({
-			url: Categoria.categoriasEndpoint,
-			method: 'GET'
-		});
-
+		const response = this.simpleFetch(Categoria.categoriasEndpoint);
 		return response;
 	}
 

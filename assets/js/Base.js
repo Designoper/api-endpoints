@@ -7,10 +7,12 @@ export class Base {
 		return json;
 	}
 
-	async fetchData({ url, method, form }) {
+	async fetchData(form) {
 
 		const init = {};
 		const userInputs = new FormData(form);
+		let url = form.getAttribute("action");
+		const method = form.getAttribute("method").toUpperCase();
 
 		switch (method) {
 			case 'GET':
