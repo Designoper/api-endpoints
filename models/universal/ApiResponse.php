@@ -45,11 +45,12 @@ abstract class ApiResponse extends MysqliConnect
         return $this->integrityErrors;
     }
 
-    protected function getResponse(): void
+    protected function getResponse(): never
     {
         http_response_code($this->getStatus());
         header('Content-Type: application/json');
         echo json_encode($this->response);
+        exit();
     }
 
     // MARK: SETTERS
@@ -96,41 +97,26 @@ abstract class ApiResponse extends MysqliConnect
     protected function checkValidationErrors(): void
     {
         if (count($this->getValidationErrors()) > 0) {
-            $this->validationErrorsExit();
+            $this->setStatus(400);
+            $this->setMessage("Hay errores de validación");
+            $this->setValidationErrors();
+            $this->getResponse();
         }
     }
 
     protected function checkIntegrityErrors(): void
     {
         if (count($this->getIntegrityErrors()) > 0) {
-            $this->integrityErrorsExit();
+            $this->setMessage("Hay errores de integridad");
+            $this->setIntegrityErrors();
+            $this->getResponse();
         }
     }
 
-    // MARK: TERMINATORS
-
-    private function validationErrorsExit(): never
-    {
-        $this->setStatus(400);
-        $this->setMessage("Hay errores de validación");
-        $this->setValidationErrors();
-        $this->getResponse();
-        exit();
-    }
-
-    private function integrityErrorsExit(): never
-    {
-        $this->setMessage("Hay errores de integridad");
-        $this->setIntegrityErrors();
-        $this->getResponse();
-        exit();
-    }
-
-    protected function invalidUser(): never
+    protected function invalidUser(): void
     {
         $this->setStatus(401);
         $this->setMessage("Credenciales incorrectas");
         $this->getResponse();
-        exit();
     }
 }
