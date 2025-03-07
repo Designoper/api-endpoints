@@ -10,7 +10,7 @@ export class Base {
 			case 'GET':
 
 				url = new URL(url);
-				url.search = new URLSearchParams(userInputs).toString();
+				url.search = new URLSearchParams(userInputs);
 
 				break;
 
