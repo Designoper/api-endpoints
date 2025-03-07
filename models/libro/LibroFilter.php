@@ -107,16 +107,17 @@ final class LibroFilter extends FileManager
 	{
 		$name = 'min_fecha';
 		$value = $_GET[$name] ?? "";
-		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
+		$dateFormat = 'Y-m-d';
+		$errorMessage = "El campo '$name' debe tener el formato '$dateFormat'.";
 
 		if ($value === "") {
 			$this->minimoFechaPublicacion = null;
 			return;
 		}
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
+		$dateTime = DateTime::createFromFormat($dateFormat, $value);
 
-		!$dateTime || $dateTime->format('Y-m-d') !== $value
+		$dateTime === false || $dateTime->format($dateFormat) !== $value
 		? $this->setValidationError($errorMessage)
 		: $this->minimoFechaPublicacion = $value;
 	}
@@ -125,16 +126,17 @@ final class LibroFilter extends FileManager
 	{
 		$name = 'max_fecha';
 		$value = $_GET[$name] ?? "";
-		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
+		$dateFormat = 'Y-m-d';
+		$errorMessage = "El campo '$name' debe tener el formato '$dateFormat'.";
 
 		if ($value === "") {
 			$this->maximoFechaPublicacion = null;
 			return;
 		}
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
+		$dateTime = DateTime::createFromFormat($dateFormat, $value);
 
-		!$dateTime || $dateTime->format('Y-m-d') !== $value
+		$dateTime === false || $dateTime->format($dateFormat) !== $value
 			? $this->setValidationError($errorMessage)
 			: $this->maximoFechaPublicacion = $value;
 	}

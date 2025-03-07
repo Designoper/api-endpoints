@@ -104,11 +104,12 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'fecha_publicacion';
 		$value = $_POST[$name] ?? "";
-		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
+		$dateFormat = 'Y-m-d';
+		$errorMessage = "El campo '$name' debe tener el formato '$dateFormat'.";
 
-		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
+		$dateTime = DateTime::createFromFormat($dateFormat, $value);
 
-		!$dateTime || $dateTime->format('Y-m-d') !== $value
+		$dateTime === false || $dateTime->format($dateFormat) !== $value
 			? $this->setValidationError($errorMessage)
 			: $this->fechaPublicacion = $value;
 	}
