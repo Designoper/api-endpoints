@@ -60,19 +60,21 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'id_libro';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->idLibro = (int) $value
-			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setTitulo(): void
 	{
 		$name = 'titulo';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' no puede estar vacío.";
 
 		$value === ""
-			? $this->setValidationError("El campo '$name' no puede estar vacío.")
+			? $this->setValidationError($errorMessage)
 			: $this->titulo = $value;
 	}
 
@@ -80,9 +82,10 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'descripcion';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' no puede estar vacío.";
 
 		$value === ""
-			? $this->setValidationError("El campo '$name' no puede estar vacío.")
+			? $this->setValidationError($errorMessage)
 			: $this->descripcion = $value;
 	}
 
@@ -90,21 +93,23 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'paginas';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->paginas = (int) $value
-			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setFechaPublicacion(): void
 	{
 		$name = 'fecha_publicacion';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' debe tener el formato yyyy-mm-dd.";
 
 		$dateTime = DateTime::createFromFormat('Y-m-d', $value);
 
 		!$dateTime || $dateTime->format('Y-m-d') !== $value
-			? $this->setValidationError("El campo '$name' debe tener el formato yyyy-mm-dd.")
+			? $this->setValidationError($errorMessage)
 			: $this->fechaPublicacion = $value;
 	}
 
@@ -112,10 +117,11 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'id_categoria';
 		$value = $_POST[$name] ?? "";
+		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->idCategoria = (int) $value
-			: $this->setValidationError("El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.");
+			: $this->setValidationError($errorMessage);
 	}
 
 	private function setPortada(): void
@@ -152,6 +158,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	{
 		$name = 'eliminar_portada';
 		$value = $_POST[$name] ?? false;
+		$errorMessage = "El campo '$name' solo puede ser campo vacío.";
 
 		if ($value === false) {
 			$this->deleteCheckbox = false;
@@ -159,7 +166,7 @@ final class LibroWrite extends LibroIntegrityErrors
 		}
 
 		$value !== ""
-			? $this->setValidationError("El único valor válido para '$name' es campo vacío")
+			? $this->setValidationError($errorMessage)
 			: $this->deleteCheckbox = true;
 	}
 
