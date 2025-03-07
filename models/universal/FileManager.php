@@ -8,8 +8,9 @@ final class FileManager extends MysqliConnect
 {
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
-    private string $extraDirectories = '';
-    private string $uniqueFilename;
+
+    private readonly string $extraDirectories;
+    private readonly string $uniqueFilename;
 
     private readonly ?array $file;
     private readonly bool $deleteCheckbox;
@@ -35,6 +36,11 @@ final class FileManager extends MysqliConnect
         return $this->extraDirectories;
     }
 
+    private function getUniqueFilename(): string
+    {
+        return $this->uniqueFilename;
+    }
+
     // MARK: SETTERS
 
     public function setFile(?array $file): void
@@ -47,16 +53,16 @@ final class FileManager extends MysqliConnect
         $this->deleteCheckbox = $deleteCheckbox;
     }
 
+    public function setExtraDirectories(string $extraDirectories): void
+    {
+        $this->extraDirectories = $extraDirectories;
+    }
+
     private function setUniqueFilename(string $originalFilename): void
     {
         $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
-    }
-
-    public function setExtraDirectories(string $extraDirectories): void
-    {
-        $this->extraDirectories = $extraDirectories;
     }
 
     // MARK: FILE OPERATIONS
@@ -100,7 +106,7 @@ final class FileManager extends MysqliConnect
 
         $this->setUniqueFilename($this->getFile()['name']);
 
-        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
+        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->getUniqueFilename();
     }
 
     public function uploadFile(): void
@@ -109,13 +115,15 @@ final class FileManager extends MysqliConnect
             return;
         }
 
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories())) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories(), 0755, true);
+        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories();
+
+        if (!file_exists($folderDestination)) {
+            mkdir($folderDestination, 0755, true);
         }
 
-        $destination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
+        $finalDestination = $folderDestination . $this->getUniqueFilename();
 
-        move_uploaded_file($this->getFile()['tmp_name'], $destination);
+        move_uploaded_file($this->getFile()['tmp_name'], $finalDestination);
     }
 
     public function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
@@ -130,7 +138,9 @@ final class FileManager extends MysqliConnect
 
         $this->setUniqueFilename($this->getFile()['name']);
 
-        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->uniqueFilename;
+        $imagePath = self::IMAGE_PATH . $this->getExtraDirectories() . $this->getUniqueFilename();
+
+        return $imagePath;
     }
 
     public function updateFile(?string $filePath): void
