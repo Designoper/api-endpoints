@@ -19,39 +19,39 @@ class Libro extends Categoria {
 
     async filterLibros(form) {
         const response = await this.fetchData(form);
-        this.printLibros(response);
         new Categoria();
+        this.printLibros(response);
     }
 
     async createLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 201) {
-            await this.getLibros();
             new Categoria();
+            await this.getLibros();
         }
     }
 
     async updateLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 200) {
-            await this.getLibros();
             new Categoria();
+            await this.getLibros();
         }
     }
 
     async deleteLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 204) {
-            await this.getLibros();
             new Categoria();
+            await this.getLibros();
         }
     }
 
     async deleteAllLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 204) {
-            await this.getLibros();
             new Categoria();
+            await this.getLibros();
         }
     }
 
