@@ -6,7 +6,7 @@ export class Categoria extends Fetch {
 
 	constructor() {
 		super();
-		this.getCategorias();
+		// this.getCategorias();
 	}
 
 	async getCategorias() {

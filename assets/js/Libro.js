@@ -7,26 +7,25 @@ class Libro extends Categoria {
 
     constructor() {
         super();
-        this.getLibros();
     }
 
     // MARK: CRUD FUNCTIONS
 
     async getLibros() {
+        await this.getCategorias();
         const response = await this.simpleFetch(Libro.librosEndpoint);
         this.printLibros(response);
     }
 
     async filterLibros(form) {
+        await this.getCategorias();
         const response = await this.fetchData(form);
-        new Categoria();
         this.printLibros(response);
     }
 
     async createLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 201) {
-            new Categoria();
             await this.getLibros();
         }
     }
@@ -34,7 +33,6 @@ class Libro extends Categoria {
     async updateLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 200) {
-            new Categoria();
             await this.getLibros();
         }
     }
@@ -42,7 +40,6 @@ class Libro extends Categoria {
     async deleteLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 204) {
-            new Categoria();
             await this.getLibros();
         }
     }
@@ -50,8 +47,8 @@ class Libro extends Categoria {
     async deleteAllLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 204) {
-            new Categoria();
-            await this.getLibros();
+            Libro.fetchOutput.innerHTML = "";
+            Libro.errorContainer.innerHTML = "No hay ningún libro.";
         }
     }
 
@@ -241,4 +238,4 @@ class Libro extends Categoria {
     }
 }
 
-new Libro();
+new Libro().getLibros();

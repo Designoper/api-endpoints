@@ -42,7 +42,7 @@ final class Libro extends ApiResponse
 		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$message =
 			$libros
-			? 'Libros obtenidos'
+			? 'Libros obtenidos.'
 			: 'No hay ningún libro.';
 
 		$query->close();
