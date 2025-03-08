@@ -35,6 +35,12 @@ export class Fetch {
 			const json = await response.json();
 			json.status = response.status;
 			json.ok = response.ok;
+
+			if (response.ok === false) {
+				const output = form.querySelector('output');
+				this.errorChecker(json, output);
+			}
+
 			return json;
 		}
 
@@ -43,9 +49,9 @@ export class Fetch {
 		}
 	}
 
-	errorChecker(response, errorContainer) {
-		if (response?.validationErrors?.length > 0) {
-			errorContainer.innerHTML =
+	errorChecker(response, output) {
+		if (response.validationErrors?.length > 0) {
+			output.innerHTML =
 				`<p>Errores de validación:</p>
 
 				<ul>
@@ -53,13 +59,13 @@ export class Fetch {
 				</ul>`
 		}
 
-		if (response?.integrityErrors?.length > 0) {
-			errorContainer.innerHTML =
+		if (response.integrityErrors?.length > 0) {
+			output.innerHTML =
 				`<p>Errores de integridad:</p>
 
-                <ul>
-                    ${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
-                </ul>`
+				<ul>
+					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
+				</ul>`
 		}
 	}
 

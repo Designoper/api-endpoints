@@ -37,21 +37,18 @@ class Libro extends Categoria {
 
     // MARK: CREATE LIBRO
 
-    async createLibro(form, errorContainer, dialog) {
+    async createLibro(form, output, dialog) {
         const response = await this.fetchData(form);
 
         if (response.ok) {
+            // const output = form.querySelector('output');
             this.resetForm({
                 form: form,
-                errorContainer: errorContainer,
+                errorContainer: output,
                 dialog: dialog
             });
 
             await this.getLibros();
-        }
-
-        if (!response.ok) {
-            this.errorChecker(response, errorContainer);
         }
     }
 
@@ -80,10 +77,6 @@ class Libro extends Categoria {
 
             await this.getLibros();
         }
-
-        if (!response.ok) {
-            this.errorChecker(response, errorContainer);
-        }
     }
 
     // MARK: DELETE LIBRO
@@ -107,10 +100,6 @@ class Libro extends Categoria {
             });
 
             await this.getLibros();
-        }
-
-        if (!response.ok) {
-            this.errorChecker(response, errorContainer);
         }
     }
 

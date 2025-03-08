@@ -21,6 +21,10 @@ main {
 	form {
 		display: grid;
 		gap: 2em;
+
+		output:empty {
+			display: none;
+		}
 	}
 
 	:is(input, select, textarea) {
