@@ -114,17 +114,6 @@ class Libro extends Categoria {
         }
     }
 
-    resetForm({
-        form,
-        errorContainer,
-        dialog
-    }) {
-
-        form ? form.reset() : null;
-        dialog ? dialog.close() : null;
-        errorContainer ? errorContainer.innerHTML = "" : null;
-    }
-
     static librosTemplate(fetchedLibros, fetchedCategorias) {
 
         const libros = fetchedLibros.map(libro =>

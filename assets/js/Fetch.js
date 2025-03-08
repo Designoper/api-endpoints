@@ -62,4 +62,15 @@ export class Fetch {
                 </ul>`
 		}
 	}
+
+	resetForm({
+		form,
+		errorContainer,
+		dialog
+	}) {
+
+		form ? form.reset() : null;
+		dialog ? dialog.close() : null;
+		errorContainer ? errorContainer.innerHTML = "" : null;
+	}
 }
