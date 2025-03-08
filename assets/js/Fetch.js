@@ -11,8 +11,8 @@ export class Fetch {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		let url = form.getAttribute("action");
 		const method = form.getAttribute("method")?.toUpperCase() ?? 'GET';
+		let url = form.getAttribute("action");
 
 		switch (method) {
 			case 'GET':
@@ -23,7 +23,6 @@ export class Fetch {
 			case 'POST':
 				init.method = method;
 				init.body = userInputs;
-				break;
 		}
 
 		try {
