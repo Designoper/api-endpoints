@@ -42,7 +42,6 @@ export class Fetch {
 
 			if (response.ok === false) {
 				this.errorChecker(json, output);
-				return;
 			}
 
 			if (response.ok) {
@@ -79,7 +78,7 @@ export class Fetch {
 
 	resetForm(form, method, errorContainer, dialog) {
 
-		form && method === "GET" ? form.reset() : null;
+		form && method !== "GET" ? form.reset() : null;
 		dialog ? dialog.close() : null;
 		errorContainer ? errorContainer.innerHTML = "" : null;
 	}
