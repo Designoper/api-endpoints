@@ -12,9 +12,7 @@ export class Categoria extends Fetch {
 		return response;
 	}
 
-	static categoriasTemplate({
-		fetchedCategorias,
-	}) {
+	static categoriasTemplate(fetchedCategorias) {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
@@ -28,11 +26,7 @@ export class Categoria extends Fetch {
 
 	async printCategorias(place) {
 		const categorias = await this.getCategorias();
-
-		const content = Categoria.categoriasTemplate({
-			fetchedCategorias: categorias.content,
-		});
-
+		const content = Categoria.categoriasTemplate(categorias.content);
 		place.outerHTML = content;
 	}
 }
