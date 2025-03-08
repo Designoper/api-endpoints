@@ -93,6 +93,8 @@ class Libro extends Categoria {
         await this.getLibros();
     }
 
+    // MARK: DELETE ALL LIBRO
+
     async deleteAllLibro(form, errorContainer, dialog) {
 
         const response = await this.fetchData(form);
