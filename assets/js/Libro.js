@@ -300,7 +300,6 @@ class Libro extends Categoria {
                         break;
                     case 'DELETE_ALL':
                         this.deleteAllLibro(form, output, dialog);
-                        break;
                 }
             }
         });
