@@ -14,6 +14,9 @@ export class Fetch {
 		const method = form.getAttribute("method")?.toUpperCase() ?? 'GET';
 		let url = form.getAttribute("action");
 
+		const output = form.querySelector('output');
+		const dialog = form.closest('dialog');
+
 		switch (method) {
 			case 'GET':
 				url = new URL(url);
@@ -29,7 +32,8 @@ export class Fetch {
 			const response = await fetch(url, init);
 
 			if (response.status === 204) {
-				return response;
+				this.resetForm(form, method, output, dialog);
+				return;
 			}
 
 			const json = await response.json();
@@ -37,8 +41,12 @@ export class Fetch {
 			json.ok = response.ok;
 
 			if (response.ok === false) {
-				const output = form.querySelector('output');
 				this.errorChecker(json, output);
+				return;
+			}
+
+			if (response.ok) {
+				this.resetForm(form, method, output, dialog);
 			}
 
 			return json;
@@ -69,13 +77,9 @@ export class Fetch {
 		}
 	}
 
-	resetForm({
-		form,
-		errorContainer,
-		dialog
-	}) {
+	resetForm(form, method, errorContainer, dialog) {
 
-		form ? form.reset() : null;
+		form && method === "GET" ? form.reset() : null;
 		dialog ? dialog.close() : null;
 		errorContainer ? errorContainer.innerHTML = "" : null;
 	}

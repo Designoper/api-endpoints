@@ -12,96 +12,37 @@ class Libro extends Categoria {
 
     // MARK: CRUD FUNCTIONS
 
-
-
-
-
-    // MARK: GET LIBROS
-
     async getLibros() {
         const response = await this.simpleFetch(Libro.librosEndpoint);
         await this.printLibros(response);
     }
 
-    // MARK: FILTER LIBROS
-
-    async filterLibros(form, dialog) {
-
+    async filterLibros(form) {
         const response = await this.fetchData(form);
         await this.printLibros(response);
-
-        this.resetForm({
-            dialog: dialog
-        });
     }
 
-    // MARK: CREATE LIBRO
-
-    async createLibro(form, output, dialog) {
-        const response = await this.fetchData(form);
-
-        if (response.ok) {
-            // const output = form.querySelector('output');
-            this.resetForm({
-                form: form,
-                errorContainer: output,
-                dialog: dialog
-            });
-
-            await this.getLibros();
-        }
+    async createLibro(form) {
+        await this.fetchData(form);
+        await this.getLibros();
     }
 
-    // MARK: UPDATE LIBRO
-
-    async updateLibro(form, errorContainer, dialog) {
-
-        const response = await this.fetchData(form);
-
-        if (response.status === 204) {
-            this.resetForm({
-                form: form,
-                errorContainer: errorContainer,
-                dialog: dialog
-            });
-
-            return;
-        }
-
-        if (response.ok) {
-            this.resetForm({
-                form: form,
-                errorContainer: errorContainer,
-                dialog: dialog
-            });
-
-            await this.getLibros();
-        }
+    async updateLibro(form) {
+        await this.fetchData(form);
+        await this.getLibros();
     }
-
-    // MARK: DELETE LIBRO
 
     async deleteLibro(form) {
         await this.fetchData(form);
         await this.getLibros();
     }
 
-    // MARK: DELETE ALL LIBRO
-
-    async deleteAllLibro(form, errorContainer, dialog) {
-
-        const response = await this.fetchData(form);
-
-        if (response.ok) {
-            this.resetForm({
-                form: form,
-                errorContainer: errorContainer,
-                dialog: dialog
-            });
-
-            await this.getLibros();
-        }
+    async deleteAllLibro(form) {
+        await this.fetchData(form);
+        await this.getLibros();
     }
+
+    // MARK: LIBRO TEMPLATE
 
     static librosTemplate(fetchedLibros, fetchedCategorias) {
 
@@ -257,26 +198,24 @@ class Libro extends Categoria {
 
             const submitButton = form.querySelector('button');
             const httpMethod = submitButton.getAttribute('value');
-            const output = form.querySelector('output');
-            const dialog = form.closest('dialog');
 
             form.onsubmit = (e) => {
                 e.preventDefault();
                 switch (httpMethod) {
                     case 'GET':
-                        this.filterLibros(form, dialog);
+                        this.filterLibros(form);
                         break;
                     case 'POST':
-                        this.createLibro(form, output, dialog);
+                        this.createLibro(form);
                         break;
                     case 'PUT':
-                        this.updateLibro(form, output, dialog);
+                        this.updateLibro(form);
                         break;
                     case 'DELETE':
                         this.deleteLibro(form);
                         break;
                     case 'DELETE_ALL':
-                        this.deleteAllLibro(form, output, dialog);
+                        this.deleteAllLibro(form);
                 }
             }
         });
