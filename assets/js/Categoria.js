@@ -1,6 +1,6 @@
-import { Base } from "./Base.js";
+import { Fetch } from "./Fetch.js";
 
-export class Categoria extends Base {
+export class Categoria extends Fetch {
 	static categoriasEndpoint = 'http://localhost/api/categorias/';
 
 	constructor() {

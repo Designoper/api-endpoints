@@ -1,4 +1,4 @@
-export class Base {
+export class Fetch {
 	constructor() { }
 
 	async simpleFetch(url) {
