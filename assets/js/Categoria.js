@@ -2,14 +2,16 @@ import { Fetch } from "./Fetch.js";
 
 export class Categoria extends Fetch {
 	static categoriasEndpoint = 'http://localhost/api/categorias/';
+	static categorias;
 
 	constructor() {
 		super();
+		this.getCategorias();
 	}
 
 	async getCategorias() {
-		const response = this.simpleFetch(Categoria.categoriasEndpoint);
-		return response;
+		const response = await this.simpleFetch(Categoria.categoriasEndpoint);
+		Categoria.categorias = response.content;
 	}
 
 	static categoriasTemplate(fetchedCategorias) {
@@ -24,9 +26,8 @@ export class Categoria extends Fetch {
 		return categorias;
 	}
 
-	async printCategorias(place) {
-		const categorias = await this.getCategorias();
-		const content = Categoria.categoriasTemplate(categorias.content);
+	printCategorias(place) {
+		const content = Categoria.categoriasTemplate(Categoria.categorias);
 		place.outerHTML = content;
 	}
 }

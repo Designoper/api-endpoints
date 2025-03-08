@@ -14,18 +14,20 @@ class Libro extends Categoria {
 
     async getLibros() {
         const response = await this.simpleFetch(Libro.librosEndpoint);
-        await this.printLibros(response);
+        this.printLibros(response);
     }
 
     async filterLibros(form) {
         const response = await this.fetchData(form);
-        await this.printLibros(response);
+        this.printLibros(response);
+        new Categoria();
     }
 
     async createLibro(form) {
         const response = await this.fetchData(form);
         if (response.status === 201) {
             await this.getLibros();
+            new Categoria();
         }
     }
 
@@ -33,6 +35,7 @@ class Libro extends Categoria {
         const response = await this.fetchData(form);
         if (response.status === 200) {
             await this.getLibros();
+            new Categoria();
         }
     }
 
@@ -40,6 +43,7 @@ class Libro extends Categoria {
         const response = await this.fetchData(form);
         if (response.status === 204) {
             await this.getLibros();
+            new Categoria();
         }
     }
 
@@ -47,12 +51,13 @@ class Libro extends Categoria {
         const response = await this.fetchData(form);
         if (response.status === 204) {
             await this.getLibros();
+            new Categoria();
         }
     }
 
     // MARK: LIBRO TEMPLATE
 
-    static librosTemplate(fetchedLibros, fetchedCategorias) {
+    static librosTemplate(fetchedLibros) {
 
         const libros = fetchedLibros.map(libro =>
             `<article>
@@ -115,7 +120,7 @@ class Libro extends Categoria {
                                 <label for='categoria'>Categoria *</label>
                                 <select name='id_categoria' id='categoria' required>
                                     <option value=''>Seleccione una categoria...</option>
-                                    ${fetchedCategorias.map(categoria =>
+                                    ${Categoria.categorias.map(categoria =>
                 `<option
                                             value='${categoria['id_categoria']}'
                                             ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
@@ -176,7 +181,7 @@ class Libro extends Categoria {
 
     // MARK: PRINT LIBROS
 
-    async printLibros(libros) {
+    printLibros(libros) {
 
         if (libros.content.length === 0) {
             Libro.fetchOutput.innerHTML = "";
@@ -184,8 +189,7 @@ class Libro extends Categoria {
         }
 
         else {
-            const categorias = await this.getCategorias();
-            const content = Libro.librosTemplate(libros.content, categorias.content);
+            const content = Libro.librosTemplate(libros.content);
             Libro.fetchOutput.innerHTML = content;
             Libro.errorContainer.innerHTML = "";
         }
