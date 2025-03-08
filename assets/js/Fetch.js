@@ -39,13 +39,9 @@ export class Fetch {
 			const json = await response.json();
 			json.status = response.status;
 
-			if (response.ok === false) {
-				this.errorChecker(json, output);
-			}
-
-			if (response.ok) {
-				this.resetForm(form, method, output, dialog);
-			}
+			response.ok
+				? this.resetForm(form, method, output, dialog)
+				: this.errorChecker(json, output);
 
 			return json;
 		}
