@@ -25,15 +25,12 @@ class Libro extends Categoria {
 
     // MARK: FILTER LIBROS
 
-    async filterLibros(form, errorContainer, dialog) {
+    async filterLibros(form, dialog) {
 
         const response = await this.fetchData(form);
-
         await this.printLibros(response);
 
         this.resetForm({
-            form: form,
-            errorContainer: errorContainer,
             dialog: dialog
         });
     }
@@ -92,9 +89,7 @@ class Libro extends Categoria {
     // MARK: DELETE LIBRO
 
     async deleteLibro(form) {
-
-        const response = await this.fetchData(form);
-
+        await this.fetchData(form);
         await this.getLibros();
     }
 
@@ -275,19 +270,21 @@ class Libro extends Categoria {
         });
     }
 
-    bigForms() {
+    formHandler() {
         const forms = document.querySelectorAll('form');
 
         forms.forEach(form => {
-            const button = form.querySelector('button');
-            const value = button.getAttribute('value');
+
+            const submitButton = form.querySelector('button');
+            const httpMethod = submitButton.getAttribute('value');
             const output = form.querySelector('output');
             const dialog = form.closest('dialog');
+
             form.onsubmit = (e) => {
                 e.preventDefault();
-                switch (value) {
+                switch (httpMethod) {
                     case 'GET':
-                        this.filterLibros(form, output, dialog);
+                        this.filterLibros(form, dialog);
                         break;
                     case 'POST':
                         this.createLibro(form, output, dialog);
@@ -296,7 +293,7 @@ class Libro extends Categoria {
                         this.updateLibro(form, output, dialog);
                         break;
                     case 'DELETE':
-                        this.deleteLibro(form, output, dialog);
+                        this.deleteLibro(form);
                         break;
                     case 'DELETE_ALL':
                         this.deleteAllLibro(form, output, dialog);
@@ -307,7 +304,7 @@ class Libro extends Categoria {
 
     final() {
         this.optionsDropdown();
-        this.bigForms();
+        this.formHandler();
     }
 }
 
