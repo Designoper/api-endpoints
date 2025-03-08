@@ -35,7 +35,6 @@ final class Libro extends ApiResponse
 			ORDER BY libros.titulo";
 
 		$query = $this->getConnection()->prepare($statement);
-		// $query->bind_param('ss', $defaultImage, $host);
 
 		$query->execute();
 
