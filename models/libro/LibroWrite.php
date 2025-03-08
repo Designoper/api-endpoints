@@ -442,9 +442,12 @@ final class LibroWrite extends LibroIntegrityErrors
 
 		if ($numFilas > 0) {
 			$deleteAllLibros->deleteAllFiles();
+			$this->setStatus(204);
+			$this->getResponse();
+		} else {
+			$this->setStatus(404);
+			$this->setIntegrityError('¡No hay ningún libro para eliminar!');
+			$this->checkIntegrityErrors();
 		}
-
-		$this->setStatus(204);
-		$this->getResponse();
 	}
 }

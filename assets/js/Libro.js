@@ -44,8 +44,10 @@ class Libro extends Categoria {
     }
 
     async deleteAllLibro(form) {
-        await this.fetchData(form);
-        await this.getLibros();
+        const response = await this.fetchData(form);
+        if (response.status === 204) {
+            await this.getLibros();
+        }
     }
 
     // MARK: LIBRO TEMPLATE
