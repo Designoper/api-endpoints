@@ -38,7 +38,6 @@ export class Fetch {
 
 			const json = await response.json();
 			json.status = response.status;
-			json.ok = response.ok;
 
 			if (response.ok === false) {
 				this.errorChecker(json, output);
