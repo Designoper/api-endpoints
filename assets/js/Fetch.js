@@ -33,7 +33,7 @@ export class Fetch {
 
 			if (response.status === 204) {
 				this.resetForm(form, method, output, dialog);
-				return;
+				return response;
 			}
 
 			const json = await response.json();
@@ -77,7 +77,6 @@ export class Fetch {
 	}
 
 	resetForm(form, method, errorContainer, dialog) {
-
 		form && method !== "GET" ? form.reset() : null;
 		dialog ? dialog.close() : null;
 		errorContainer ? errorContainer.innerHTML = "" : null;

@@ -23,18 +23,24 @@ class Libro extends Categoria {
     }
 
     async createLibro(form) {
-        await this.fetchData(form);
-        await this.getLibros();
+        const response = await this.fetchData(form);
+        if (response.status === 201) {
+            await this.getLibros();
+        }
     }
 
     async updateLibro(form) {
-        await this.fetchData(form);
-        await this.getLibros();
+        const response = await this.fetchData(form);
+        if (response.status === 200) {
+            await this.getLibros();
+        }
     }
 
     async deleteLibro(form) {
-        await this.fetchData(form);
-        await this.getLibros();
+        const response = await this.fetchData(form);
+        if (response.status === 204) {
+            await this.getLibros();
+        }
     }
 
     async deleteAllLibro(form) {
@@ -165,6 +171,8 @@ class Libro extends Categoria {
 
         return libros;
     }
+
+    // MARK: PRINT LIBROS
 
     async printLibros(libros) {
 
