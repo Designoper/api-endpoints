@@ -1,19 +1,34 @@
 import { Categoria } from "./Categoria.js";
 
 class Libro extends Categoria {
-    static librosEndpoint = 'http://localhost/api/libros/';
-    static fetchOutput = document.getElementById('fetchoutput');
-    static errorContainer = document.getElementById('errorcontainer');
+    static ENDPOINTS = {
+        READ: 'http://localhost/api/libros',
+        FILTER: 'http://localhost/api/libros/filter',
+        CREATE: 'http://localhost/api/libros/create',
+        UPDATE: 'http://localhost/api/libros/update',
+        DELETE: 'http://localhost/api/libros/delete'
+    };
+
+    static DOM_ELEMENTS = {
+        OUTPUT: document.getElementById('fetchoutput'),
+        ERROR_CONTAINER: document.getElementById('errorcontainer')
+    };
 
     constructor() {
         super();
+        this.initialize();
+    }
+
+    async initialize() {
+        await this.getLibros();
+        this.optionsDropdown();
     }
 
     // MARK: CRUD FUNCTIONS
 
     async getLibros() {
         await this.getCategorias();
-        const response = await this.simpleFetch(Libro.librosEndpoint);
+        const response = await this.simpleFetch(Libro.ENDPOINTS.READ);
         this.printLibros(response);
     }
 
@@ -77,7 +92,7 @@ class Libro extends Categoria {
 
                 <dialog id="modificar-dialog-${libro['id_libro']}">
 
-                    <form action="http://localhost/api/libros/update/" method="POST">
+                    <form action="${Libro.ENDPOINTS.UPDATE}" method="POST">
                         <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
                         <h3>Modificando ${libro['titulo']}</h3>
@@ -116,7 +131,6 @@ class Libro extends Categoria {
                             <li>
                                 <label for='categoria'>Categoria *</label>
                                 <select name='id_categoria' id='categoria' required>
-                                    <option value=''>Seleccione una categoria...</option>
                                     ${Categoria.categorias.map(categoria =>
                 `<option
                                             value='${categoria['id_categoria']}'
@@ -132,7 +146,7 @@ class Libro extends Categoria {
 
                             <menu>
                                 <li>
-                                    <button value='PUT'>Guardar cambios</button>
+                                    <button type="submit" value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
                                     <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
@@ -148,7 +162,7 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
-                <form action="http://localhost/api/libros/delete/" method="POST">
+                <form action="${Libro.ENDPOINTS.DELETE}" method="POST">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
@@ -158,7 +172,7 @@ class Libro extends Categoria {
 
                         <menu>
                             <li>
-                                <button value='DELETE'>Sí, eliminar</button>
+                                <button type="submit" value='DELETE'>Sí, eliminar</button>
                             </li>
                             <li>
                                 <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
@@ -181,17 +195,17 @@ class Libro extends Categoria {
     printLibros(libros) {
 
         if (libros.content.length === 0) {
-            Libro.fetchOutput.innerHTML = "";
-            Libro.errorContainer.innerHTML = libros.message;
+            Libro.DOM_ELEMENTS.OUTPUT.innerHTML = "";
+            Libro.DOM_ELEMENTS.ERROR_CONTAINER.innerHTML = libros.message;
         }
 
         else {
             const content = Libro.librosTemplate(libros.content);
-            Libro.fetchOutput.innerHTML = content;
-            Libro.errorContainer.innerHTML = "";
+            Libro.DOM_ELEMENTS.OUTPUT.innerHTML = content;
+            Libro.DOM_ELEMENTS.ERROR_CONTAINER.innerHTML = "";
         }
 
-        this.final();
+        this.formHandler();
     }
 
     optionsDropdown() {
@@ -207,7 +221,7 @@ class Libro extends Categoria {
 
         forms.forEach(form => {
 
-            const submitButton = form.querySelector('button');
+            const submitButton = form.querySelector('button[type="submit"]');
             const httpMethod = submitButton.getAttribute('value');
 
             form.onsubmit = (e) => {
@@ -231,11 +245,8 @@ class Libro extends Categoria {
             }
         });
     }
-
-    final() {
-        this.optionsDropdown();
-        this.formHandler();
-    }
 }
 
-new Libro().getLibros();
+(async () => {
+    await new Libro().initialize();
+})();
