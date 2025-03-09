@@ -15,7 +15,7 @@
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/Libro.js" type="module"></script>
+	<script src="./assets/js/Libro.js" type="module" async></script>
 
 </head>
 
@@ -28,7 +28,7 @@
 			<button type="button" commandfor="alta-dialog" command="show-modal">Alta</button>
 
 			<dialog id="alta-dialog">
-				<form action="http://localhost/api/libros/create/" method="POST">
+				<form action="http://localhost/api/libros/create" method="POST">
 					<h3>Formulario de alta</h3>
 					<fieldset>
 						<menu>
@@ -65,7 +65,7 @@
 					<fieldset>
 						<menu>
 							<li>
-								<button value="POST">Dar de alta</button>
+								<button type="submit" value="POST">Dar de alta</button>
 							</li>
 							<li>
 								<button type="button" commandfor="alta-dialog" command="close">Cancelar</button>
@@ -82,7 +82,7 @@
 			<button type="button" commandfor="filter-dialog" command="show-modal">Filtrar</button>
 
 			<dialog id="filter-dialog">
-				<form action="http://localhost/api/libros/filter/">
+				<form action="http://localhost/api/libros/filter">
 					<h3>Filtros</h3>
 					<fieldset>
 						<menu>
@@ -130,7 +130,7 @@
 					<fieldset>
 						<menu>
 							<li>
-								<button value="GET">Buscar</button>
+								<button type="submit" value="GET">Buscar</button>
 							</li>
 							<li>
 								<button type="reset">Resetear filtros</button>
@@ -148,13 +148,13 @@
 
 			<dialog id="delete-all-dialog">
 
-				<form action="http://localhost/api/libros/delete-all/" method="POST">
+				<form action="http://localhost/api/libros/delete-all" method="POST">
 
 					<p>¿Seguro que quiere eliminar todos los libros?</p>
 
 					<menu>
 						<li>
-							<button value="DELETE_ALL">Sí, eliminar todos</button>
+							<button type="submit" value="DELETE_ALL">Sí, eliminar todos</button>
 						</li>
 						<li>
 							<button type="button" commandfor="delete-all-dialog" command="close">Cancelar</button>

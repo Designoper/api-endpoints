@@ -20,7 +20,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'libros/',
+            self::COMMON_PATH . 'libros',
             function (): void {
                 $libro = new Libro();
                 $libro->readLibros();
@@ -29,7 +29,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'libros/filter/',
+            self::COMMON_PATH . 'libros/filter',
             function (): void {
                 $libro = new LibroFilter();
                 $libro->filterLibros();
@@ -38,7 +38,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'categorias/',
+            self::COMMON_PATH . 'categorias',
             function (): void {
                 $categoria = new Categoria();
                 $categoria->readCategorias();
@@ -47,7 +47,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'usuarios/',
+            self::COMMON_PATH . 'usuarios',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->createUsuario();
@@ -56,10 +56,8 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/create/',
+            self::COMMON_PATH . 'libros/create',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }
@@ -67,10 +65,8 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/update/',
+            self::COMMON_PATH . 'libros/update',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->updateLibro();
             }
@@ -78,10 +74,8 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/delete/',
+            self::COMMON_PATH . 'libros/delete',
             function (): void {
-                // $usuario = new Usuario();
-                // $usuario->login();
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
             }
@@ -89,7 +83,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/delete-all/',
+            self::COMMON_PATH . 'libros/delete-all',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteAllLibros();

@@ -1,12 +1,11 @@
 import { Fetch } from "./Fetch.js";
 
 export class Categoria extends Fetch {
-	static categoriasEndpoint = 'http://localhost/api/categorias/';
+	static categoriasEndpoint = 'http://localhost/api/categorias';
 	static categorias;
 
 	constructor() {
 		super();
-		// this.getCategorias();
 	}
 
 	async getCategorias() {
@@ -14,7 +13,7 @@ export class Categoria extends Fetch {
 		Categoria.categorias = response.content;
 	}
 
-	static categoriasTemplate(fetchedCategorias) {
+	categoriasTemplate(fetchedCategorias) {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
@@ -27,7 +26,7 @@ export class Categoria extends Fetch {
 	}
 
 	printCategorias(place) {
-		const content = Categoria.categoriasTemplate(Categoria.categorias);
+		const content = this.categoriasTemplate(Categoria.categorias);
 		place.outerHTML = content;
 	}
 }
