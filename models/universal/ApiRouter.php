@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/libro/Libro.php';
+require_once __DIR__ . '/../../models/libro/LibroId.php';
 require_once __DIR__ . '/../../models/libro/LibroFilter.php';
 require_once __DIR__ . '/../../models/libro/LibroWrite.php';
 require_once __DIR__ . '/../../models/categoria/Categoria.php';
@@ -24,6 +25,15 @@ final class ApiRouter extends Sanitizer
             function (): void {
                 $libro = new Libro();
                 $libro->readLibros();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            self::COMMON_PATH . 'libros/(\d+)',
+            function (): void {
+                $libro = new LibroId();
+                $libro->readLibro();
             }
         );
 
@@ -111,8 +121,12 @@ final class ApiRouter extends Sanitizer
                 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
                 foreach ($this->routes as $route) {
-                    if ($route['method'] === $method && $route['path'] === $path) {
-                        $route['handler']();
+                    if ($route['method'] === $method) {
+                        // Use pattern matching instead of exact equality
+                        if (preg_match("#^{$route['path']}$#", $path)) {
+                            $route['handler']();
+                            return;
+                        }
                     }
                 }
 
