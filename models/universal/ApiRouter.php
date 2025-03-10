@@ -113,14 +113,13 @@ final class ApiRouter extends Sanitizer
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method && $route['path'] === $path) {
                         $route['handler']();
-                        exit();
                     }
                 }
 
                 http_response_code(404);
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'error' => 'Route not found',
+                    'message' => 'La ruta solicitada no existe',
                     'requested_path' => $path
                 ]);
                 break;
