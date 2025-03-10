@@ -310,8 +310,8 @@ final class LibroFilter extends ApiResponse
 		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$message =
 			$libros
-			? 'Libros obtenidos'
-			: 'Ningún libro coincide con el criterio seleccionado';
+			? 'Libros obtenidos.'
+			: 'Ningún libro coincide con el criterio seleccionado.';
 
 		$query->close();
 
