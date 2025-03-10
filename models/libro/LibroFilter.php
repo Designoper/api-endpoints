@@ -118,8 +118,8 @@ final class LibroFilter extends ApiResponse
 		$dateTime = DateTime::createFromFormat($dateFormat, $value);
 
 		$dateTime === false || $dateTime->format($dateFormat) !== $value
-		? $this->setValidationError($errorMessage)
-		: $this->minimoFechaPublicacion = $value;
+			? $this->setValidationError($errorMessage)
+			: $this->minimoFechaPublicacion = $value;
 	}
 
 	private function setMaximoFechaPublicacion(): void
