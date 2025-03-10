@@ -70,15 +70,25 @@ class Libro extends Categoria {
     // MARK: LIBRO TEMPLATE
 
     static librosTemplate(fetchedLibros) {
+        const dateFormatter = new Intl.DateTimeFormat('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            timeZone: 'UTC'
+        });
 
-        const libros = fetchedLibros.map(libro =>
-            `<article>
+        const libros = fetchedLibros.map(libro => {
+            // Create date in UTC to avoid timezone offset
+            const fecha = new Date(libro['fecha_publicacion'] + 'T00:00:00Z');
+            const fechaFormateada = dateFormatter.format(fecha);
+
+            return `<article>
 
                 <h3>${libro['titulo']}</h3>
                 <img src="${libro['portada']}" alt="Portada de ${libro['titulo']}" loading="lazy">
                 <p>${libro['descripcion']}</p>
                 <p>Páginas: ${libro['paginas']}</p>
-                <p>Fecha de publicación: ${libro['fecha_publicacion_dd_mm_yyyy']}</p>
+                <p>Fecha de publicación: ${fechaFormateada}</p>
                 <p>Categoria: ${libro['categoria']}</p>
 
                 <menu>
@@ -185,7 +195,7 @@ class Libro extends Categoria {
                 </dialog>
 
             </article>`
-        ).join('');
+        }).join('');
 
         return libros;
     }

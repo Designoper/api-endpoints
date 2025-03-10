@@ -53,7 +53,6 @@ final class LibroId extends ApiResponse
 				libros.descripcion,
 				libros.paginas,
 				libros.fecha_publicacion,
-				DATE_FORMAT(libros.fecha_publicacion, '%d-%m-%Y') AS fecha_publicacion_dd_mm_yyyy,
 				categorias.categoria
 			FROM libros
 			NATURAL JOIN categorias
