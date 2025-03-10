@@ -133,7 +133,6 @@ final class ApiRouter extends Sanitizer
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method && preg_match("#^{$route['path']}$#", $path)) {
                         $route['handler']();
-                        return;
                     }
                 }
 
