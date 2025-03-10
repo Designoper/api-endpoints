@@ -28,7 +28,7 @@
 			<button type="button" commandfor="alta-dialog" command="show-modal">Alta</button>
 
 			<dialog id="alta-dialog">
-				<form action="http://localhost/api/libros/create" method="POST">
+				<form action="http://localhost/api/libros" method="POST">
 					<h3>Formulario de alta</h3>
 					<fieldset>
 						<menu>
@@ -148,13 +148,13 @@
 
 			<dialog id="delete-all-dialog">
 
-				<form action="http://localhost/api/libros/delete-all" method="POST">
+				<form action="http://localhost/api/libros">
 
 					<p>¿Seguro que quiere eliminar todos los libros?</p>
 
 					<menu>
 						<li>
-							<button type="submit" value="DELETE_ALL">Sí, eliminar todos</button>
+							<button type="submit" value="DELETE">Sí, eliminar todos</button>
 						</li>
 						<li>
 							<button type="button" commandfor="delete-all-dialog" command="close">Cancelar</button>

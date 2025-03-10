@@ -11,7 +11,8 @@ export class Fetch {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		const method = form.getAttribute("method")?.toUpperCase() ?? 'GET';
+		const sendButton = form.querySelector('button[type="submit"]');
+		const method = sendButton.getAttribute("value")?.toUpperCase();
 		let url = form.getAttribute("action");
 
 		const output = form.querySelector('output');
@@ -24,8 +25,14 @@ export class Fetch {
 				break;
 
 			case 'POST':
-				init.method = method;
+			case 'PUT':
+				init.method = 'POST';
 				init.body = userInputs;
+				break;
+
+			case 'DELETE':
+				url = new URL(url);
+				init.method = 'DELETE';
 		}
 
 		try {

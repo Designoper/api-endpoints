@@ -66,7 +66,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/create',
+            self::COMMON_PATH . 'libros',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->createLibro();
@@ -75,7 +75,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/update',
+            self::COMMON_PATH . 'libros/(\d+)',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->updateLibro();
@@ -83,8 +83,8 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
-            'POST',
-            self::COMMON_PATH . 'libros/delete',
+            'DELETE',
+            self::COMMON_PATH . 'libros/(\d+)',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
@@ -92,8 +92,8 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
-            'POST',
-            self::COMMON_PATH . 'libros/delete-all',
+            'DELETE',
+            self::COMMON_PATH . 'libros',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteAllLibros();
@@ -118,11 +118,12 @@ final class ApiRouter extends Sanitizer
         switch ($method) {
             case 'GET':
             case 'POST':
+            case 'PUT':
+            case 'DELETE':
                 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method) {
-                        // Use pattern matching instead of exact equality
                         if (preg_match("#^{$route['path']}$#", $path)) {
                             $route['handler']();
                             return;
@@ -141,7 +142,7 @@ final class ApiRouter extends Sanitizer
             default:
                 http_response_code(405);
                 header('Content-Type: application/json');
-                header('Allow: GET, POST');
+                header('Allow: GET, POST, PUT, DELETE');
         }
     }
 }

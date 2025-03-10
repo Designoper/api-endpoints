@@ -74,9 +74,11 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function setIdLibro(): void
 	{
-		$name = 'id_libro';
-		$value = $_POST[$name] ?? "";
-		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
+		$errorMessage = "El id del recurso debe ser un número entero superior o igual a 1 y solo contener números.";
+
+		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$segments = explode('/', trim($path, '/'));
+		$value = end($segments);
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
 			? $this->idLibro = (int) $value

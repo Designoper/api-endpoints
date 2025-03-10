@@ -4,9 +4,9 @@ class Libro extends Categoria {
     static ENDPOINTS = {
         READ: 'http://localhost/api/libros',
         FILTER: 'http://localhost/api/libros/filter',
-        CREATE: 'http://localhost/api/libros/create',
-        UPDATE: 'http://localhost/api/libros/update',
-        DELETE: 'http://localhost/api/libros/delete'
+        CREATE: 'http://localhost/api/libros',
+        UPDATE: 'http://localhost/api/libros',
+        DELETE: 'http://localhost/api/libros'
     };
 
     static DOM_ELEMENTS = {
@@ -59,14 +59,6 @@ class Libro extends Categoria {
         }
     }
 
-    async deleteAllLibro(form) {
-        const response = await this.fetchData(form);
-        if (response.status === 204) {
-            Libro.fetchOutput.innerHTML = "";
-            Libro.errorContainer.innerHTML = "No hay ningún libro.";
-        }
-    }
-
     // MARK: LIBRO TEMPLATE
 
     static librosTemplate(fetchedLibros) {
@@ -102,8 +94,7 @@ class Libro extends Categoria {
 
                 <dialog id="modificar-dialog-${libro['id_libro']}">
 
-                    <form action="${Libro.ENDPOINTS.UPDATE}" method="POST">
-                        <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
+                    <form action="${Libro.ENDPOINTS.UPDATE}/${libro['id_libro']}">
 
                         <h3>Modificando ${libro['titulo']}</h3>
 
@@ -172,11 +163,9 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
-                <form action="${Libro.ENDPOINTS.DELETE}" method="POST">
+                <form action="${Libro.ENDPOINTS.DELETE}/${libro['id_libro']}" method="POST">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
-
-                    <input type='number' value='${libro['id_libro']}' name='id_libro' hidden>
 
                     <fieldset>
 
@@ -248,9 +237,6 @@ class Libro extends Categoria {
                         break;
                     case 'DELETE':
                         this.deleteLibro(form);
-                        break;
-                    case 'DELETE_ALL':
-                        this.deleteAllLibro(form);
                 }
             }
         });

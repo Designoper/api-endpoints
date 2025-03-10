@@ -181,7 +181,7 @@ final class FileManager extends MysqliConnect
         }
     }
 
-    public function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
+    public function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): string|null|false
     {
         $statement =
             "SELECT $column
