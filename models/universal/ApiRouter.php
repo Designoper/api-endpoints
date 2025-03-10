@@ -19,9 +19,11 @@ final class ApiRouter extends Sanitizer
     {
         parent::__construct();
 
+        // MARK: GET ROUTES
+
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'libros',
+            'libros',
             function (): void {
                 $libro = new Libro();
                 $libro->readLibros();
@@ -30,7 +32,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'libros/(\d+)',
+            'libros/(\d+)',
             function (): void {
                 $libro = new LibroId();
                 $libro->readLibro();
@@ -39,7 +41,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'libros/filter',
+            'libros/filter',
             function (): void {
                 $libro = new LibroFilter();
                 $libro->filterLibros();
@@ -48,16 +50,18 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            self::COMMON_PATH . 'categorias',
+            'categorias',
             function (): void {
                 $categoria = new Categoria();
                 $categoria->readCategorias();
             }
         );
 
+        // MARK: POST ROUTES
+
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'usuarios',
+            'usuarios',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->createUsuario();
@@ -66,25 +70,29 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros',
+            'libros',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->createLibro();
             }
         );
 
+        // UPDATE ROUTES
+
         $this->setRoute(
             'POST',
-            self::COMMON_PATH . 'libros/(\d+)',
+            'libros/(\d+)',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->updateLibro();
             }
         );
 
+        // MARK: DELETE ROUTES
+
         $this->setRoute(
             'DELETE',
-            self::COMMON_PATH . 'libros/(\d+)',
+            'libros/(\d+)',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
@@ -93,7 +101,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'DELETE',
-            self::COMMON_PATH . 'libros',
+            'libros',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteAllLibros();
@@ -107,7 +115,7 @@ final class ApiRouter extends Sanitizer
     {
         $this->routes[] = [
             'method' => $method,
-            'path' => $path,
+            'path' => self::COMMON_PATH . $path,
             'handler' => $handler
         ];
     }
@@ -123,11 +131,9 @@ final class ApiRouter extends Sanitizer
                 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
                 foreach ($this->routes as $route) {
-                    if ($route['method'] === $method) {
-                        if (preg_match("#^{$route['path']}$#", $path)) {
-                            $route['handler']();
-                            return;
-                        }
+                    if ($route['method'] === $method && preg_match("#^{$route['path']}$#", $path)) {
+                        $route['handler']();
+                        return;
                     }
                 }
 
