@@ -1,13 +1,7 @@
 import { Categoria } from "./Categoria.js";
 
 class Libro extends Categoria {
-    static ENDPOINTS = {
-        READ: 'http://localhost/api/libros',
-        FILTER: 'http://localhost/api/libros',
-        CREATE: 'http://localhost/api/libros',
-        UPDATE: 'http://localhost/api/libros',
-        DELETE: 'http://localhost/api/libros'
-    };
+    static ENDPOINT = 'http://localhost/api/libros';
 
     static DOM_ELEMENTS = {
         OUTPUT: document.getElementById('fetchoutput'),
@@ -28,7 +22,7 @@ class Libro extends Categoria {
 
     async getLibros() {
         await this.getCategorias();
-        const response = await this.simpleFetch(Libro.ENDPOINTS.READ);
+        const response = await this.simpleFetch(Libro.ENDPOINT);
         this.printLibros(response);
     }
 
@@ -94,7 +88,7 @@ class Libro extends Categoria {
 
                 <dialog id="modificar-dialog-${libro['id_libro']}">
 
-                    <form action="${Libro.ENDPOINTS.UPDATE}/${libro['id_libro']}">
+                    <form action="${Libro.ENDPOINT}/${libro['id_libro']}">
 
                         <h3>Modificando ${libro['titulo']}</h3>
 
@@ -163,7 +157,7 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
-                <form action="${Libro.ENDPOINTS.DELETE}/${libro['id_libro']}" method="POST">
+                <form action="${Libro.ENDPOINT}/${libro['id_libro']}" method="POST">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 
