@@ -31,23 +31,9 @@ class Libro extends Categoria {
         this.printLibros(response);
     }
 
-    async createLibro(form) {
+    async writeLibro(form, method) {
         const response = await this.fetchData(form);
-        if (response.status === 201) {
-            await this.getLibros();
-        }
-    }
-
-    async updateLibro(form) {
-        const response = await this.fetchData(form);
-        if (response.status === 200) {
-            await this.getLibros();
-        }
-    }
-
-    async deleteLibro(form) {
-        const response = await this.fetchData(form);
-        if (response.status === 204) {
+        if (response.status === 201 && method === 'POST' || response.status === 200 && method === 'PUT' || response.status === 204 && method === 'DELETE') {
             await this.getLibros();
         }
     }
@@ -223,13 +209,9 @@ class Libro extends Categoria {
                         this.filterLibros(form);
                         break;
                     case 'POST':
-                        this.createLibro(form);
-                        break;
                     case 'PUT':
-                        this.updateLibro(form);
-                        break;
                     case 'DELETE':
-                        this.deleteLibro(form);
+                        this.writeLibro(form, httpMethod);
                 }
             }
         });
