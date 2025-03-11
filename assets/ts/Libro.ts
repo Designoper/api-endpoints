@@ -1,11 +1,12 @@
-import { Categoria } from "./Categoria.ts";
+import { Categoria } from "./Categoria";
+import LibroContent from "./interfaces/LibroContent.ts";
 
 class Libro extends Categoria {
     static ENDPOINT = new URL('http://localhost/api/libros');
 
     static DOM_ELEMENTS = {
-        OUTPUT: document.getElementById('fetchoutput'),
-        ERROR_CONTAINER: document.getElementById('errorcontainer')
+        OUTPUT: document.getElementById('fetchoutput') as HTMLOutputElement,
+        ERROR_CONTAINER: document.getElementById('errorcontainer') as HTMLOutputElement
     };
 
     constructor() {
@@ -55,7 +56,7 @@ class Libro extends Categoria {
 
     // MARK: LIBRO TEMPLATE
 
-    static librosTemplate(fetchedLibros) {
+    static librosTemplate(fetchedLibros: LibroContent[]) {
         const dateFormatter = new Intl.DateTimeFormat('es-ES', {
             day: '2-digit',
             month: '2-digit',
@@ -65,47 +66,47 @@ class Libro extends Categoria {
 
         const libros = fetchedLibros.map(libro => {
             // Create date in UTC to avoid timezone offset
-            const fecha = new Date(libro['fecha_publicacion'] + 'T00:00:00Z');
+            const fecha = new Date(libro.fecha_publicacion + 'T00:00:00Z');
             const fechaFormateada = dateFormatter.format(fecha);
 
             return `<article>
 
-                <h3>${libro['titulo']}</h3>
-                <img src="${libro['portada']}" alt="Portada de ${libro['titulo']}" loading="lazy">
-                <p>${libro['descripcion']}</p>
-                <p>Páginas: ${libro['paginas']}</p>
+                <h3>${libro.titulo}</h3>
+                <img src="${libro.portada}" alt="Portada de ${libro.titulo}" loading="lazy">
+                <p>${libro.descripcion}</p>
+                <p>Páginas: ${libro.paginas}</p>
                 <p>Fecha de publicación: ${fechaFormateada}</p>
-                <p>Categoria: ${libro['categoria']}</p>
+                <p>Categoria: ${libro.categoria}</p>
 
                 <menu>
                     <li>
-                        <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
+                        <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="show-modal">Modificar</button>
                     </li>
                     <li>
-                        <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
+                        <button type='button' commandfor="eliminar-dialog-${libro.id_libro}" command="show-modal">Eliminar</button>
                     </li>
                 </menu>
 
-                <dialog id="modificar-dialog-${libro['id_libro']}">
+                <dialog id="modificar-dialog-${libro.id_libro}">
 
-                    <form action="${Libro.ENDPOINT}/${libro['id_libro']}">
+                    <form action="${Libro.ENDPOINT}/${libro.id_libro}">
 
-                        <h3>Modificando ${libro['titulo']}</h3>
+                        <h3>Modificando ${libro.titulo}</h3>
 
                         <menu>
                             <li>
                                 <label for='titulo'>Título *</label>
-                                <textarea id='titulo' name='titulo' required>${libro['titulo']}</textarea>
+                                <textarea id='titulo' name='titulo' required>${libro.titulo}</textarea>
                             </li>
 
                             <li>
                                 <label for='descripcion'>Descripción *</label>
-                                <textarea id='descripcion' name='descripcion' required>${libro['descripcion']}</textarea>
+                                <textarea id='descripcion' name='descripcion' required>${libro.descripcion}</textarea>
                             </li>
 
                             <li>
                                 <label for='paginas'>Páginas *</label>
-                                <input type='number' id='paginas' name='paginas' value='${libro['paginas']}' required min='1'>
+                                <input type='number' id='paginas' name='paginas' value='${libro.paginas}' required min='1'>
                             </li>
 
                             <li>
@@ -120,7 +121,7 @@ class Libro extends Categoria {
 
                             <li>
                                 <label for='fecha_publicacion'>Fecha de publicación *</label>
-                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro['fecha_publicacion']}' required>
+                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro.fecha_publicacion}' required>
                             </li>
 
                             <li>
@@ -144,7 +145,7 @@ class Libro extends Categoria {
                                     <button type="submit" value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
-                                    <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
+                                    <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="close">Cancelar</button>
                                 </li>
                             </menu>
 

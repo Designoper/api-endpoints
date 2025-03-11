@@ -1,21 +1,10 @@
-import { Fetch } from "./Fetch.ts";
-
-interface CategoriaResponse {
-	status: number;
-	message: string;
-	content?: CategoriaContent
-	validationErrors?: string[],
-	integrityErrors?: string[]
-}
-
-interface CategoriaContent {
-	id_categoria: number,
-	categoria: string
-}
+import { Fetch } from "./Fetch";
+import CategoriaContent from "./interfaces/CategoriaContent.ts";
+import CategoriaResponse from "./interfaces/CategoriaResponse.ts";
 
 export class Categoria extends Fetch {
 	static categoriasEndpoint = new URL('http://localhost/api/categorias');
-	static categorias: CategoriaContent;
+	static categorias: CategoriaResponse;
 
 	constructor() {
 		super();
@@ -23,10 +12,10 @@ export class Categoria extends Fetch {
 
 	async getCategorias() {
 		const response: CategoriaResponse = await this.simpleFetch(Categoria.categoriasEndpoint);
-		Categoria.categorias = response.content as CategoriaContent;
+		Categoria.categorias = response;
 	}
 
-	categoriasTemplate(fetchedCategorias: CategoriaContent): string {
+	categoriasTemplate(fetchedCategorias: CategoriaContent[]): string {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
@@ -39,7 +28,7 @@ export class Categoria extends Fetch {
 	}
 
 	printCategorias(place: HTMLOptionElement) {
-		const content = this.categoriasTemplate(Categoria.categorias);
+		const content = this.categoriasTemplate(Categoria.categorias.content);
 		place.outerHTML = content;
 	}
 }

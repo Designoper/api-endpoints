@@ -7,7 +7,7 @@ export class Fetch {
 		return json;
 	}
 
-	async fetchData(form: HTMLFormElement) {
+	async fetchData(form: HTMLFormElement): Promise<any> {
 
 		const init: RequestInit = {};
 		const userInputs = new FormData(form);
@@ -43,12 +43,12 @@ export class Fetch {
 			}
 
 			const json = await response.json();
-			json.status = response.status;
 
 			response.ok
-				? this.resetForm(form, method, output, dialog)
-				: this.errorChecker(json, output);
+			? this.resetForm(form, method, output, dialog)
+			: this.errorChecker(json, output);
 
+			json.status = response.status;
 			return json;
 		}
 
