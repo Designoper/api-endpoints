@@ -3,7 +3,7 @@ import { Categoria } from "./Categoria.js";
 class Libro extends Categoria {
     static ENDPOINTS = {
         READ: 'http://localhost/api/libros',
-        FILTER: 'http://localhost/api/libros/filter',
+        FILTER: 'http://localhost/api/libros',
         CREATE: 'http://localhost/api/libros',
         UPDATE: 'http://localhost/api/libros',
         DELETE: 'http://localhost/api/libros'

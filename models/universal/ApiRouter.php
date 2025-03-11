@@ -23,7 +23,16 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'libros',
+            'libros?$',
+            function (): void {
+                $libro = new LibroFilter();
+                $libro->filterLibros();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'libros$',
             function (): void {
                 $libro = new Libro();
                 $libro->readLibros();
@@ -32,19 +41,10 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'libros/(\d+)',
+            'libros/[123456789]\d*',
             function (): void {
                 $libro = new LibroId();
                 $libro->readLibro();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'libros/filter',
-            function (): void {
-                $libro = new LibroFilter();
-                $libro->filterLibros();
             }
         );
 
