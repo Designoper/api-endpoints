@@ -23,15 +23,6 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'libros?$',
-            function (): void {
-                $libro = new LibroFilter();
-                $libro->filterLibros();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
             'libros$',
             function (): void {
                 $libro = new Libro();
@@ -41,7 +32,16 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'libros/[123456789]\d*',
+            'libros\?[^/]*',
+            function (): void {
+                $libro = new LibroFilter();
+                $libro->filterLibros();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'libros/[1-9]\d*$',
             function (): void {
                 $libro = new LibroId();
                 $libro->readLibro();
@@ -70,7 +70,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'libros',
+            'libros$',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->createLibro();
@@ -81,7 +81,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'libros/[123456789]\d*',
+            'libros/[1-9]\d*$',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->updateLibro();
@@ -92,7 +92,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'DELETE',
-            'libros/[123456789]\d*',
+            'libros/[1-9]\d*$',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
@@ -101,7 +101,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'DELETE',
-            'libros',
+            'libros$',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteAllLibros();
@@ -128,10 +128,10 @@ final class ApiRouter extends Sanitizer
             case 'POST':
             case 'PUT':
             case 'DELETE':
-                $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+                $requestUri = $_SERVER['REQUEST_URI']; // Gets full URI including query string
 
                 foreach ($this->routes as $route) {
-                    if ($route['method'] === $method && preg_match("#^{$route['path']}$#", $path)) {
+                    if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
                         $route['handler']();
                     }
                 }
@@ -140,7 +140,7 @@ final class ApiRouter extends Sanitizer
                 header('Content-Type: application/json');
                 echo json_encode([
                     'message' => 'La ruta solicitada no existe',
-                    'requested_path' => $path
+                    'requested_path' => $requestUri
                 ]);
                 break;
 
