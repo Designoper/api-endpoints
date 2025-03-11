@@ -81,7 +81,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'libros/(\d+)',
+            'libros/[123456789]\d*',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->updateLibro();
@@ -92,7 +92,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'DELETE',
-            'libros/(\d+)',
+            'libros/[123456789]\d*',
             function (): void {
                 $libro = new LibroWrite();
                 $libro->deleteLibro();
