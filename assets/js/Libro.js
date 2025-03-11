@@ -64,47 +64,47 @@ class Libro extends Categoria {
 
         const libros = fetchedLibros.map(libro => {
             // Create date in UTC to avoid timezone offset
-            const fecha = new Date(libro['fecha_publicacion'] + 'T00:00:00Z');
+            const fecha = new Date(libro.fecha_publicacion + 'T00:00:00Z');
             const fechaFormateada = dateFormatter.format(fecha);
 
             return `<article>
 
-                <h3>${libro['titulo']}</h3>
-                <img src="${libro['portada']}" alt="Portada de ${libro['titulo']}" loading="lazy">
-                <p>${libro['descripcion']}</p>
-                <p>Páginas: ${libro['paginas']}</p>
+                <h3>${libro.titulo}</h3>
+                <img src="${libro.portada}" alt="Portada de ${libro.titulo}" loading="lazy">
+                <p>${libro.descripcion}</p>
+                <p>Páginas: ${libro.paginas}</p>
                 <p>Fecha de publicación: ${fechaFormateada}</p>
-                <p>Categoria: ${libro['categoria']}</p>
+                <p>Categoria: ${libro.categoria}</p>
 
                 <menu>
                     <li>
-                        <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="show-modal">Modificar</button>
+                        <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="show-modal">Modificar</button>
                     </li>
                     <li>
-                        <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="show-modal">Eliminar</button>
+                        <button type='button' commandfor="eliminar-dialog-${libro.id_libro}" command="show-modal">Eliminar</button>
                     </li>
                 </menu>
 
-                <dialog id="modificar-dialog-${libro['id_libro']}">
+                <dialog id="modificar-dialog-${libro.id_libro}">
 
-                    <form action="${Libro.ENDPOINT}/${libro['id_libro']}">
+                    <form action="${Libro.ENDPOINT}/${libro.id_libro}">
 
-                        <h3>Modificando ${libro['titulo']}</h3>
+                        <h3>Modificando ${libro.titulo}</h3>
 
                         <menu>
                             <li>
                                 <label for='titulo'>Título *</label>
-                                <textarea id='titulo' name='titulo' required>${libro['titulo']}</textarea>
+                                <textarea id='titulo' name='titulo' required>${libro.titulo}</textarea>
                             </li>
 
                             <li>
                                 <label for='descripcion'>Descripción *</label>
-                                <textarea id='descripcion' name='descripcion' required>${libro['descripcion']}</textarea>
+                                <textarea id='descripcion' name='descripcion' required>${libro.descripcion}</textarea>
                             </li>
 
                             <li>
                                 <label for='paginas'>Páginas *</label>
-                                <input type='number' id='paginas' name='paginas' value='${libro['paginas']}' required min='1'>
+                                <input type='number' id='paginas' name='paginas' value='${libro.paginas}' required min='1'>
                             </li>
 
                             <li>
@@ -119,7 +119,7 @@ class Libro extends Categoria {
 
                             <li>
                                 <label for='fecha_publicacion'>Fecha de publicación *</label>
-                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro['fecha_publicacion']}' required>
+                                <input type='date' id='fecha_publicacion' name='fecha_publicacion' value='${libro.fecha_publicacion}' required>
                             </li>
 
                             <li>
@@ -127,9 +127,9 @@ class Libro extends Categoria {
                                 <select name='id_categoria' id='categoria' required>
                                     ${Categoria.categorias.map(categoria =>
                 `<option
-                                            value='${categoria['id_categoria']}'
-                                            ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
-                                            ${categoria['categoria']}
+                                            value='${categoria.id_categoria}'
+                                            ${categoria.categoria === libro.categoria ? 'selected' : ''}>
+                                            ${categoria.categoria}
                                         </option>`
             ).join('')}
                                 </select>
@@ -143,7 +143,7 @@ class Libro extends Categoria {
                                     <button type="submit" value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
-                                    <button type='button' commandfor="modificar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
+                                    <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="close">Cancelar</button>
                                 </li>
                             </menu>
 
@@ -154,11 +154,11 @@ class Libro extends Categoria {
                     </form>
                 </dialog>
 
-                <dialog id="eliminar-dialog-${libro['id_libro']}">
+                <dialog id="eliminar-dialog-${libro.id_libro}">
 
-                <form action="${Libro.ENDPOINT}/${libro['id_libro']}">
+                <form action="${Libro.ENDPOINT}/${libro.id_libro}">
 
-                    <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
+                    <p>¿Seguro que quiere eliminar ${libro.titulo}?</p>
 
                     <fieldset>
 
@@ -167,7 +167,7 @@ class Libro extends Categoria {
                                 <button type="submit" value='DELETE'>Sí, eliminar</button>
                             </li>
                             <li>
-                                <button type='button' commandfor="eliminar-dialog-${libro['id_libro']}" command="close">Cancelar</button>
+                                <button type='button' commandfor="eliminar-dialog-${libro.id_libro}" command="close">Cancelar</button>
                             </li>
                         </menu>
 

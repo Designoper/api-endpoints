@@ -1,7 +1,7 @@
 import { Fetch } from "./Fetch.js";
 
 export class Categoria extends Fetch {
-	static categoriasEndpoint = 'http://localhost/api/categorias';
+	static ENDPOINT = 'http://localhost/api/categorias';
 	static categorias;
 
 	constructor() {
@@ -9,7 +9,7 @@ export class Categoria extends Fetch {
 	}
 
 	async getCategorias() {
-		const response = await this.simpleFetch(Categoria.categoriasEndpoint);
+		const response = await this.simpleFetch(Categoria.ENDPOINT);
 		Categoria.categorias = response.content;
 	}
 
@@ -17,8 +17,8 @@ export class Categoria extends Fetch {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
-				value='${categoria['id_categoria']}'>
-				${categoria['categoria']}
+				value='${categoria.id_categoria}'>
+				${categoria.categoria}
 			</option>`
 		).join('');
 
