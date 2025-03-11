@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 export class Fetch {
 	constructor() { }
 
@@ -72,21 +63,23 @@ export class Fetch {
 				`<p>Errores de validación:</p>
 
 				<ul>
-					${response.validationErrors.map((error) => `<li>${error}</li>`).join("")}
-				</ul>`;
-        }
-        if (((_b = response.integrityErrors) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-            output.innerHTML =
-                `<p>Errores de integridad:</p>
+					${response.validationErrors.map(error => `<li>${error}</li>`).join("")}
+				</ul>`
+		}
+
+		if (response.integrityErrors?.length > 0) {
+			output.innerHTML =
+				`<p>Errores de integridad:</p>
 
 				<ul>
-					${response.integrityErrors.map((error) => `<li>${error}</li>`).join("")}
-				</ul>`;
-        }
-    }
-    resetForm(form, method, errorContainer, dialog) {
-        form && method !== "GET" ? form.reset() : null;
-        dialog ? dialog.close() : null;
-        errorContainer ? errorContainer.innerHTML = "" : null;
-    }
+					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
+				</ul>`
+		}
+	}
+
+	resetForm(form, method, errorContainer, dialog) {
+		form && method !== "GET" ? form.reset() : null;
+		dialog ? dialog.close() : null;
+		errorContainer ? errorContainer.innerHTML = "" : null;
+	}
 }
