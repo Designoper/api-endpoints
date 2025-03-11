@@ -25,6 +25,13 @@ main {
 		output:empty {
 			display: none;
 		}
+
+		&:has(:invalid) {
+			button[type="submit"] {
+				interactivity: inert;
+				opacity: 50%;
+			}
+		}
 	}
 
 	:is(input, select, textarea) {
