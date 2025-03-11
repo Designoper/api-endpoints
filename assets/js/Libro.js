@@ -11,7 +11,6 @@ import { Categoria } from "./Categoria";
 class Libro extends Categoria {
     constructor() {
         super();
-        this.initialize();
     }
     initialize() {
         return __awaiter(this, void 0, void 0, function* () {

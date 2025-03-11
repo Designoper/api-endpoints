@@ -12,7 +12,6 @@ class Libro extends Categoria {
 
     constructor() {
         super();
-        this.initialize();
     }
 
     async initialize() {
