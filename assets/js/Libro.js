@@ -200,18 +200,18 @@ class Libro extends Categoria {
         forms.forEach(form => {
 
             const submitButton = form.querySelector('button[type="submit"]');
-            const httpMethod = submitButton.value;
+            const method = submitButton.value;
 
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                switch (httpMethod) {
+            form.onsubmit = (submitEvent) => {
+                submitEvent.preventDefault();
+                switch (method) {
                     case 'GET':
                         this.filterLibros(form);
                         break;
                     case 'POST':
                     case 'PUT':
                     case 'DELETE':
-                        this.writeLibro(form, httpMethod);
+                        this.writeLibro(form, method);
                 }
             }
         });
