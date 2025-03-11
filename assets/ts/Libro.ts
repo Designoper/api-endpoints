@@ -127,7 +127,7 @@ class Libro extends Categoria {
                             <li>
                                 <label for='categoria'>Categoria *</label>
                                 <select name='id_categoria' id='categoria' required>
-                                    ${Categoria.categorias.map(categoria =>
+                                    ${Categoria.categorias.content.map(categoria =>
                 `<option
                                             value='${categoria['id_categoria']}'
                                             ${categoria['categoria'] === libro['categoria'] ? 'selected' : ''}>
