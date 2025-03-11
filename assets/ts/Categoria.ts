@@ -1,6 +1,6 @@
 import { Fetch } from "./Fetch";
-import CategoriaContent from "./interfaces/CategoriaContent.ts";
-import CategoriaResponse from "./interfaces/CategoriaResponse.ts";
+import CategoriaContent from "./interfaces/CategoriaContent";
+import CategoriaResponse from "./interfaces/CategoriaResponse";
 
 export class Categoria extends Fetch {
 	static categoriasEndpoint = new URL('http://localhost/api/categorias');

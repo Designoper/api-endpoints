@@ -57,13 +57,13 @@ export class Fetch {
 		}
 	}
 
-	errorChecker(response, output: HTMLOutputElement): void {
+	errorChecker(response:any, output: HTMLOutputElement): void {
 		if (response.validationErrors?.length > 0) {
 			output.innerHTML =
 				`<p>Errores de validación:</p>
 
 				<ul>
-					${response.validationErrors.map(error => `<li>${error}</li>`).join("")}
+					${response.validationErrors.map((error: any) => `<li>${error}</li>`).join("")}
 				</ul>`
 		}
 
@@ -72,12 +72,12 @@ export class Fetch {
 				`<p>Errores de integridad:</p>
 
 				<ul>
-					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
+					${response.integrityErrors.map((error: any) => `<li>${error}</li>`).join("")}
 				</ul>`
 		}
 	}
 
-	resetForm(form: HTMLFormElement, method: string, errorContainer, dialog: HTMLDialogElement): void {
+	resetForm(form: HTMLFormElement, method: string, errorContainer: HTMLOutputElement, dialog: HTMLDialogElement): void {
 		form && method !== "GET" ? form.reset() : null;
 		dialog ? dialog.close() : null;
 		errorContainer ? errorContainer.innerHTML = "" : null;

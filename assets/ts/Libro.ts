@@ -1,5 +1,6 @@
 import { Categoria } from "./Categoria";
-import LibroContent from "./interfaces/LibroContent.ts";
+import LibroContent from "./interfaces/LibroContent";
+import LibroResponse from "./interfaces/LibroResponse";
 
 class Libro extends Categoria {
     static ENDPOINT = new URL('http://localhost/api/libros');
@@ -23,13 +24,13 @@ class Libro extends Categoria {
 
     async getLibros() {
         await this.getCategorias();
-        const response = await this.simpleFetch(Libro.ENDPOINT);
+        const response: LibroResponse = await this.simpleFetch(Libro.ENDPOINT);
         this.printLibros(response);
     }
 
     async filterLibros(form: HTMLFormElement) {
         await this.getCategorias();
-        const response = await this.fetchData(form);
+        const response: LibroResponse = await this.fetchData(form);
         this.printLibros(response);
     }
 
@@ -41,14 +42,14 @@ class Libro extends Categoria {
     }
 
     async updateLibro(form: HTMLFormElement) {
-        const response = await this.fetchData(form);
+        const response: LibroResponse = await this.fetchData(form);
         if (response.status === 200) {
             await this.getLibros();
         }
     }
 
     async deleteLibro(form: HTMLFormElement) {
-        const response = await this.fetchData(form);
+        const response: LibroResponse = await this.fetchData(form);
         if (response.status === 204) {
             await this.getLibros();
         }
@@ -186,9 +187,9 @@ class Libro extends Categoria {
 
     // MARK: PRINT LIBROS
 
-    printLibros(libros) {
+    printLibros(libros: LibroResponse) {
 
-        if (libros.content.length === 0) {
+        if (libros.content?.length === 0) {
             Libro.DOM_ELEMENTS.OUTPUT.innerHTML = "";
             Libro.DOM_ELEMENTS.ERROR_CONTAINER.innerHTML = libros.message;
         }
