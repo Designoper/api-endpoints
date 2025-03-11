@@ -21,7 +21,7 @@ export class Fetch {
 
 		switch (method) {
 			case 'GET':
-				url.search = new URLSearchParams(userInputs);
+				url.search = new URLSearchParams(userInputs as any).toString();
 				break;
 
 			case 'POST':
