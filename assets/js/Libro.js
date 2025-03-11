@@ -157,7 +157,7 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro['id_libro']}">
 
-                <form action="${Libro.ENDPOINT}/${libro['id_libro']}" method="POST">
+                <form action="${Libro.ENDPOINT}/${libro['id_libro']}">
 
                     <p>¿Seguro que quiere eliminar ${libro['titulo']}?</p>
 

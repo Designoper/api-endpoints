@@ -14,13 +14,13 @@ export class Fetch {
 		const sendButton = form.querySelector('button[type="submit"]');
 		const method = sendButton.getAttribute("value")?.toUpperCase();
 		let url = form.getAttribute("action");
+		url = new URL(url);
 
 		const output = form.querySelector('output');
 		const dialog = form.closest('dialog');
 
 		switch (method) {
 			case 'GET':
-				url = new URL(url);
 				url.search = new URLSearchParams(userInputs);
 				break;
 
@@ -31,7 +31,6 @@ export class Fetch {
 				break;
 
 			case 'DELETE':
-				url = new URL(url);
 				init.method = 'DELETE';
 		}
 
