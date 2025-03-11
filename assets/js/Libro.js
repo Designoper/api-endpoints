@@ -19,7 +19,6 @@ class Libro extends Categoria {
             this.optionsDropdown();
         });
     }
-    // MARK: CRUD FUNCTIONS
     getLibros() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.getCategorias();
@@ -58,7 +57,6 @@ class Libro extends Categoria {
             }
         });
     }
-    // MARK: LIBRO TEMPLATE
     static librosTemplate(fetchedLibros) {
         const dateFormatter = new Intl.DateTimeFormat('es-ES', {
             day: '2-digit',
@@ -67,7 +65,6 @@ class Libro extends Categoria {
             timeZone: 'UTC'
         });
         const libros = fetchedLibros.map(libro => {
-            // Create date in UTC to avoid timezone offset
             const fecha = new Date(libro.fecha_publicacion + 'T00:00:00Z');
             const fechaFormateada = dateFormatter.format(fecha);
             return `<article>
@@ -181,7 +178,6 @@ class Libro extends Categoria {
         }).join('');
         return libros;
     }
-    // MARK: PRINT LIBROS
     printLibros(libros) {
         var _a;
         if (((_a = libros.content) === null || _a === void 0 ? void 0 : _a.length) === 0) {
