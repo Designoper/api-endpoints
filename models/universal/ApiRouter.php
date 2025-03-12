@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/Sanitizer.php';
-require_once __DIR__ . '/../../models/libro/Libro.php';
-require_once __DIR__ . '/../../models/libro/LibroId.php';
-require_once __DIR__ . '/../../models/libro/LibroFilter.php';
+require_once __DIR__ . '/../../models/libro/LibroRead.php';
 require_once __DIR__ . '/../../models/libro/LibroWrite.php';
 require_once __DIR__ . '/../../models/categoria/Categoria.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
@@ -25,7 +23,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'libros$',
             function (): void {
-                $libro = new Libro();
+                $libro = new LibroRead();
                 $libro->readLibros();
             }
         );
@@ -34,7 +32,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'libros\?[^/]*',
             function (): void {
-                $libro = new LibroFilter();
+                $libro = new LibroRead();
                 $libro->filterLibros();
             }
         );
@@ -43,7 +41,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'libros/[1-9]\d*$',
             function (): void {
-                $libro = new LibroId();
+                $libro = new LibroRead();
                 $libro->readLibro();
             }
         );

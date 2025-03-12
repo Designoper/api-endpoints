@@ -13,7 +13,7 @@ export class Fetch {
 		const userInputs = new FormData(form);
 		const sendButton = form.querySelector('button[type="submit"]');
 		const method = sendButton.value.toUpperCase();
-		let url = form.action;
+		const url = new URL(form.action);
 
 		const output = form.querySelector('output');
 		const dialog = form.closest('dialog');

@@ -3,9 +3,13 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../universal/ApiResponse.php';
+require_once __DIR__ . '/../universal/FileManager.php';
 
-final class LibroFilter extends ApiResponse
+final class LibroRead extends ApiResponse
 {
+	private string $statement;
+	private readonly int $idLibro;
+
 	private array $params = [];
 	private array $types = [];
 
@@ -20,9 +24,39 @@ final class LibroFilter extends ApiResponse
 	public function __construct()
 	{
 		parent::__construct();
+
+		$host = $this->getHost();
+		$defaultImage = FileManager::DEFAULT_IMAGE;
+
+		$this->setStatement(
+			"SELECT
+				libros.id_libro,
+				libros.titulo,
+				CASE
+					WHEN libros.portada IS NULL THEN CONCAT('$host', '$defaultImage')
+					ELSE CONCAT('$host', libros.portada)
+				END AS portada,
+				libros.descripcion,
+				libros.paginas,
+				libros.fecha_publicacion,
+				categorias.categoria
+			FROM libros
+			NATURAL JOIN categorias
+			WHERE 1=1"
+		);
 	}
 
 	// MARK: GETTERS
+
+	private function getStatement(): string
+	{
+		return $this->statement;
+	}
+
+	private function getIdLibro(): int
+	{
+		return $this->idLibro;
+	}
 
 	private function getTitulo(): ?string
 	{
@@ -70,6 +104,24 @@ final class LibroFilter extends ApiResponse
 	}
 
 	// MARK: SETTERS
+
+	private function setStatement(string $statement): void
+	{
+		$this->statement = $statement;
+	}
+
+	private function setIdLibro(): void
+	{
+		$errorMessage = "El id del recurso debe ser un número entero superior o igual a 1 y solo contener números.";
+
+		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$segments = explode('/', trim($path, '/'));
+		$value = end($segments);
+
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
+			? $this->idLibro = (int) $value
+			: $this->setValidationError($errorMessage);
+	}
 
 	private function setMinimoPaginas(): void
 	{
@@ -201,6 +253,65 @@ final class LibroFilter extends ApiResponse
 		$this->types[] = $type;
 	}
 
+	// MARK: READ ALL
+
+	public function readLibros(): void
+	{
+		$statement = $this->getStatement();
+
+		$statement .= " ORDER BY libros.titulo";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->execute();
+
+		$libros = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$libros
+			? 'Libros obtenidos.'
+			: 'No hay ningún libro.';
+
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($libros);
+		// header('Cache-Control: public, max-age=31536000, must-revalidate');
+		$this->getResponse();
+	}
+
+	// MARK: READ ONE
+
+	public function readLibro(): void
+	{
+		$this->setIdLibro();
+		$this->checkValidationErrors();
+
+		$idLibro = $this->getIdLibro();
+		$statement = $this->getStatement();
+
+		$statement .= " AND libros.id_libro = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+		$query->bind_param("i", $idLibro);
+		$query->execute();
+
+		$libro = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
+		if ($libro) {
+			$this->setStatus(200);
+			$this->setMessage('Libro obtenido.');
+			$this->setContent($libro);
+			$this->getResponse();
+		} else {
+			$this->setStatus(404);
+			$this->setIntegrityError('¡El libro solicitado no existe!');
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	// MARK: FILTER
 
 	public function filterLibros(): void
@@ -215,24 +326,7 @@ final class LibroFilter extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		$host = $this->getHost();
-		$defaultImage = FileManager::DEFAULT_IMAGE;
-
-		$statement =
-			"SELECT
-				libros.id_libro,
-				libros.titulo,
-				CASE
-					WHEN libros.portada IS NULL THEN CONCAT('$host', '$defaultImage')
-					ELSE CONCAT('$host', libros.portada)
-				END AS portada,
-				libros.descripcion,
-				libros.paginas,
-				libros.fecha_publicacion,
-				categorias.categoria
-			FROM libros
-			NATURAL JOIN categorias
-			WHERE 1=1";
+		$statement = $this->getStatement();
 
 		if ($this->getMinimoPaginas()) {
 			$this->setParam($this->getMinimoPaginas());
@@ -294,6 +388,8 @@ final class LibroFilter extends ApiResponse
 
 			$statement .= " ORDER BY " . $param;
 		}
+
+		else $statement .= " ORDER BY libros.titulo ASC";
 
 		$query = $this->getConnection()->prepare($statement);
 
