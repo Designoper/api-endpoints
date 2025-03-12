@@ -2,9 +2,15 @@ self.addEventListener('install', event => {
 	event.waitUntil(
 		caches.open('v1').then(cache => {
 			return cache.addAll([
-				'/index.html',
-				'/styles.css',
-				'/app.js'
+				'./index.html',
+				'./assets/css/common/reset.css',
+				'./assets/css/common/reset.css',
+				'./assets/css/common/reset.css',
+				'./assets/css/common/reset.css',
+				'./assets/css/index.css',
+				'./assets/js/Fetch.js',
+				'./assets/js/Categoria.js',
+				'./assets/js/Libro.js',
 			]);
 		})
 	);
