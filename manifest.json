@@ -1,8 +1,10 @@
 {
-	"name": "Mi CRUD App",
+	"name": "Libroland",
 	"short_name": "CRUDApp",
 	"start_url": "/index.html",
 	"display": "standalone",
+	"version": "2.0",
+	"author": "Lucero",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
 	"icons": [
