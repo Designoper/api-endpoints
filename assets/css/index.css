@@ -27,7 +27,7 @@ main {
 		}
 
 		&:has(:invalid) {
-			button[type="submit"] {
+			button:not([type="reset"], [type="button"]) {
 				interactivity: inert;
 				opacity: 50%;
 			}
