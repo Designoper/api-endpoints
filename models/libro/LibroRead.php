@@ -7,7 +7,7 @@ require_once __DIR__ . '/../universal/FileManager.php';
 
 final class LibroRead extends ApiResponse
 {
-	private string $statement;
+	private readonly string $statement;
 	private readonly int $idLibro;
 
 	private array $params = [];
