@@ -142,23 +142,23 @@ class Libro extends Categoria {
 
                 <dialog id="eliminar-dialog-${libro.id}">
 
-                <form action="${Libro.ENDPOINT}/${libro.id}">
+                    <form action="${Libro.ENDPOINT}/${libro.id}">
 
-                    <p>¿Seguro que quiere eliminar ${libro.titulo}?</p>
+                        <p>¿Seguro que quiere eliminar ${libro.titulo}?</p>
 
-                    <fieldset>
+                        <fieldset>
 
-                        <menu>
-                            <li>
-                                <button type="submit" value='DELETE'>Sí, eliminar</button>
-                            </li>
-                            <li>
-                                <button type='button' commandfor="eliminar-dialog-${libro.id}" command="close">Cancelar</button>
-                            </li>
-                        </menu>
+                            <menu>
+                                <li>
+                                    <button type="submit" value='DELETE'>Sí, eliminar</button>
+                                </li>
+                                <li>
+                                    <button type='button' commandfor="eliminar-dialog-${libro.id}" command="close">Cancelar</button>
+                                </li>
+                            </menu>
 
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>
 
                 </dialog>
 
