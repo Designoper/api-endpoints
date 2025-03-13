@@ -4,7 +4,6 @@
 	"start_url": "/index.html",
 	"display": "standalone",
 	"version": "2.0",
-	"author": "Lucero",
 	"background_color": "#ffffff",
 	"theme_color": "#48c7c7",
 	"icons": [
