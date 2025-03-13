@@ -48,7 +48,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'categorias',
+            'categorias$',
             function (): void {
                 $categoria = new Categoria();
                 $categoria->readCategorias();
