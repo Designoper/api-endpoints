@@ -30,7 +30,7 @@ final class LibroRead extends ApiResponse
 
 		$this->setStatement(
 			"SELECT
-				libros.id_libro,
+				libros.id_libro AS id,
 				libros.titulo,
 				CASE
 					WHEN libros.portada IS NULL THEN CONCAT('$host', '$defaultImage')

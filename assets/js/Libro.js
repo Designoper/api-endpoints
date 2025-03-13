@@ -64,16 +64,16 @@ class Libro extends Categoria {
 
                 <menu>
                     <li>
-                        <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="show-modal">Modificar</button>
+                        <button type='button' commandfor="modificar-dialog-${libro.id}" command="show-modal">Modificar</button>
                     </li>
                     <li>
-                        <button type='button' commandfor="eliminar-dialog-${libro.id_libro}" command="show-modal">Eliminar</button>
+                        <button type='button' commandfor="eliminar-dialog-${libro.id}" command="show-modal">Eliminar</button>
                     </li>
                 </menu>
 
-                <dialog id="modificar-dialog-${libro.id_libro}">
+                <dialog id="modificar-dialog-${libro.id}">
 
-                    <form action="${Libro.ENDPOINT}/${libro.id_libro}">
+                    <form action="${Libro.ENDPOINT}/${libro.id}">
 
                         <h3>Modificando ${libro.titulo}</h3>
 
@@ -113,7 +113,7 @@ class Libro extends Categoria {
                                 <select name='id_categoria' id='categoria' required>
                                     ${Categoria.categorias.map(categoria =>
                 `<option
-                                            value='${categoria.id_categoria}'
+                                            value='${categoria.id}'
                                             ${categoria.categoria === libro.categoria ? 'selected' : ''}>
                                             ${categoria.categoria}
                                         </option>`
@@ -129,7 +129,7 @@ class Libro extends Categoria {
                                     <button type="submit" value='PUT'>Guardar cambios</button>
                                 </li>
                                 <li>
-                                    <button type='button' commandfor="modificar-dialog-${libro.id_libro}" command="close">Cancelar</button>
+                                    <button type='button' commandfor="modificar-dialog-${libro.id}" command="close">Cancelar</button>
                                 </li>
                             </menu>
 
@@ -140,9 +140,9 @@ class Libro extends Categoria {
                     </form>
                 </dialog>
 
-                <dialog id="eliminar-dialog-${libro.id_libro}">
+                <dialog id="eliminar-dialog-${libro.id}">
 
-                <form action="${Libro.ENDPOINT}/${libro.id_libro}">
+                <form action="${Libro.ENDPOINT}/${libro.id}">
 
                     <p>¿Seguro que quiere eliminar ${libro.titulo}?</p>
 
@@ -153,7 +153,7 @@ class Libro extends Categoria {
                                 <button type="submit" value='DELETE'>Sí, eliminar</button>
                             </li>
                             <li>
-                                <button type='button' commandfor="eliminar-dialog-${libro.id_libro}" command="close">Cancelar</button>
+                                <button type='button' commandfor="eliminar-dialog-${libro.id}" command="close">Cancelar</button>
                             </li>
                         </menu>
 

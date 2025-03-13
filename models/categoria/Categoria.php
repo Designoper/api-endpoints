@@ -14,9 +14,11 @@ final class Categoria extends ApiResponse
 	public function readCategorias(): void
 	{
 		$statement =
-			"SELECT *
+			"SELECT
+				categorias.id_categoria AS id,
+				categorias.categoria
 			FROM categorias
-			ORDER BY categoria";
+			ORDER BY categorias.categoria";
 
 		$query = $this->getConnection()->prepare($statement);
 

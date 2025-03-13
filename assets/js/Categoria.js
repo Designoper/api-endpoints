@@ -17,7 +17,7 @@ export class Categoria extends Fetch {
 
 		const categorias = fetchedCategorias.map(categoria =>
 			`<option
-				value='${categoria.id_categoria}'>
+				value='${categoria.id}'>
 				${categoria.categoria}
 			</option>`
 		).join('');
