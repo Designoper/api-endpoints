@@ -1,6 +1,6 @@
 // Nombre de la caché y archivos a cachear
-const CACHE_NAME = 'mi-app-cache-v1';
-const ARCHIVOS_A_CACHEAR = [
+const CACHE_VERSION = 'mi-app-cache-v1';
+const FILES = [
 	'./manifest.json',
 	'./index.html',
 	'./assets/css/common/reset.css',
@@ -16,9 +16,9 @@ const ARCHIVOS_A_CACHEAR = [
 // Evento de instalación: cachear archivos
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
+        caches.open(CACHE_VERSION).then(cache => {
             console.log('Archivos cacheados');
-            return cache.addAll(ARCHIVOS_A_CACHEAR);
+            return cache.addAll(FILES);
         })
     );
 });
@@ -34,7 +34,7 @@ self.addEventListener('fetch', event => {
 
 // Evento de activación: limpiar cachés antiguas
 self.addEventListener('activate', event => {
-    const cachesPermitidos = [CACHE_NAME];
+    const cachesPermitidos = [CACHE_VERSION];
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
