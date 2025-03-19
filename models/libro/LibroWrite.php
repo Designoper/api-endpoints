@@ -103,7 +103,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setDescripcion(): void
 	{
 		$name = 'descripcion';
-		$value = $_POST[$name] ?? "";
+		$value = $this->info[$name] ?? "";
 		$errorMessage = "El campo '$name' no puede estar vacío.";
 
 		$value === ""
@@ -114,7 +114,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setPaginas(): void
 	{
 		$name = 'paginas';
-		$value = $_POST[$name] ?? "";
+		$value = $this->info[$name] ?? "";
 		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
@@ -125,7 +125,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setFechaPublicacion(): void
 	{
 		$name = 'fecha_publicacion';
-		$value = $_POST[$name] ?? "";
+		$value = $this->info[$name] ?? "";
 		$dateFormat = 'Y-m-d';
 		$errorMessage = "El campo '$name' debe tener el formato '$dateFormat'.";
 
@@ -139,7 +139,7 @@ final class LibroWrite extends LibroIntegrityErrors
 	private function setIdCategoria(): void
 	{
 		$name = 'id_categoria';
-		$value = $_POST[$name] ?? "";
+		$value = $this->info[$name] ?? "";
 		$errorMessage = "El campo '$name' debe ser un número entero superior o igual a 1 y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))
@@ -197,6 +197,10 @@ final class LibroWrite extends LibroIntegrityErrors
 
 	private function parsePutMultipart(): array
 	{
+		if ($_SERVER["REQUEST_METHOD"] === "POST") {
+			return $_POST;
+		}
+
 		$rawData = file_get_contents("php://input");
 		$contentType = $_SERVER["CONTENT_TYPE"] ?? '';
 
@@ -266,7 +270,7 @@ final class LibroWrite extends LibroIntegrityErrors
 				];
 			} else {
 				// Regular form field
-				$results[$fieldName = $body];
+				$results[$fieldName] = $body;
 			}
 		}
 		return $results;
