@@ -25,7 +25,7 @@ export class Fetch {
 
 			case 'POST':
 			case 'PUT':
-				init.method = 'POST';
+				init.method = method;
 				init.body = userInputs;
 				break;
 

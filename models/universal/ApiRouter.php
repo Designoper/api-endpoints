@@ -78,7 +78,7 @@ final class ApiRouter extends Sanitizer
         // UPDATE ROUTES
 
         $this->setRoute(
-            'POST',
+            'PUT',
             'libros/[1-9]\d*$',
             function (): void {
                 $libro = new LibroWrite();
