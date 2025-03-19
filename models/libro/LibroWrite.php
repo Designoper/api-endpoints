@@ -217,6 +217,9 @@ final class LibroWrite extends LibroIntegrityErrors
 		$idCategoria = $this->getIdCategoria();
 		$portadaName = $createLibro->uploadFileName();
 
+		$this->tituloExists($titulo);
+		$this->idCategoriaExists($idCategoria);
+
 		$statement =
 			"INSERT INTO libros (
 				titulo,
@@ -247,47 +250,9 @@ final class LibroWrite extends LibroIntegrityErrors
 			$idCategoria
 		);
 
-		try {
-			$query->execute();
-		} catch (Exception $error) {
-			$query->close();
-
-			//error 1062 clave única duplicada
-			if ($error->getCode() == 1062) {
-				preg_match_all("/for key '(.+?)'/", $error->getMessage(), $matches);
-				$constraintNames = $matches[1] ?? [];
-
-				foreach ($constraintNames as $constraint) {
-					$errorMessage = match ($constraint) {
-						'titulo_UNIQUE' => '¡El título del libro ya esta asignado a otro libro!',
-						default => "Valor duplicado en {$constraint}"
-					};
-					$this->setIntegrityError($errorMessage);
-				}
-
-				$this->setStatus(409);
-				$this->checkIntegrityErrors();
-			}
-
-			//error 1452 clave foránea no válida
-			if ($error->getCode() == 1452) {
-				preg_match("/FOREIGN KEY \(`(.+?)`\)/", $error->getMessage(), $matches);
-				$constraintFields = $matches[1] ?? [];
-
-				foreach ($constraintFields as $constraint) {
-					$errorMessage = match ($constraint) {
-						'id_categoria' => '¡La categoria seleccionada no existe!',
-						default => "El registro referenciado no existe en {$constraint}"
-					};
-					$this->setIntegrityError($errorMessage);
-				}
-
-				$this->setStatus(404);
-				$this->checkIntegrityErrors();
-			}
-		}
-
+		$query->execute();
 		$query->close();
+
 		$this->setStatus(201);
 		$this->setMessage("Libro creado");
 		$createLibro->uploadFile();
@@ -315,11 +280,12 @@ final class LibroWrite extends LibroIntegrityErrors
 		$paginas = $this->getPaginas();
 		$fechaPublicacion = $this->getFechaPublicacion();
 		$idCategoria = $this->getIdCategoria();
-
-		$this->idLibroExists($idLibro);
-
 		$portada = $this->getPortada();
 		$eliminarPortada = $this->getEliminarPortada();
+
+		$this->tituloUpdateExists($titulo, $idLibro);
+		$this->idLibroExists($idLibro);
+		$this->idCategoriaExists($idCategoria);
 
 		$updateLibro = new FileManager();
 
@@ -353,25 +319,7 @@ final class LibroWrite extends LibroIntegrityErrors
 			$idLibro
 		);
 
-		try {
-			$query->execute();
-		} catch (Exception $error) {
-			$query->close();
-
-			//error 1062 clave única duplicada
-			if ($error->getCode() == 1062) {
-				$this->setStatus(409);
-				$this->setIntegrityError('¡El título del libro ya esta asignado a otro libro!');
-				$this->checkIntegrityErrors();
-			}
-
-			//error 1452 clave foránea no válida
-			if ($error->getCode() == 1452) {
-				$this->setStatus(404);
-				$this->setIntegrityError('¡La categoria seleccionada no existe!');
-				$this->checkIntegrityErrors();
-			}
-		}
+		$query->execute();
 
 		$numFilas = $query->affected_rows;
 		$query->close();
