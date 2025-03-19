@@ -11,7 +11,7 @@ export class Fetch {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		const sendButton = form.querySelector('button[type="submit"]');
+		const sendButton = form.querySelector('button:not([type="reset"], [type="button"])');
 		const method = sendButton.value.toUpperCase();
 		const url = new URL(form.action);
 

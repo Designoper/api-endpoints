@@ -199,7 +199,7 @@ class Libro extends Categoria {
 
         forms.forEach(form => {
 
-            const submitButton = form.querySelector('button[type="submit"]');
+            const submitButton = form.querySelector('button:not([type="reset"], [type="button"])');
             const method = submitButton.value;
 
             form.onsubmit = (submitEvent) => {
