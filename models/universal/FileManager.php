@@ -15,7 +15,8 @@ final class FileManager extends MysqliConnect
     private readonly ?array $file;
     private readonly bool $deleteCheckbox;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -79,7 +80,7 @@ final class FileManager extends MysqliConnect
         if (is_array($files['name'])) {
             $count = count($files['name']);
             for ($i = 0; $i < $count; $i++) {
-                if ((int)$files['error'][$i] === 0) {
+                if ((int) $files['error'][$i] === 0) {
                     $newArray[] = [
                         'name'     => $files['name'][$i],
                         'type'     => $files['type'][$i],
