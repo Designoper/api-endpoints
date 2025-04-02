@@ -35,6 +35,7 @@ strong {
 		font-size: 1.25rem;
 	}
 }
+
 @media screen and (801px <=width) {
 	html {
 		font-size: 1.2rem;
